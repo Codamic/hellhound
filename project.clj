@@ -3,4 +3,5 @@
   :url "http://github.com/Codamic/hell-hound"
   :license {:name "GPLv3"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.8.0"]])
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [cljsjs/jquery]])
