@@ -4,4 +4,4 @@
   :license {:name "GPLv3"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [cljsjs/jquery]])
+                 [cljsjs/jquery "2.2.4-0"]])
