@@ -17,6 +17,7 @@
 (r/reg-fx
  :jquery
  (fn [{:keys [method values selector]}]
-   (let [elem (js/$ (clj->js selector))
-         method (clj->js method)]
-     (.call (aget elem  method) elem values))))
+   (let [elem   (js/$ (clj->js selector))
+         method (clj->js method)
+         args   (concat [elem] values)]
+     (.apply (aget elem method) elem (clj->js values)))))
