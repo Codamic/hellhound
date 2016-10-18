@@ -46,7 +46,6 @@
 
 (def ^:private locale  (atom nil))
 (def ^:private options (atom nil))
-(def ^:private translate (partial tr @options @locale))
 
 (defn- check-for-valid-values
   []
@@ -65,7 +64,7 @@
   "Translate the given string according to the current locale."
   [& args]
   (check-for-valid-values)
-  (apply translate args))
+  (tr @options [@locale] (first (vec args))))
 
 
 
@@ -74,4 +73,4 @@
   be call at the begining of your application."
   [dictionary lang]
   (set-locale! lang)
-  (reset! options dictionary))
+  (reset! options {:dict dictionary}))
