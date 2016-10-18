@@ -33,7 +33,7 @@
 
 
   ```clojure
-  (initialize-i18n my-dict :en)
+  (init my-dict :en)
 
   ; You can change the current language later like this:
 
@@ -46,15 +46,15 @@
 
 (def ^:private locale  (atom nil))
 (def ^:private options (atom nil))
-(def ^:private translate (partial tr @options @lang))
-
+(def ^:private translate (partial tr @options @locale))
 
 (defn- check-for-valid-values
   []
   (if (nil? @locale)
     (throw (Exception. "Current locale is nil. You forgot to set it."))
     (do (if (nil? @options)
-          (throw (Exception. "Did you set the default dictionary for i18n system ?"))))))
+          (throw #?(:clj  (Exception. "Did you set the default dictionary for i18n system ?")
+                    :cljs "Did you set the default dictionary for i18n system ?"))))))
 
 (defn set-locale!
   "Set the current locale to the given value."
@@ -69,9 +69,9 @@
 
 
 
-(defn initialize-i18n
+(defn init
   "Set the default dictionary of the i18n system. This function should
   be call at the begining of your application."
   [dictionary lang]
-  (set-local! lang)
+  (set-locale! lang)
   (reset! options dictionary))
