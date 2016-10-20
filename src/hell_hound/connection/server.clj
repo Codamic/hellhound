@@ -1,7 +1,7 @@
 (ns hell-hound.connection.server
   (:require [taoensso.sente :as sente]
             [taoensso.sente.server-adapters.http-kit :refer (get-sch-adapter)]
-            [compojure.core :as compojure]))
+            [compojure.core :as compojure :refer [GET POST]]))
 
 
 
@@ -10,7 +10,7 @@
       (sente/make-channel-socket! (get-sch-adapter) {})]
 
   (def ring-ajax-post                ajax-post-fn)
-  (def ring-ajax-get-or-ws-handshake ajax-get-or-ws-handshake-fn)
+  (def ring-handshake ajax-get-or-ws-handshake-fn)
 
   ; ChannelSocket's receive channel
   (def ch-chsk                       ch-recv)
@@ -27,5 +27,7 @@
   "Routes macro allows developer to setup sente connection and urls easy
   and painlessly."
   []
-  (compojure/GET "/hellhound" req (ring-ajax-get-or-ws-handshake req))
-  (compojure/POST "/hellhound" req (ring-ajax-post               req)))
+  (compojure/routes
+   (compojure/context "/hellhound" []
+                      (compojure/GET  "/" req (ring-handshake req))
+                      (compojure/POST "/" req (ring-ajax-post req)))))
