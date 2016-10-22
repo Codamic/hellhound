@@ -5,21 +5,24 @@
 
 
 
-(let [{:keys [ch-recv send-fn connected-uids
-              ajax-post-fn ajax-get-or-ws-handshake-fn]}
-      (sente/make-channel-socket! (get-sch-adapter) {})]
+(let [{:keys [ch-recv
+              send-fn
+              connected-uids
+              ajax-post-fn
+              ajax-get-or-ws-handshake-fn]}
+      (sente/make-channel-socket! (get-sch-adapter) {:packer :edn})]
 
-  (def ring-ajax-post                ajax-post-fn)
-  (def ring-handshake ajax-get-or-ws-handshake-fn)
+  (def ring-ajax-post  ajax-post-fn)
+  (def ring-handshake  ajax-get-or-ws-handshake-fn)
 
   ; ChannelSocket's receive channel
-  (def ch-chsk                       ch-recv)
+  (def ch-chsk         ch-recv)
 
   ; ChannelSocket's send API fn
-  (def chsk-send!                    send-fn)
+  (def chsk-send!      send-fn)
 
   ; Watchable, read-only atom
-  (def connected-uids                connected-uids))
+  (def connected-uids  connected-uids))
 
 
 
