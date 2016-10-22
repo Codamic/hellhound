@@ -1,4 +1,4 @@
-(defproject codamic/hell-hound "0.5.0-SNAPSHOT"
+(defproject codamic/hell-hound "0.6.0-SNAPSHOT"
   :description "A simple full-stack web framework for clojure"
   :url "http://github.com/Codamic/hell-hound"
   :license {:name "GPLv3"
@@ -7,7 +7,10 @@
                  [cljsjs/jquery "2.2.4-0"]
                  [compojure "1.5.0"]
                  [reagent "0.6.0"]
+
                  [ring "1.5.0"]
+                 [ring/ring-anti-forgery "1.0.1"]
+
                  [binaryage/devtools "0.8.2"]
                  [re-frame "0.8.0"]
                  [secretary "1.2.3"]
