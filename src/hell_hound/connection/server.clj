@@ -1,5 +1,6 @@
 (ns hell-hound.connection.server
   (:require [taoensso.sente :as sente]
+            [clojure.core.async :refer [go-loop <!]]
             [taoensso.sente.server-adapters.http-kit :refer (get-sch-adapter)]
             [compojure.core :as compojure :refer [GET POST]]))
 
@@ -34,3 +35,6 @@
    (compojure/context "/hellhound" []
                       (compojure/GET  "/" req (ring-handshake req))
                       (compojure/POST "/" req (ring-ajax-post req)))))
+
+(go-loop [data (<! ch-chsk)]
+  (spit "/home/lxsameer/tmpdata" (:event data) :append true))

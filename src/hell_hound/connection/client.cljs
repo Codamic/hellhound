@@ -9,33 +9,40 @@
    [taoensso.sente  :as sente :refer (cb-success?)]))
 
 
+(defonce handshake-ch (atom nil))
+(defonce recv-ch      (atom nil))
+(defonce send-fn!     (atom nil))
+(defonce state        (atom nil))
+(defonce router       (atom nil))
+
+
 (defn -router
   [{:as event-msg :keys [id event ?data]}]
-  (router event-msg))
+  (dispatcher event-msg))
 
 
-(defmulti router
+(defmulti dispatcher
   "A multimethod to dispatch and handle sente's events"
   :id)
 
-(defmethod router
+(defmethod dispatcher
   ; Default method is responsible for fallback and the situation
   ; which there is no handler matched
   :default
   [{:as event-msg :keys [event id]}]
   (js/console.warn (str "Missing handler for '" id "'. (Sente's event)")))
 
-(defmethod router :chsk/recv
+(defmethod dispatcher :chsk/recv
   [{:as event-msg :keys [event id ?data]}]
   (js/console.log (str "Re-frame event '" (first ?data) "' dispatched."))
   (re-frame/dispatch ?data))
 
-(defmethod router :chsk/handshake
+(defmethod dispatcher :chsk/handshake
   [{:as ev-msg :keys [?data]}]
   (let [[?uid ?csrf-token ?handshake-data] ?data]
     (js/console.log (str "Handshake: " ?data))))
 
-(defmethod router :chsk/state
+(defmethod dispatcher :chsk/state
   [{:as ev-msg :keys [?data]}]
   (let [[old-state-map new-state-map] (have vector? ?data)]
     (if (:first-open? new-state-map)
@@ -47,12 +54,14 @@
   "This function should be called in the `handler.cljs` file to
   dispatch the server events into client application."
   []
-  (let [{:keys [chsk ch-recv send-fn state]}
+  (let [{:as msg-map :keys [chsk ch-recv send-fn]}
         (sente/make-channel-socket! "/hellhound"
                                     {:type :auto
-                                     :packer :edn})]
-    {:chsk       chsk
-     :ch-chsk    ch-recv ; ChannelSocket's receive channel
-     :chsk-send! send-fn ; ChannelSocket's send API fn
-     :chsk-state state   ; Watchable, read-only atom
-     :router     (sente/start-client-chsk-router! ch-recv -router)}))
+                                     :packer :edn})
+        router_ (sente/start-client-chsk-router! ch-recv -router)]
+
+    (reset! handshake-ch chsk)
+    (reset! recv-ch      ch-recv)
+    (reset! send-fn!     send-fn)
+    (reset! state        (:state msg-map))
+    (reset! router       router_)))
