@@ -1,6 +1,5 @@
 (ns hell-hound.connection.server
   (:require [taoensso.sente :as sente]
-            [clojure.core.async :refer [go-loop <!]]
             [taoensso.sente.server-adapters.http-kit :refer (get-sch-adapter)]
             [compojure.core :as compojure :refer [GET POST]]))
 
@@ -36,5 +35,28 @@
                       (compojure/GET  "/" req (ring-handshake req))
                       (compojure/POST "/" req (ring-ajax-post req)))))
 
-(go-loop [data (<! ch-chsk)]
-  (spit "/home/lxsameer/tmpdata" (:event data) :append true))
+
+
+(defmulti -router
+  "Multimethod to handle Sente `event-msg`s"
+  :id ; Dispatch on event-id
+  )
+
+(defmethod -router
+   :default ; Default/fallback case (no other matching handler)
+  [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
+  (let [session (:session ring-req)
+        uid     (:uid     session)]
+    (println "Unhandled event: %s" event)
+    (when ?reply-fn
+      (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))
+
+(defmethod -router :sam/sam
+  [{:as ev-msg :keys [?data ?reply-fn event]}]
+  (spit "/home/lxsameer/tmpdata" event :append true))
+
+(defn router [{:as ev-msg :keys [id ?data event]}]
+  (-router ev-msg))
+
+
+(sente/start-server-chsk-router! ch-chsk router)

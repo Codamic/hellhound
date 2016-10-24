@@ -7,7 +7,10 @@
   (let [send @send-fn!]
     (if (nil? send)
       (println "Not connected to server.")
-      (do (send data 5000)))))
+      (do
+        (println "Sent to server")
+        (println data)
+        (send data 5000)))))
 
 (defn dispatch->server
   "Dispatch the given event to server side application."
