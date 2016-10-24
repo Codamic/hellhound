@@ -4,27 +4,24 @@
             [compojure.core :as compojure :refer [GET POST]]))
 
 
+(def ring-ajax-post  (atom nil))
+(def ring-handshake  (atom nil))
 
-(let [{:keys [ch-recv
-              send-fn
-              connected-uids
-              ajax-post-fn
-              ajax-get-or-ws-handshake-fn]}
-      (sente/make-channel-socket! (get-sch-adapter) {:packer :edn})]
+(def recv-ch
+  "An atom containing channelSocket's receive channel"
+  (atom nil))
 
-  (def ring-ajax-post  ajax-post-fn)
-  (def ring-handshake  ajax-get-or-ws-handshake-fn)
-
-  ; ChannelSocket's receive channel
-  (def ch-chsk         ch-recv)
-
-  ; ChannelSocket's send API fn
-  (def chsk-send!      send-fn)
-
-  ; Watchable, read-only atom
-  (def connected-uids  connected-uids))
+(def send-fn!
+  "An atom containing channelSocket's send API fn"
+  (atom nil))
 
 
+(def connected-uids
+  "Watchable, read-only atom"
+  nil)
+
+(def event-router
+  "An atom containing the current event router." nil)
 
 (defn routes
   "Routes macro allows developer to setup sente connection and urls easy
@@ -37,12 +34,12 @@
 
 
 
-(defmulti -router
+(defmulti router
   "Multimethod to handle Sente `event-msg`s"
   :id ; Dispatch on event-id
   )
 
-(defmethod -router
+(defmethod router
    :default ; Default/fallback case (no other matching handler)
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)
@@ -51,12 +48,35 @@
     (when ?reply-fn
       (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))
 
-(defmethod -router :sam/sam
+(defmethod router :sam/sam
   [{:as ev-msg :keys [?data ?reply-fn event]}]
   (spit "/home/lxsameer/tmpdata" event :append true))
 
-(defn router [{:as ev-msg :keys [id ?data event]}]
+(defn -router [{:as ev-msg :keys [id ?data event]}]
   (-router ev-msg))
 
 
-(sente/start-server-chsk-router! ch-chsk router)
+(defn initialize-event-router!
+  "Initialize the sente connection along side with
+  the event router. This function should be called
+  at the initialization level of the application or
+  start level of the component."
+  []
+  (let [{:keys [ch-recv send-fn connected-uids
+                ajax-post-fn ajax-get-or-ws-handshake-fn]}
+        (sente/make-channel-socket! (get-sch-adapter) {:packer :edn})]
+
+    (reset! ring-ajax-post  ajax-post-fn)
+    (reset! ring-handshake  ajax-get-or-ws-handshake-fn)
+    (reset! recv-ch         ch-recv)
+    (reset! send-fn!        send-fn)
+    (reset! connected-uids  connected-uids)
+    (reset! event-router    (sente/start-server-chsk-router! ch-recv -router))
+
+    ;; Returning a hashmap to be used in components.
+    {:ring-ajax-post  ring-ajax-post
+     :ring-handshake  ring-handshake
+     :recv-ch         recv-ch
+     :send-fn!        send-fn!
+     :connected-uids  connected-uids
+     :event-router    router}))
