@@ -1,6 +1,6 @@
-(ns hell-hound.core-test
+(ns hellhound.core-test
   (:require [clojure.test :refer :all]
-            [hell-hound.core :refer :all]))
+            [hellhound.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

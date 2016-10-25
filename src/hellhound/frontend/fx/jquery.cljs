@@ -1,4 +1,4 @@
-(ns hell-hound.frontend.fx.jquery
+(ns hellhound.frontend.fx.jquery
   "JQuery effect is responsible for the :jquery effect.
    The value of the effect should be as follow:
 

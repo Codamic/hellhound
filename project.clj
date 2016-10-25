@@ -1,8 +1,9 @@
-(defproject codamic/hell-hound "0.6.0-SNAPSHOT"
+(defproject codamic/hellhound "0.6.0-SNAPSHOT"
   :description "A simple full-stack web framework for clojure"
-  :url "http://github.com/Codamic/hell-hound"
+  :url "http://github.com/Codamic/hellhound"
   :license {:name "GPLv3"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+            :url "https://www.gnu.org/licenses/gpl.html"}
+
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [cljsjs/jquery "2.2.4-0"]
                  [compojure "1.5.0"]
@@ -26,11 +27,11 @@
              :clj {:codeina {:sources ["src"]
                              :reader :clojure
                              :target "doc/dist/latest/api"
-                             :src-uri "http://github.com/Codamic/hell-hound/blob/master/"
+                             :src-uri "http://github.com/Codamic/hellhound/blob/master/"
                              :src-uri-prefix "#L" }}
 
              :cljs {:codeina {:sources ["src"]
                               :reader :clojurescript
                               :target "doc/dist/latest/fontend/api"
-                              :src-uri "http://github.com/Codamic/hell-hound/blob/master/"
+                              :src-uri "http://github.com/Codamic/hellhound/blob/master/"
                               :src-uri-prefix "#L"}}})

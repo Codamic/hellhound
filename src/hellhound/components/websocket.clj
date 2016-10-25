@@ -1,6 +1,6 @@
-(ns hell-hound.components.websocket
+(ns hellhound.components.websocket
   (:require [com.stuartsierra.component :as component]
-            [hell-hound.connection.server :refer [initialize-event-router!]]))
+            [hellhound.connection.server :refer [initialize-event-router!]]))
 
 (defrecord WebSocket []
   component/Lifecycle

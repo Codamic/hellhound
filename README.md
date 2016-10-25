@@ -1,14 +1,19 @@
-# hell-hound
+# HellHound
 
-A Clojure library designed to ... well, that part is up to you.
+A full stack web framework for Clojure/script.
 
-## Usage
+Using **HellHound** you can develop a complete SPA web application using Clojure and
+ClojureScript.
 
-FIXME
+## Installation
+Add **HellHound** to your dependencies as follow:
+
+```clojure
+[codamic/hellhound "0.6.0-SNAPSHOT"]
+```
 
 ## License
 
-Copyright © 2016 FIXME
+Copyright © 2016 Codamic
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the GPL v3.

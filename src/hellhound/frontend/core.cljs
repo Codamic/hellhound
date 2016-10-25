@@ -1,5 +1,5 @@
-(ns hell-hound.frontend.core
-  (:require [hell-hound.connection.client :refer [send-fn!] ]))
+(ns hellhound.frontend.core
+  (:require [hellhound.connection.client :refer [send-fn!] ]))
 
 
 (defn- send-to-server

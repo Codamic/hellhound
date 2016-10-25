@@ -1,4 +1,4 @@
-(ns hell-hound.connection.server
+(ns hellhound.connection.server
   (:require [taoensso.sente :as sente]
             [taoensso.sente.server-adapters.http-kit :refer (get-sch-adapter)]
             [compojure.core :as compojure :refer [GET POST]]))

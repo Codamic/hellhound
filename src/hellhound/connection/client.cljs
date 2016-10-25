@@ -1,4 +1,4 @@
-(ns hell-hound.connection.client
+(ns hellhound.connection.client
   (:require-macros
    [cljs.core.async.macros :as asyncm :refer (go go-loop)])
 
