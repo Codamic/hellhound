@@ -50,7 +50,8 @@
 (defn- check-for-valid-values
   []
   (if (nil? @locale)
-    (throw (Exception. "Current locale is nil. You forgot to set it."))
+    (throw #?(:clj (Exception. "Current locale is nil. You forgot to set it.")
+              :cljs "Current locale is nil. You forgot to set it."))
     (do (if (nil? @options)
           (throw #?(:clj  (Exception. "Did you set the default dictionary for i18n system ?")
                     :cljs "Did you set the default dictionary for i18n system ?"))))))

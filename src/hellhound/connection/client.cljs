@@ -16,14 +16,13 @@
 (defonce router       (atom nil))
 
 
-(defn -router
-  [{:as event-msg :keys [id event ?data]}]
-  (dispatcher event-msg))
-
-
 (defmulti dispatcher
   "A multimethod to dispatch and handle sente's events"
   :id)
+
+(defn -router
+  [{:as event-msg :keys [id event ?data]}]
+  (dispatcher event-msg))
 
 (defmethod dispatcher
   ; Default method is responsible for fallback and the situation
