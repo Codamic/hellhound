@@ -9,12 +9,12 @@
                  [http-kit                   "2.1.18"]
                  [re-frame                   "0.8.0"]
                  [secretary                  "1.2.3"]
-                 [adzerk/boot-cljs           "1.7.228-2" :scope "test"]
-                 [binaryage/devtools         "0.8.2"     :scope "test"]
                  [com.stuartsierra/component "0.3.1"]
                  [com.taoensso/tempura       "1.0.0-RC3"]
                  [com.taoensso/sente         "1.11.0"]
-                                  [adzerk/boot-cljs           "1.7.228-2" :scope "test"]
+
+
+                 [adzerk/boot-cljs           "1.7.228-2" :scope "test"]
                  [deraen/boot-less           "0.6.0"     :scope "test"]
                  [deraen/boot-sass           "0.3.0"     :scope "test"]
                  [binaryage/devtools         "0.8.2"     :scope "test"]
@@ -32,7 +32,7 @@
 
 (task-options!
  pom {:project 'codamic/hellhound
-      :version "0.7.0-SNAPSHOT"}
+      :version "0.8.0-SNAPSHOT"}
  jar {:manifest {"Description" "A simple full-stack web framework for clojure"
                  "Url" "http://github.com/Codamic/hellhound"}})
 
