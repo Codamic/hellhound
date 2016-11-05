@@ -71,7 +71,7 @@
     (reset! recv-ch         ch-recv)
     (reset! send-fn!        send-fn)
     (reset! connected-uids  connected-uids)
-    (reset! event-router    (sente/start-server-chsk-router! ch-recv -router))
+    (def    event-router    (sente/start-server-chsk-router! ch-recv -router))
 
     ;; Returning a hashmap to be used in components.
     {:ring-ajax-post  ring-ajax-post
