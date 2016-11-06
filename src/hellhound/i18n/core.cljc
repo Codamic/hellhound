@@ -1,5 +1,6 @@
 (ns hellhound.i18n.core
-  "I18n features of HellHound is based on [tempura](https://github.com/ptaoussanis/tempura)
+
+  "I18n features of HellHound is based on [tempura](https://github.com/ptaoussanis/tempura
   The `initialize-i18n` function should be called at the beginning of the
   application in order to set the default configuration and dictionary.
 
@@ -41,7 +42,9 @@
   ```
 
   "
+
   (:require [taoensso.tempura :as tempura :refer [tr]]))
+
 
 
 (def ^:private locale  (atom nil))

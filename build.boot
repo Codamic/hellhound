@@ -1,6 +1,6 @@
 (set-env!
  :resource-paths #{"src"}
- :dependencies '[[org.clojure/clojure        "1.8.0"]
+ :dependencies '[[org.clojure/clojure        "1.9.0-alpha14"]
                  [cljsjs/jquery              "2.2.4-0"]
                  [compojure                  "1.5.0"]
                  [reagent                    "0.6.0"]
@@ -27,33 +27,67 @@
                  [weasel                     "0.7.0"          :scope "test"]
                  [org.clojure/tools.nrepl    "0.2.12"         :scope "test"]
                  ;; ---------------------------------------------------
-                 [funcool/boot-codeina       "0.1.0-SNAPSHOT" :scope "test"]])
+                 [funcool/codeina            "0.5.0"          :scope "test"]
+                 [codamic/boot-codeina       "0.2.0-SNAPSHOT" :scope "test"]])
+
+
+(require '[funcool.boot-codeina :refer [apidoc]]
+         '[taoensso.sente])
 
 (def VERSION       "0.8.0-SNAPSHOT")
 (def DESCRIPTION   "A simple full-stack web framework for clojure")
+
+
 (task-options!
  pom {:project     'codamic/hellhound
       :version     VERSION
       :description DESCRIPTION
       :license     {:name "GPLv3"
                     :url  "https://www.gnu.org/licenses/gpl.html"}
-      :url         "http://github.com/Codamic/hellhound"}
+      :url         "http://github.com/Codamic/hellhound"
+      :scm         {:url "https://github.com/Codamic/hellhound"}}
 
  jar {:manifest    {"Description" DESCRIPTION
                     "Url"         "http://github.com/Codamic/hellhound"}}
 
- apidoc            {:version VERSION
-                    :title   "HellHound"
-                    :sources #{"src"}
-                    :format  :markdown
-                    :target  "doc"
-                    :description DESCRIPTION})
+ apidoc            {:version     VERSION
+                    :title       "HellHound"
+                    :sources     #{"src"}
+                    :reader      :clojure
+                    :target      "doc/api/clj"
+                    :description DESCRIPTION}
+ push              {:repo "clojars"})
 
-(require '[funcool.boot-codeina :refer :all])
+
+(deftask cljs-docs
+  "Create the documents for cljs parts."
+  []
+  (apidoc :reader :clojurescript :target "doc/api/cljs"))
+
+(deftask clj-docs
+  "Create the documents for clj parts."
+  []
+  (apidoc))
+
+(deftask docs
+  "Create all the docs."
+  []
+  (comp
+   (speak)
+   (cljs-docs)
+   (clj-docs)))
 
 (deftask build
   "Build and install the hellhound"
   []
   (comp (pom) (jar) (install)))
 
-(require '[adzerk.boot-cljs :refer [cljs]])
+(deftask release
+  "Build and release the snapshot version of hellhound"
+  []
+  (comp (pom) (jar) (push)))
+
+;; (deftask release-snapshot
+;;   "Build and release the snapshot version of hellhound"
+;;   []
+;;   (comp (pom) (jar) (push-snapshot)))
