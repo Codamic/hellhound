@@ -42,8 +42,8 @@
  pom {:project     'codamic/hellhound
       :version     VERSION
       :description DESCRIPTION
-      :license     {:name "GPLv3"
-                    :url  "https://www.gnu.org/licenses/gpl.html"}
+      :license     {"GPLv3"
+                    "https://www.gnu.org/licenses/gpl.html"}
       :url         "http://github.com/Codamic/hellhound"
       :scm         {:url "https://github.com/Codamic/hellhound"}}
 
