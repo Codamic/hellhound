@@ -6,6 +6,7 @@
                  [reagent                    "0.6.0"]
                  [ring                       "1.5.0"]
                  [ring/ring-anti-forgery     "1.0.1"]
+                 [ring/ring-defaults         "0.3.0-beta1"]
                  [http-kit                   "2.1.18"]
                  [re-frame                   "0.8.0"]
                  [secretary                  "1.2.3"]
