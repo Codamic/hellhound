@@ -1,5 +1,5 @@
 (ns hellhound.connection.server
-  (:require [hellhound.system :refer [system]]
+  (:require [hellhound.system :refer [get-system]]
             [compojure.core :as compojure :refer [GET POST]]))
 
 
@@ -9,8 +9,8 @@
   []
   (compojure/routes
    (compojure/context "/hellhound" []
-                      (compojure/GET  "/" req (fn [req] (println "--------------") (println system) ((:ring-ajax-get-or-ws-handshake (:websocket system))) req))
-                      (compojure/POST "/" req (fn [req] ((:ring-ajax-post (:websocket system))) req)))))
+                      (compojure/GET  "/" req ((:ring-ajax-get-or-ws-handshake (:websocket (get-system))) req))
+                      (compojure/POST "/" req ((:ring-ajax-post (:websocket (get-system)))) req))))
 
 
 
