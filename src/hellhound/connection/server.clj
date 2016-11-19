@@ -29,8 +29,8 @@
   []
   (compojure/routes
    (compojure/context "/hellhound" []
-                      (compojure/GET  "/" req (ring-handshake req))
-                      (compojure/POST "/" req (ring-ajax-post req)))))
+                      (compojure/GET  "/" req (@ring-handshake req))
+                      (compojure/POST "/" req (@ring-ajax-post req)))))
 
 
 
