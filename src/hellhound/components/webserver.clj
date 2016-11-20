@@ -1,6 +1,8 @@
 (ns hellhound.components.webserver
-  "Hellhound webserver component namespace. Using `webserver` function
-  alongside with `hellhound.system.defsystem` macro you can define a
+  "Hellhound webserver component namespace. Webserver component is
+  responsible for running a `http-kit` webserver and setting up a
+  `compojure` ring handler. In order to run a webserver use `webserver`
+  function  alongside with `hellhound.system.defsystem` macro you can define a
   system with webserver component in it. But if you want to define your
   own system map you can use `make-webserver` function and do it like
   you used to do."
