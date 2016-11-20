@@ -14,6 +14,9 @@
                  [com.taoensso/tempura       "1.0.0-RC3"]
                  [com.taoensso/sente         "1.11.0"]
                  [org.danielsz/system        "0.3.2-SNAPSHOT"]
+                 [environ                    "1.1.0"]
+                 [boot-environ               "1.1.0"]
+
 
                  [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
                  [deraen/boot-less           "0.6.0"          :scope "test"]
@@ -35,7 +38,7 @@
 (require '[funcool.boot-codeina :refer [apidoc]]
          '[taoensso.sente])
 
-(def VERSION       "0.8.0-SNAPSHOT")
+(def VERSION       "0.9.0-SNAPSHOT")
 (def DESCRIPTION   "A simple full-stack web framework for clojure")
 
 
