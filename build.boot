@@ -2,7 +2,7 @@
  :resource-paths #{"src"}
  :dependencies '[[org.clojure/clojure        "1.9.0-alpha14"]
                  [cljsjs/jquery              "2.2.4-0"]
-                 [compojure                  "1.5.0"]
+                 [bidi                       "2.0.14"]
                  [reagent                    "0.6.0"]
                  [ring                       "1.5.0"]
                  [ring/ring-anti-forgery     "1.0.1"]
@@ -38,7 +38,7 @@
 (require '[funcool.boot-codeina :refer [apidoc]]
          '[taoensso.sente])
 
-(def VERSION       "0.10.0-SNAPSHOT")
+(def VERSION       "0.11.0-SNAPSHOT")
 (def DESCRIPTION   "A simple full-stack web framework for clojure")
 
 

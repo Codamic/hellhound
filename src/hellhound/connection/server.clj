@@ -1,6 +1,6 @@
 (ns hellhound.connection.server
   (:require [hellhound.system :refer [get-system]]
-            [compojure.core :as compojure :refer [GET POST]]))
+            [hellhound.routes.core :refer [get_ POST]]))
 
 (defn- websocket
   []
@@ -10,11 +10,9 @@
   "Routes macro allows developer to setup sente connection and urls easy
   and painlessly."
   []
-  (compojure/routes
-   (compojure/context
-    "/hellhound" []
-    (compojure/GET  "/" req ((:ring-ajax-get-or-ws-handshake (websocket)) req))
-    (compojure/POST "/" req ((:ring-ajax-post (websocket))) req))))
+  ["/hellhound"
+   (get_  "/" (fn [req] (:ring-ajax-get-or-ws-handshake (websocket)) req))
+   (POST "/" (fn [req] (:ring-ajax-post (websocket)) req))])
 
 
 (defmulti router
