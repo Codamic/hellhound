@@ -17,6 +17,7 @@
                  [environ                    "1.1.0"]
                  [boot-environ               "1.1.0"]
                  [com.cemerick/friend        "0.2.3"]
+                 [ring-logger                "0.7.6"]
 
                  [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
                  [deraen/boot-less           "0.6.0"          :scope "test"]
@@ -38,7 +39,7 @@
 (require '[funcool.boot-codeina :refer [apidoc]]
          '[taoensso.sente])
 
-(def VERSION       "0.11.0-SNAPSHOT")
+(def VERSION       "0.12.0-SNAPSHOT")
 (def DESCRIPTION   "A simple full-stack web framework for clojure")
 
 
