@@ -1,18 +1,6 @@
 (ns hellhound.connection.server
-  (:require [hellhound.system :refer [get-system]]
-            [hellhound.routes.core :refer [get_ POST]]))
+  (:require [hellhound.system :refer [get-system]]))
 
-(defn- websocket
-  []
-  (:websocket (get-system)))
-
-(defn routes
-  "Routes macro allows developer to setup sente connection and urls easy
-  and painlessly."
-  []
-  ["/hellhound"
-   (get_  "/" (fn [req] (:ring-ajax-get-or-ws-handshake (websocket)) req))
-   (POST "/" (fn [req] (:ring-ajax-post (websocket)) req))])
 
 
 (defmulti router

@@ -22,7 +22,7 @@
   []
   (core/set-env! :source-paths #(conj % "src/js/prod"))
   (core/task-options!
-   cljs   {:optimizations :advanced}
+   cljs   {:optimizations :advanced :compression true}
    less   {:compression true}
    ;reload {:on-jsload 'sd.app/init}
    sass   {:compression true})
