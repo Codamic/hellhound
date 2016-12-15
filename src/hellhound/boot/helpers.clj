@@ -47,9 +47,9 @@
   "Run the application for respected environment. e.g boot dev run"
   []
   (comp (speak)
+        (watch)
         (sass)
         (less)
-        (watch)
         (reload)
         (cljs-repl)
         (cljs)
