@@ -1,21 +1,56 @@
 (ns hellhound.components.webserver
   "Hellhound webserver component namespace. Webserver component is
-  responsible for running a `http-kit` webserver and setting up a
-  `compojure` ring handler. In order to run a webserver use `webserver`
+  responsible for running an `Immutant` webserver and setting up a
+  `bidi` ring handler. In order to run a webserver use `webserver`
   function  alongside with `hellhound.system.defsystem` macro you can define a
   system with webserver component in it. But if you want to define your
   own system map you can use `make-webserver` function and do it like
   you used to do."
-  (:require [ring.middleware.defaults :refer [site-defaults]]
-            [environ.core :refer [env]]
-            (system.components
-             [http-kit :refer [new-web-server]])))
+  (:require [ring.middleware.defaults   :refer [site-defaults]]
+            [com.stuartsierra.component :as component]
+            [environ.core               :refer [env]]
+            [immutant.web               :as web]))
 
 
 
 (defn- http-port
   []
-  (Integer. (env :http-port)))
+  (or (Integer. (env :http-port)) 4000))
+
+(defn- http-host
+  []
+  (or (env :http-host) "0.0.0.0"))
+
+
+(defrecord Webserver [handler host port]
+  component/Lifecycle
+
+  (start [component]
+    (if-not (:server component)
+      (let [config {:host host :port port}
+            server (do (-> (str "Starting web server. Listening on host: %s "
+                                "and port: %d")
+                           (format host port)
+                           (println))
+
+                       (web/run handler config))]
+        (assoc component
+               :server server
+               :host   host
+               :port   port))
+      component))
+
+  (stop [component]
+    (if-let [server (:server component)]
+      (do (-> (str "Stopping web server on host: %s and port: %d")
+              (format (:host component) (:port component))
+              (println))
+          (web/stop server)
+          (dissoc component :server))
+      component)))
+
+
+
 
 (defn ring-handler
   "Create a ring handler from the given routs. This function
@@ -34,13 +69,18 @@
 
 
 (defn make-webserver
-  "Creat and launch an `http-kit` server."
+  "Creat and launch an `immutant` server."
   ([routes]
-   (make-webserver 4000 {}))
-  ([routes port]
-   (make-webserver port {}))
-  ([routes port handler-options]
-   (new-web-server port (ring-handler routes handler-options))))
+   (make-webserver routes 4000 {}))
+
+  ([routes host]
+   (make-webserver routes host 4000 {}))
+
+  ([routes host port]
+   (make-webserver routes host port {}))
+
+  ([routes host port handler-options]
+   (->Webserver (ring-handler routes handler-options) host port)))
 
 
 (defn webserver
@@ -51,4 +91,4 @@
 
   ([system-map routes handler-options]
    (assoc-in system-map [:webserver]
-             (make-webserver routes (http-port) handler-options))))
+             (make-webserver routes (http-host) (http-port) handler-options))))

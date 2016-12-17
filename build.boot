@@ -7,7 +7,6 @@
                  [ring                       "1.5.0"]
                  [ring/ring-anti-forgery     "1.0.1"]
                  [ring/ring-defaults         "0.3.0-beta1"]
-                 [http-kit                   "2.1.18"]
                  [re-frame                   "0.8.0"]
                  [secretary                  "1.2.3"]
                  [com.stuartsierra/component "0.3.1"]
@@ -19,13 +18,18 @@
                  [com.cemerick/friend        "0.2.3"]
                  [ring-logger                "0.7.6"]
 
+                 [org.immutant/web           "2.1.5"]
+                 [org.immutant/caching       "2.1.5"]
+                 [org.immutant/messaging     "2.1.5"]
+                 [org.immutant/scheduling    "2.1.5"]
+                 [org.immutant/transactions  "2.1.5"]
+
                  [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
                  [deraen/boot-less           "0.6.0"          :scope "test"]
                  [deraen/boot-sass           "0.3.0"          :scope "test"]
                  [binaryage/devtools         "0.8.2"          :scope "test"]
 
                  [adzerk/boot-reload         "0.4.13"         :scope "test"]
-
                  ;; Cljs repl dependencies ----------------------------
                  [adzerk/boot-cljs-repl      "0.3.3"          :scope "test"]
                  [com.cemerick/piggieback    "0.2.1"          :scope "test"]
