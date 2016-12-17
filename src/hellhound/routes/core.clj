@@ -7,7 +7,8 @@
   [documents](https://github.com/juxt/bidi)."
   (:require [bidi.bidi        :refer [match-route path-for] :as bidi]
             [hellhound.system :refer [get-system]]
-            [bidi.ring        :as biring]))
+            [bidi.ring        :as biring]
+            [taoensso.timbre  :as log]))
 
 
 (def __routes__ (atom nil))
@@ -20,8 +21,8 @@
 (defn hellhound-routes
   []
   {"hellhound"
-   {:get  {"" (fn [req] ((:ring-ajax-get-or-ws-handshake (websocket)) req))}
-    :post {"" (fn [req] ((:ring-ajax-post (websocket)) req))}}})
+   {:get  {"" (fn [req]  ((:ring-ajax-get-or-ws-handshake (websocket)) req))}
+    :post {"" (fn [req]  ((:ring-ajax-post (websocket)) req))}}})
 
 
 (defn make-handler

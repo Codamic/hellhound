@@ -8,7 +8,7 @@
             [com.stuartsierra.component              :as component]
             [taoensso.sente :as sente]
             ;[taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]
-            [taoensso.sente.server-adapters.http-kit :refer [get-sch-adapter]]))
+            [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
 
 
 

@@ -17,12 +17,11 @@
                  [boot-environ               "1.1.0"]
                  [com.cemerick/friend        "0.2.3"]
                  [ring-logger                "0.7.6"]
+                 [com.taoensso/timbre        "4.7.4"]
+                 [org.immutant/immutant      "2.1.5"
+                  :exclusions [ch.qos.logback/logback-classic]]
+                 [com.fzakaria/slf4j-timbre  "0.3.2"]
 
-                 [org.immutant/web           "2.1.5"]
-                 [org.immutant/caching       "2.1.5"]
-                 [org.immutant/messaging     "2.1.5"]
-                 [org.immutant/scheduling    "2.1.5"]
-                 [org.immutant/transactions  "2.1.5"]
 
                  [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
                  [deraen/boot-less           "0.6.0"          :scope "test"]

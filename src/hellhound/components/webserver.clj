@@ -8,6 +8,7 @@
   you used to do."
   (:require [ring.middleware.defaults   :refer [site-defaults]]
             [com.stuartsierra.component :as component]
+            [taoensso.timbre           :as log]
             [environ.core               :refer [env]]
             [immutant.web               :as web]))
 
@@ -27,12 +28,11 @@
 
   (start [component]
     (if-not (:server component)
-      (let [config {:host host :port port}
+      (let [config {:host host :port port :path "/"}
             server (do (-> (str "Starting web server. Listening on host: %s "
                                 "and port: %d")
                            (format host port)
-                           (println))
-
+                           (log/info))
                        (web/run handler config))]
         (assoc component
                :server server
@@ -82,6 +82,7 @@
   ([routes host port handler-options]
    (->Webserver (ring-handler routes handler-options) host port)))
 
+;;
 
 (defn webserver
   "Create a webserver instance from the webserver components.
