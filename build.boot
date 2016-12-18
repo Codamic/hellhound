@@ -23,6 +23,8 @@
                  [com.fzakaria/slf4j-timbre  "0.3.2"]
 
 
+                 [colorize                   "0.1.1"]
+                 [potemkin                   "0.4.3"]
                  [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
                  [deraen/boot-less           "0.6.0"          :scope "test"]
                  [deraen/boot-sass           "0.3.0"          :scope "test"]
