@@ -16,7 +16,7 @@
 
 (defn- http-port
   []
-  (or (Integer. (env :http-port)) 4000))
+  (Integer. (or (env :http-port)  "4000")))
 
 (defn- http-host
   []

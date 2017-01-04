@@ -5,7 +5,6 @@
                  [bidi                       "2.0.14"]
                  [reagent                    "0.6.0"]
                  [ring                       "1.5.0"]
-                 [ring/ring-anti-forgery     "1.0.1"]
                  [ring/ring-defaults         "0.3.0-beta1"]
                  [re-frame                   "0.8.0"]
                  [secretary                  "1.2.3"]
@@ -23,8 +22,11 @@
                  [com.fzakaria/slf4j-timbre  "0.3.2"]
 
 
-                 [colorize                   "0.1.1"]
                  [potemkin                   "0.4.3"]
+                 [colorize                   "0.1.1"
+                  :exclusions [org.clojure/clojure]]
+                 [ring/ring-anti-forgery     "1.1.0-beta1"]
+
                  [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
                  [deraen/boot-less           "0.6.0"          :scope "test"]
                  [deraen/boot-sass           "0.3.0"          :scope "test"]
