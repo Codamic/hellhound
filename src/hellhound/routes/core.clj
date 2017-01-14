@@ -8,6 +8,7 @@
   (:require [bidi.bidi        :refer [match-route path-for] :as bidi]
             [hellhound.system :refer [get-system]]
             [bidi.ring        :as biring]
+            [clojure.pprint   :refer [pprint]]
             [taoensso.timbre  :as log]))
 
 
@@ -20,7 +21,8 @@
 (defn route-table
   "Return the current route table. Use this function for debuggin purposes."
   []
-  @__routes__)
+
+   @__routes__)
 
 (defn not-found
   "Default route for bidi. This means that a route that does not
@@ -29,7 +31,11 @@
   ;; TODO: We should provide a better view of routes here
   {:status 404
    :headers {"Content-Type" "text/html"}
-   :body (clojure.string/replace (route-table) "\n" "<br />")})
+   :body (str "<pre>"
+              (clojure.string/replace (with-out-str
+                                        (pprint (route-table)))
+                                      "\n" "<br />")
+              "</pre>")})
 
 
 (defn hellhound-routes
@@ -55,15 +61,3 @@
 (defn redirect-to-not-found
   []
   [true not-found])
-
-(defn make-route
-  "Create data sctructure that represents a `bidi` route."
-  ([method url func]
-   (make-route method url func {}))
-
-  ([method url func options]
-   (let [{:keys [tag]} options
-         handler (if (nil? tag)
-                   func
-                   (bidi/tag func tag))]
-     {method [url handler]})))
