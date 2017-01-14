@@ -1,6 +1,6 @@
 (ns hellhound.system
   "A thin wrapper layer on top of `danielsz/system`."
-  (:require [system.repl :refer [system]]
+  (:require [system.repl :refer [system stop]]
             [com.stuartsierra.component :refer [system-map]]))
 
 (defn get-system
@@ -14,3 +14,8 @@
 (defmacro defsystem
   [name & body]
   `(defn ~name [] (-> (system-map) ~@body)))
+
+
+(defn stop-system
+  []
+  (stop))

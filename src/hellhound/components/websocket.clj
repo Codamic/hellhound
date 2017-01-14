@@ -5,6 +5,7 @@
   `hellhound.system.defsystem` macro or use the `make-websocket` with a
   traditional system map."
   (:require [hellhound.connection.server             :refer [event-router]]
+            [hellhound.system                        :refer [get-system]]
             [com.stuartsierra.component              :as component]
             [taoensso.sente :as sente]
             ;[taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]
@@ -12,7 +13,10 @@
 
 
 
-
+(defn send-to-all
+  [event]
+  (let [func (:chsk-send! (:websocket (get-system)))]
+    (func :sente/all-users-without-uid event)))
 
 (defrecord WebSocketServer [ring-ajax-post ring-ajax-get-or-ws-handshake
                             ch-chsk chsk-send! connected-uids router

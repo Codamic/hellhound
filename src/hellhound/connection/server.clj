@@ -1,5 +1,6 @@
 (ns hellhound.connection.server
-  (:require [hellhound.system :refer [get-system]]))
+  (:require [hellhound.system :refer [get-system]]
+            [hellhound.logger.core :as logger]))
 
 
 
@@ -13,7 +14,7 @@
   [{:as ev-msg :keys [event id ?data ring-req ?reply-fn send-fn]}]
   (let [session (:session ring-req)
         uid     (:uid     session)]
-    (println "Unhandled event: " event)
+    (logger/warn (str "Unhandled event: " event))
     (when ?reply-fn
       (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))
 
