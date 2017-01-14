@@ -14,7 +14,9 @@
 
 
 
-(defrecord WebSocketServer [ring-ajax-post ring-ajax-get-or-ws-handshake ch-chsk chsk-send! connected-uids router web-server-adapter handler options]
+(defrecord WebSocketServer [ring-ajax-post ring-ajax-get-or-ws-handshake
+                            ch-chsk chsk-send! connected-uids router
+                            web-server-adapter handler options]
   component/Lifecycle
   (start [component]
     (let [handler (get-in component [:sente-handler :handler] handler)
