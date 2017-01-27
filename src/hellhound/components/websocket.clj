@@ -7,7 +7,9 @@
   (:require [hellhound.connection.server             :refer [event-router]]
             [hellhound.system                        :refer [get-system]]
             [com.stuartsierra.component              :as component]
-            [taoensso.sente :as sente]
+            [taoensso.sente                          :as sente]
+            [taoensso.encore :as enc :refer (swap-in! reset-in! swapped have have! have?)]
+            [taoensso.sente.interfaces :as interfaces]
             ;[taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]
             [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
 
@@ -18,29 +20,30 @@
   (let [func (:chsk-send! (:websocket (get-system)))]
     (func :sente/all-users-without-uid event)))
 
-(defrecord WebSocketServer [ring-ajax-post ring-ajax-get-or-ws-handshake
-                            ch-chsk chsk-send! connected-uids router
-                            web-server-adapter handler options]
+(defrecord WebSocketServer [web-server-adapter handler options adapter]
   component/Lifecycle
   (start [component]
-    (let [handler (get-in component [:sente-handler :handler] handler)
-          {:keys [ch-recv send-fn ajax-post-fn ajax-get-or-ws-handshake-fn connected-uids]}
-          (sente/make-channel-socket-server! web-server-adapter options)
+    (let [{:keys [ch-recv send-fn ajax-post-fn ajax-get-or-ws-handshake-fn connected-uids]}
+          (sente/make-channel-socket-server! adapter  options) ;;web-server-adapter
           component (assoc component
-                           :ring-ajax-post ajax-post-fn
+                           :ring-ajax-post                ajax-post-fn
                            :ring-ajax-get-or-ws-handshake ajax-get-or-ws-handshake-fn
-                           :ch-chsk ch-recv
-                           :chsk-send! send-fn
-                           :connected-uids connected-uids)]
+                           :ch-chsk                       ch-recv
+                           :chsk-send!                    send-fn
+                           :adapter                       adapter
+                           :connected-uids                connected-uids)]
+
       (assoc component
              :router (sente/start-chsk-router!
                       ch-recv (if (:wrap-component? options)
                                 (handler component)
                                 handler)))))
   (stop [component]
-    (if-let [stop-f router]
-      (assoc component :router (stop-f))
-      component)))
+    (let [router (:router component)]
+      (if (not (nil? router))
+        (do
+          (router)
+          (assoc component :router nil))))))
 
 
 
@@ -51,8 +54,9 @@
    (new-channel-socket-server event-msg-handler web-server-adapter {}))
   ([event-msg-handler web-server-adapter options]
    (map->WebSocketServer {:web-server-adapter web-server-adapter
-                              :handler event-msg-handler
-                              :options options})))
+                          :handler event-msg-handler
+                          :options options
+                          :adapter (get-sch-adapter)})))
 
 
 (defn make-websocket
