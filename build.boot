@@ -1,5 +1,8 @@
 (set-env!
  :resource-paths #{"src"}
+ :checkouts '[;[cljsjs/grommet                "1.1.0-0"]
+              [codamic/sente                 "1.11.1"]]
+
  :dependencies '[[org.clojure/clojure        "1.9.0-alpha14"]
                  [cljsjs/jquery              "2.2.4-0"]
                  [bidi                       "2.0.14"]
@@ -10,7 +13,7 @@
                  [secretary                  "1.2.3"]
                  [com.stuartsierra/component "0.3.1"]
                  [com.taoensso/tempura       "1.0.0-RC3"]
-                 [com.taoensso/sente         "1.11.0"]
+                 [codamic/sente              "1.11.1"]
                  [com.taoensso/timbre        "4.7.4"]
                  [org.danielsz/system        "0.3.2-SNAPSHOT"]
                  [environ                    "1.1.0"]
