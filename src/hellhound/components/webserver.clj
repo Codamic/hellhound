@@ -35,19 +35,20 @@
                            (log/info))
                        (web/run handler config))]
         (assoc component
-               :server server
-               :host   host
-               :port   port))
+               :server  server
+               :host    host
+               :handler handler
+               :config  config
+               :port    port))
       component))
 
   (stop [component]
-    (if-let [server (:server component)]
-      (do (-> (str "Stopping web server on host: %s and port: %d")
-              (format (:host component) (:port component))
-              (println))
-          (web/stop server)
-          (dissoc component :server))
-      component)))
+    (let [server (:server component)]
+      (-> (str "Stopping web server on host: %s and port: %d")
+          (format (:host component) (:port component))
+          (println))
+      (web/stop server)
+      (dissoc component :server))))
 
 
 
