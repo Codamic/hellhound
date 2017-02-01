@@ -1,4 +1,4 @@
-(ns hellhound.connection.server
+(ns hellhound.connection
   (:require [hellhound.system :refer [get-system]]
             [hellhound.logger.core :as logger]))
 
@@ -24,3 +24,11 @@
 
 (defn event-router [{:as ev-msg :keys [id ?data event]}]
   (router ev-msg))
+
+
+
+(defn send-to-all
+  "Send the given event to all the connected users."
+  [event]
+  (let [func (:chsk-send! (:websocket (get-system)))]
+    (func :sente/all-users-without-uid event)))

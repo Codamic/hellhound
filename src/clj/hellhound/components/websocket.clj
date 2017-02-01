@@ -4,63 +4,16 @@
   have to do is, either use `websocket-server` function with
   `hellhound.system.defsystem` macro or use the `make-websocket` with a
   traditional system map."
-  (:require [hellhound.connection.server             :refer [event-router]]
+  (:require [hellhound.connection                   :refer [event-router]]
             [hellhound.system                        :refer [get-system]]
             [com.stuartsierra.component              :as component]
             [taoensso.sente                          :as sente]
             [taoensso.sente.interfaces               :as interfaces]
-            [taoensso.encore :as enc :refer (swap-in! reset-in! swapped have have! have?)]
-            [taoensso.sente.interfaces :as interfaces]
-            ;[taoensso.sente.server-adapters.http-kit :refer (sente-web-server-adapter)]
             [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
-
-
-
-(defn send-to-all
-  [event]
-  (let [func (:chsk-send! (:websocket (get-system)))]
-    (func :sente/all-users-without-uid event)))
-
-(defn- super-chain [^Class c]
-  (when c
-    (cons c (super-chain (.getSuperclass c)))))
-
-(defn- pref
-  ([] nil)
-  ([a] a)
-  ([^Class a ^Class b]
-   (if (.isAssignableFrom a b) b a)))
-
-(defn ff [protocol x]
-  (println (str "T1: " (instance? (:on-interface protocol) x)))
-
-  (if (instance? (:on-interface protocol) x)
-    x
-    (let [c (class x)
-          impl #(get (:impls protocol) %)]
-      (println (str "T2: " c))
-      (println (str "T3: " (impl c)))
-      (println (str "T4: " (first (remove nil? (map impl (butlast (super-chain c)))))))
-      (println (str "T5: " (when-let [t (reduce pref (filter impl (disj (supers c) Object)))]
-                             (impl t))))
-      (println (str "T6: " (impl Object)))
-
-      (or (impl c)
-          (and c (or (first (remove nil? (map impl (butlast (super-chain c)))))
-                     (when-let [t (reduce pref (filter impl (disj (supers c) Object)))]
-                       (impl t))
-                     (impl Object)))))))
-(defn s?
-  "Returns true if x satisfies the protocol"
-  [protocol x]
-  (boolean (ff protocol x)))
-
 
 (defrecord WebSocketServer [web-server-adapter handler options adapter]
   component/Lifecycle
   (start [component]
-    (println "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
-    (println (s? interfaces/IServerChanAdapter adapter))
     (let [{:keys [ch-recv send-fn ajax-post-fn ajax-get-or-ws-handshake-fn connected-uids]}
           (sente/make-channel-socket-server! adapter  options) ;;web-server-adapter
           component (assoc component

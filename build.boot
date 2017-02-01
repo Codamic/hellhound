@@ -6,6 +6,7 @@
               [codamic/sente                 "1.11.1"]]
 
  :dependencies '[[org.clojure/clojure        "1.9.0-alpha14"]
+                 [org.clojure/clojurescript  "RELEASE"]
                  [cljsjs/jquery              "2.2.4-0"]
                  [bidi                       "2.0.14"]
                  [reagent                    "0.6.0"]
@@ -25,19 +26,11 @@
                  [org.immutant/immutant      "2.1.5"
                   :exclusions [ch.qos.logback/logback-classic]]
                  [com.fzakaria/slf4j-timbre  "0.3.2"]
-
-
                  [potemkin                   "0.4.3"]
                  [colorize                   "0.1.1"
                   :exclusions [org.clojure/clojure]]
                  [ring/ring-anti-forgery     "1.1.0-beta1"]
 
-                 [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
-                 [deraen/boot-less           "0.6.0"          :scope "test"]
-                 [deraen/boot-sass           "0.3.0"          :scope "test"]
-                 [binaryage/devtools         "0.8.2"          :scope "test"]
-
-                 [adzerk/boot-reload         "0.4.13"         :scope "test"]
                  ;; Cljs repl dependencies ----------------------------
                  [adzerk/boot-cljs-repl      "0.3.3"          :scope "test"]
                  [com.cemerick/piggieback    "0.2.1"          :scope "test"]
