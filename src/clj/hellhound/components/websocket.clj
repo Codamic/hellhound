@@ -7,8 +7,8 @@
   (:require [hellhound.connection                   :refer [event-router]]
             [hellhound.system                        :refer [get-system]]
             [com.stuartsierra.component              :as component]
+            [taoensso.sente.packers.transit          :as sente-transit]
             [taoensso.sente                          :as sente]
-            [taoensso.sente.interfaces               :as interfaces]
             [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
 
 (defrecord WebSocketServer [web-server-adapter handler options adapter]
@@ -48,6 +48,7 @@
    (map->WebSocketServer {:web-server-adapter web-server-adapter
                           :handler event-msg-handler
                           :options options
+                          :packer  (sente-transit/get-transit-packer)
                           :adapter (get-sch-adapter)})))
 
 

@@ -8,6 +8,7 @@
    [re-frame.core   :as re-frame]
    [taoensso.encore :as encore :refer-macros (have have?)]
    [cljs.core.async :as async :refer (<! >! put! chan)]
+   [taoensso.sente.packers.transit :as sente-transit]
    [taoensso.sente  :as sente :refer (cb-success?)]))
 
 
@@ -60,7 +61,7 @@
   (let [{:as msg-map :keys [chsk ch-recv send-fn]}
         (sente/make-channel-socket! "/hellhound"
                                     {:type :auto
-                                     :packer :edn})
+                                     :packer (sente-transit/get-transit-packer)})
         router_ (sente/start-client-chsk-router! ch-recv -router)]
 
     (reset! handshake-ch chsk)

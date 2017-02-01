@@ -27,6 +27,8 @@
                   :exclusions [ch.qos.logback/logback-classic]]
                  [com.fzakaria/slf4j-timbre  "0.3.2"]
                  [potemkin                   "0.4.3"]
+                 [com.cognitect/transit-clj  "RELEASE"]
+                 [com.cognitect/transit-cljs "RELEASE"]
                  [colorize                   "0.1.1"
                   :exclusions [org.clojure/clojure]]
                  [ring/ring-anti-forgery     "1.1.0-beta1"]
