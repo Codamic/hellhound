@@ -68,7 +68,7 @@
   "Translate the given string according to the current locale."
   [& args]
   (check-for-valid-values)
-  (tr @options [@locale] (first (vec args))))
+  (tr @options [@locale]  (vec args)))
 
 
 
