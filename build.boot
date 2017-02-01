@@ -1,5 +1,7 @@
 (set-env!
- :resource-paths #{"src"}
+ :resource-paths #{"src/clj"
+                   "src/cljs"
+                   "src/cljc"}
  :checkouts '[;[cljsjs/grommet                "1.1.0-0"]
               [codamic/sente                 "1.11.1"]]
 
@@ -7,7 +9,7 @@
                  [cljsjs/jquery              "2.2.4-0"]
                  [bidi                       "2.0.14"]
                  [reagent                    "0.6.0"]
-                 [ring                       "1.5.0"]
+                 [ring                       "1.5.1"]
                  [ring/ring-defaults         "0.3.0-beta1"]
                  [re-frame                   "0.8.0"]
                  [secretary                  "1.2.3"]
@@ -77,18 +79,17 @@
 (deftask cljs-docs
   "Create the documents for cljs parts."
   []
-  (apidoc :reader :clojurescript :target "doc/api/cljs"))
+  (apidoc :reader :clojurescript :target "doc/api/cljs" :source #{"src/cljs" "src/cljc"}))
 
 (deftask clj-docs
   "Create the documents for clj parts."
   []
-  (apidoc))
+  (apidoc :source #{"src/clj" "src/cljc"}))
 
 (deftask docs
   "Create all the docs."
   []
   (comp
-   (speak)
    (cljs-docs)
    (clj-docs)))
 
