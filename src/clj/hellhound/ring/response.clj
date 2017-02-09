@@ -7,15 +7,13 @@
 
 
 (defn- content-type-of
-  [format]
-  (if (nil? format)
-    nil
-    (do
-      (cond
-        (= format :json) "application/json"
-        (= format :xml)  "application/xml"
-        (= format :html) "text/html"
-        :else (str format)))))
+  [res-format]
+  (when-not (nil? res-format)
+    (cond
+      (= res-format :json) "application/json"
+      (= res-format :xml)  "application/xml"
+      (= res-format :html) "text/html"
+      :else (str res-format))))
 
 (defn respond-with
   "A shortcut function to render a template given by the `template-path`

@@ -19,7 +19,8 @@
       (?reply-fn {:umatched-event-as-echoed-from-from-server event}))))
 
 (defmethod router :chsk/ws-ping
-  [{:as ev-msg :keys [?data ?reply-fn event]}])
+  [{:as ev-msg :keys [?data ?reply-fn event]}]
+  (logger/warn "TODO: Handle ws-ping event"))
 
 
 (defn event-router [{:as ev-msg :keys [id ?data event]}]

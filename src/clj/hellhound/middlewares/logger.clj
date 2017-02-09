@@ -5,8 +5,9 @@
 
 ;; TODO: We need to refactore this function to include the parameterize
 ;;       keys and values
-(defn wrap-logger [handler]
+(defn wrap-logger
   "Log the requests and responses."
+  [handler]
   (fn [request]
     (let [start (System/currentTimeMillis)]
       (logger/info (format "%s %s %s, %s %s"

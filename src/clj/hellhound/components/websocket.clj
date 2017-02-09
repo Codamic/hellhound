@@ -31,7 +31,7 @@
                                 handler)))))
   (stop [component]
     (let [router (:router component)]
-      (if (not (nil? router))
+      (if-not (nil? router)
         (do
           (router)
           (assoc component :router nil))

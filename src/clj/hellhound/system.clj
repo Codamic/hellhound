@@ -12,8 +12,9 @@
 
 
 (defmacro defsystem
-  [name & body]
-  `(defn ~name [] (-> (system-map) ~@body)))
+  "Define a system map according to clojure component defination."
+  [system-name & body]
+  `(defn ~system-name [] (-> (system-map) ~@body)))
 
 
 (defn stop-system
