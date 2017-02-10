@@ -36,6 +36,9 @@
                  [cheshire                   "5.7.0"]
                  [cljsjs/jquery              "2.2.4-0"]
 
+                 ;; Testing tasks
+                 [adzerk/boot-test           "1.2.0"          :scope "test"]
+
                  ;; Cljs repl dependencies ----------------------------
                  [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
                  [adzerk/boot-cljs-repl      "0.3.3"          :scope "test"]
@@ -55,7 +58,8 @@
 
 
 (require '[funcool.boot-codeina :refer [apidoc]]
-         '[tolitius.boot-check :as check])
+         '[adzerk.boot-test     :as t]
+         '[tolitius.boot-check  :as check])
 
 (def VERSION       "0.12.0-SNAPSHOT")
 (def DESCRIPTION   "A simple full-stack web framework for clojure")
@@ -82,6 +86,32 @@
  push              {:repo "clojars"})
 
 
+
+(deftask test-clj
+  "Run the clj tests."
+  [c clojure    VERSION   str    "the version of Clojure for testing."
+   n namespaces NAMESPACE #{sym} "The set of namespace symbols to run tests in."
+   e exclusions NAMESPACE #{sym} "The set of namespace symbols to be excluded from test."
+   f filters    EXPR      #{edn} "The set of expressions to use to filter namespaces."
+   X exclude    REGEX     regex  "the filter for excluded namespaces"
+   I include    REGEX     regex  "the filter for included namespaces"
+   r requires   REQUIRES  #{sym} "Extra namespaces to pre-load into the pool of test pods for speed."
+   s shutdown   FN        #{sym} "functions to be called prior to pod shutdown"
+   S startup    FN        #{sym} "functions to be called at pod startup"
+   j junit-output-to JUNITOUT str "The directory where a junit formatted report will be generated for each ns"]
+  (set-env! :source-paths #{"test/clj"})
+  (comp
+   (t/test :clojure    clojure
+           :namespaces namespaces
+           :exclusions exclusions
+           :filters    filters
+           :exclude    exclude
+           :include    include
+           :requires   requires
+           :shutdown   shutdown
+           :startup    startup
+           :junit-output-to junit-output-to)))
+
 (deftask cljs-docs
   "Create the documents for cljs parts."
   []
@@ -107,7 +137,7 @@
 (deftask release
   "Build and release the snapshot version of hellhound"
   []
-  (comp (pom) (jar) (push)))
+  (comp (docs) (build) (push)))
 
 (deftask check-sources
   "Analyze the source tree and report."
