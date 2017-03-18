@@ -37,7 +37,8 @@
                  [cljsjs/jquery              "2.2.4-0"]
 
                  ;; Testing tasks
-                 [adzerk/boot-test           "1.2.0"          :scope "test"]
+                 [adzerk/boot-test            "1.2.0"          :scope "test"]
+                 [crisptrutski/boot-cljs-test "0.3.0"          :scope "test"]
 
                  ;; Cljs repl dependencies ----------------------------
                  [adzerk/boot-cljs           "1.7.228-2"      :scope "test"]
@@ -57,9 +58,10 @@
                  [codamic/boot-codeina       "0.2.0-SNAPSHOT" :scope "test"]])
 
 
-(require '[funcool.boot-codeina :refer [apidoc]]
-         '[adzerk.boot-test     :as t]
-         '[tolitius.boot-check  :as check])
+(require '[funcool.boot-codeina            :refer [apidoc]]
+         '[adzerk.boot-test                :as t]
+         '[crisptrutski.boot-cljs-test     :as tjs]
+         '[tolitius.boot-check             :as check])
 
 (def VERSION       "0.12.0-SNAPSHOT")
 (def DESCRIPTION   "A simple full-stack web framework for clojure")
@@ -111,6 +113,24 @@
            :shutdown   shutdown
            :startup    startup
            :junit-output-to junit-output-to)))
+
+(deftask test-cljs
+  "Run the cljs tests."
+  [n namespaces NAMESPACE #{sym} "The set of namespace symbols to run tests in."
+   e exclusions NAMESPACE #{sym} "The set of namespace symbols to be excluded from test."
+   i ids        IDS       #{str} "the filter for included namespaces"
+   c cljs-opts  OPTS      str    "Extra namespaces to pre-load into the pool of test pods for speed."
+   o optimizations LEVEL  str    "functions to be called prior to pod shutdown"
+   j js-env     env        str "The directory where a junit formatted report will be generated for each ns"]
+  (set-env! :source-paths #{"test/cljs"})
+  (comp
+   (tjs/test-cljs
+           :namespaces namespaces
+           :exclusions exclusions
+           :ids        ids
+           :js-env     js-env
+           :cljs-opts  cljs-opts
+           :optimizations optimizations)))
 
 (deftask cljs-docs
   "Create the documents for cljs parts."
