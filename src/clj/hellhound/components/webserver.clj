@@ -12,8 +12,6 @@
             [environ.core               :refer [env]]
             [immutant.web               :as web]))
 
-
-
 (defn- http-port
   []
   (Integer. (or (env :http-port)  "4000")))
@@ -49,9 +47,6 @@
           (println))
       (web/stop server)
       (dissoc component :server))))
-
-
-
 
 (defn ring-handler
   "Create a ring handler from the given routs. This function

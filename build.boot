@@ -31,6 +31,7 @@
                  [colorize                   "0.1.1"
                   :exclusions [org.clojure/clojure]]
                  [ring/ring-anti-forgery     "1.1.0-beta1"]
+                 [clj-http                   "2.3.0"]
 
                  [selmer                     "1.0.9"]
                  [cheshire                   "5.7.0"]
