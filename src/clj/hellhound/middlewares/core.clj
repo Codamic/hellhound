@@ -24,7 +24,7 @@ environments like `development`, `test` and `production`"
       wrap-logger
       wrap-anti-forgery
       wrap-session
-      (wrap-resource "assets")
+      (wrap-resource "public")
       wrap-content-type
       wrap-not-modified
       wrap-reload))
