@@ -4,15 +4,16 @@
   have to do is, either use `websocket-server` function with
   `hellhound.system.defsystem` macro or use the `make-websocket` with a
   traditional system map."
-  (:require [hellhound.connection                   :refer [event-router]]
-            [hellhound.system                        :refer [get-system]]
-            [com.stuartsierra.component              :as component]
-            [taoensso.sente.packers.transit          :as packer]
-            [taoensso.sente                          :as sente]
-            [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
+  (:require
+   [hellhound.connection                    :refer [event-router]]
+   [hellhound.system                        :refer [get-system]]
+   [hellhound.units.core                    :as unit]
+   [taoensso.sente.packers.transit          :as packer]
+   [taoensso.sente                          :as sente]
+   [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
 
 (defrecord WebSocketServer [web-server-adapter handler options adapter]
-  component/Lifecycle
+  unit/Structure
   (start [component]
     (let [{:keys [ch-recv send-fn ajax-post-fn ajax-get-or-ws-handshake-fn connected-uids]}
           (sente/make-channel-socket-server! adapter  options) ;;web-server-adapter
