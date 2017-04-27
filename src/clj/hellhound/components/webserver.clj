@@ -7,8 +7,8 @@
   own system map you can use `make-webserver` function and do it like
   you used to do."
   (:require [ring.middleware.defaults   :refer [site-defaults]]
-            [com.stuartsierra.component :as component]
-            [taoensso.timbre           :as log]
+            [hellhound.units.core       :as unit]
+            [taoensso.timbre            :as log]
             [environ.core               :refer [env]]
             [immutant.web               :as web]))
 
@@ -22,7 +22,7 @@
 
 
 (defrecord Webserver [handler host port]
-  component/Lifecycle
+  unit/Structure
 
   (start [component]
     (if-not (:server component)
@@ -77,8 +77,6 @@
 
   ([routes host port handler-options]
    (->Webserver (ring-handler routes handler-options) host port)))
-
-;;
 
 (defn webserver
   "Create a webserver instance from the webserver components.
