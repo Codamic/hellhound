@@ -1,16 +1,21 @@
 (ns hellhound.components.core
-  "Unit is the same concept as components")
+  "A very light weight and effecient implementation of clojure components.")
+
+;; Vars ------------------------------------------
+;; Default structure for a system map
+(def *:private default-system-structure
+  {:components {}})
 
 ;; Main storage for system data.
 (def ^:private default-system (atom {}))
 
-;; Protocols --------------------------------------
+;; Protocols -------------------------------------
 (defprotocol Lifecycle
   "This protocol defines the structure of each component"
   (start [component])
   (stop  [component]))
 
-;; Private Functions -------------------------------
+;; Private Functions -----------------------------
 (declare get-system-entry start-component)
 
 (defn- throw-exception
@@ -121,7 +126,7 @@
         (throw (Exception. (format "'%s' component does not satisfy the 'Structure' protocol."
                                    component-name)))))))
 
-;; Global Functions ---------------------------
+;; Public Functions ------------------------------
 (defn set-system!
   "Set the default system"
   [system]
@@ -164,3 +169,8 @@
   []
   (stop)
   (start))
+
+(defmacro defsystem
+  "Define a system map according to clojure component defination."
+  [system-name & body]
+  `(defn ~system-name [] (-> default-system-structure ~@body)))
