@@ -7,13 +7,13 @@
   (:require
    [hellhound.connection                    :refer [event-router]]
    [hellhound.system                        :refer [get-system]]
-   [hellhound.units.core                    :as unit]
+   [hellhound.websocket.core                :as component]
    [taoensso.sente.packers.transit          :as packer]
    [taoensso.sente                          :as sente]
    [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
 
 (defrecord WebSocketServer [web-server-adapter handler options adapter]
-  unit/Structure
+  component/Lifecycle
   (start [component]
     (let [{:keys [ch-recv send-fn ajax-post-fn ajax-get-or-ws-handshake-fn connected-uids]}
           (sente/make-channel-socket-server! adapter  options) ;;web-server-adapter
