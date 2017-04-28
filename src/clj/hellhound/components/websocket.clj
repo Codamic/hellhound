@@ -12,6 +12,8 @@
    [taoensso.sente                          :as sente]
    [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
 
+;; This component is responsible for establish a websocket server
+;; Base on Sente
 (defrecord WebSocketServer [web-server-adapter handler options adapter]
   component/Lifecycle
   (start [component]
@@ -68,4 +70,4 @@
   ([system-map]
    (websocket-server system-map {}))
   ([system-map options]
-   (assoc-in system-map [:websocket] (make-websocket options))))
+   (update-in system-map [:components :websocket] (make-websocket options))))

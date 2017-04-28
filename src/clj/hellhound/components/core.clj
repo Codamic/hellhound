@@ -3,7 +3,7 @@
 
 ;; Vars ------------------------------------------
 ;; Default structure for a system map
-(def *:private default-system-structure
+(def ^:private default-system-structure
   {:components {}})
 
 ;; Main storage for system data.
@@ -120,10 +120,10 @@
   [system f]
   (let [components (:components @system)]
     (doseq [[component-name component-data] components]
-      (if (satisfies? Structure (:record component-data))
+      (if (satisfies? Lifecycle (:record component-data))
         (do
           (f component-name component-data system))
-        (throw (Exception. (format "'%s' component does not satisfy the 'Structure' protocol."
+        (throw (Exception. (format "'%s' component does not satisfy the 'Lifecycle' protocol."
                                    component-name)))))))
 
 ;; Public Functions ------------------------------

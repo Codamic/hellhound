@@ -84,5 +84,5 @@
    (webserver system-map routes {}))
 
   ([system-map routes handler-options]
-   (assoc-in system-map [:webserver]
+   (update-in system-map [:components :webserver]
              (make-webserver routes (http-host) (http-port) handler-options))))
