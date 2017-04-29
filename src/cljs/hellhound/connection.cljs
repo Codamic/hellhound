@@ -57,15 +57,18 @@
 (defn start-event-router!
   "This function should be called in the `handler.cljs` file to
   dispatch the server events into client application."
-  []
-  (let [{:as msg-map :keys [chsk ch-recv send-fn]}
-        (sente/make-channel-socket! "/hellhound"
-                                    {:type :auto
-                                     :packer (packer/->TransitPacker :json {} {})})
-        router_ (sente/start-client-chsk-router! ch-recv -router)]
+  ([]
+   (start-event-router! nil))
+  ([host]
+   (let [{:as msg-map :keys [chsk ch-recv send-fn]}
+         (sente/make-channel-socket! "/hellhound"
+                                     {:type :auto
+                                      :host host
+                                      :packer (packer/->TransitPacker :json {} {})})
+         router_ (sente/start-client-chsk-router! ch-recv -router)]
 
-    (reset! handshake-ch chsk)
-    (reset! recv-ch      ch-recv)
-    (reset! send-fn!     send-fn)
-    (reset! state        (:state msg-map))
-    (reset! router       router_)))
+     (reset! handshake-ch chsk)
+     (reset! recv-ch      ch-recv)
+     (reset! send-fn!     send-fn)
+     (reset! state        (:state msg-map))
+     (reset! router       router_))))
