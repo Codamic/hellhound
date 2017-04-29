@@ -66,7 +66,7 @@
 (defn make-webserver
   "Creat and launch an `immutant` server."
   ([routes]
-   (make-webserver routes 4000 {}))
+   (make-webserver routes (http-host) 4000 {}))
 
   ([routes host]
    (make-webserver routes host 4000 {}))

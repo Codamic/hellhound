@@ -7,7 +7,7 @@
   (:require
    [hellhound.connection                    :refer [event-router]]
    [hellhound.system                        :refer [get-system]]
-   [hellhound.websocket.core                :as component]
+   [hellhound.components.core               :as component]
    [taoensso.sente.packers.transit          :as packer]
    [taoensso.sente                          :as sente]
    [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
