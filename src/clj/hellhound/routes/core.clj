@@ -5,18 +5,18 @@
   create a unified interface. But most of the concepts of the internal
   library remains untouched. So for more info checkout the `bidi`
   [documents](https://github.com/juxt/bidi)."
-  (:require [bidi.bidi        :refer [match-route path-for] :as bidi]
-            [hellhound.system :refer [get-system]]
-            [bidi.ring        :as biring]
-            [clojure.pprint   :refer [pprint]]
-            [taoensso.timbre  :as log]))
+  (:require [bidi.bidi                 :refer [match-route path-for] :as bidi]
+            [hellhound.components.core :refer [get-component]]
+            [bidi.ring                 :as biring]
+            [clojure.pprint            :refer [pprint]]
+            [taoensso.timbre           :as log]))
 
 
 (def __routes__ (atom nil))
 
 (defn- websocket
   []
-  (:websocket (get-system)))
+  (get-component :websocket))
 
 (defn route-table
   "Return the current route table. Use this function for debuggin purposes."
