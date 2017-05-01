@@ -7,6 +7,8 @@
 
   :dependencies [[org.clojure/clojure        "1.9.0-alpha14"]
                  [org.clojure/clojurescript  "RELEASE"]
+                 [org.clojure/core.async     "0.3.442"]
+
                  [bidi                       "2.0.14"]
                  [reagent                    "0.6.0"]
                  [ring                       "1.5.1"]
