@@ -23,10 +23,25 @@
   (logger/warn "TODO: Handle ws-ping event"))
 
 
+(defmethod router :hellhound/event
+  [{:as ev-msg :keys [?data ?reply-fn event event-router send-fn]}]
+  (logger/warn "TODO: Handle hellhound event")
+
+  (let [event-name    (:event-name ?data)
+        event-handler (get event-router event-name)]
+    (if (nil? event-handler)
+      ;; TODO: Should we send any error code or something similar?
+      (logger/warn "Can't find an event handler for '%s' event" event-name)
+      (event-handler (:data ?data) ev-msg))))
+
 (defn event-router [{:as ev-msg :keys [id ?data event]}]
   (router ev-msg))
 
-
+(defn router-builder
+  [router-map]
+  (fn [{:as ev-msg :keys [id ?data event]}]
+    (let [event-map (assoc ev-msg :event-router router-map)]
+      (router event-map))))
 
 (defn send-to-all
   "Send the given event to all the connected users."

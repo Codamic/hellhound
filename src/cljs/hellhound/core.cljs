@@ -2,7 +2,7 @@
   (:require [hellhound.connection :refer [send-fn!] ]))
 
 
-(defn- send-to-server
+(defn ->server
   [data]
   (let [send @send-fn!]
     (if (nil? send)
@@ -11,5 +11,5 @@
 
 (defn dispatch->server
   "Dispatch the given event to server side application."
-  [event]
-  (send-to-server event))
+  [[event-name data]]
+  (->server [:hellhound/event  {:event-name event-name :data data}]))

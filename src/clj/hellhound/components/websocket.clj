@@ -5,7 +5,7 @@
   `hellhound.system.defsystem` macro or use the `make-websocket` with a
   traditional system map."
   (:require
-   [hellhound.connection                    :refer [event-router]]
+   [hellhound.connection                    :refer [router-builder]]
    [hellhound.system                        :refer [get-system]]
    [hellhound.components.core               :as component]
    [taoensso.sente.packers.transit          :as packer]
@@ -58,10 +58,10 @@
 
 (defn make-websocket
   "Creates a websocket component instance."
-  ([]
-   (make-websocket {}))
-  ([options]
-   (new-channel-socket-server event-router (get-sch-adapter) options)))
+  ([router]
+   (new-channel-socket-server (router-builder router) (get-sch-adapter) {}))
+  ([router options]
+   (new-channel-socket-server (router-builder router) (get-sch-adapter) options)))
 
 
 (defn websocket-server
