@@ -1,13 +1,17 @@
 (ns hellhound.connection
+  "This namespace is responsible for dispatching reveived data
+  from the client to the correct message handler in the server side
+  application. In order to define a message router checkout the
+  `hellhound.messaging.core` namespace. This namespace is an internal
+  namespace which used by the `websocket` component."
   (:require [hellhound.system :refer [get-system]]
             [hellhound.logger.core :as logger]))
 
 
 
 (defmulti router
-  "Multimethod to handle Sente `event-msg`s"
-  :id ; Dispatch on event-id
-  )
+  "Multimethod to handle Sente `event-msg`s. Dispatch messages by `:id`"
+  :id)
 
 (defmethod router
    :default ; Default/fallback case (no other matching handler)
@@ -24,15 +28,22 @@
 
 
 (defmethod router :hellhound/event
-  [{:as ev-msg :keys [?data ?reply-fn event event-router send-fn]}]
+  [{:as ev-msg :keys [?data ?reply-fn event message-router uid
+                      client-id send-fn]}]
   (logger/warn "TODO: Handle hellhound event")
 
-  (let [event-name    (:event-name ?data)
-        event-handler (get event-router event-name)]
+  (let [message-name    (:message-name ?data)
+        message-handler (get event-router event-name)]
     (if (nil? event-handler)
       ;; TODO: Should we send any error code or something similar?
       (logger/warn "Can't find an event handler for '%s' event" event-name)
-      (event-handler (:data ?data) ev-msg))))
+      ;; Calls the message handler function provided by the message router
+      ;; with the following arguments:
+      ;; First argument is the `data` which sent by the client, second argument
+      ;; is a `function` to send data back to the same client and finally the
+      ;; third argument is the `ev-msg` itself which contains complete
+      ;; on the received message information.
+      (message-handler (:data ?data) #(send-fn uid %) ev-msg))))
 
 (defn event-router [{:as ev-msg :keys [id ?data event]}]
   (router ev-msg))
