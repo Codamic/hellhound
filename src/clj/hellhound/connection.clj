@@ -27,7 +27,7 @@
   (logger/warn "TODO: Handle ws-ping event"))
 
 
-(defmethod router :hellhound/event
+(defmethod router :hellhound/message
   [{:as ev-msg :keys [?data ?reply-fn event message-router uid
                       client-id send-fn]}]
   (logger/warn "TODO: Handle hellhound event")
