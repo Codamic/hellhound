@@ -33,10 +33,11 @@
   (logger/warn "TODO: Handle hellhound event")
 
   (let [message-name    (:message-name ?data)
-        message-handler (get event-router event-name)]
-    (if (nil? event-handler)
+        message-handler (get message-router message-name)]
+    (if (nil? message-handler)
       ;; TODO: Should we send any error code or something similar?
-      (logger/warn "Can't find an event handler for '%s' event" event-name)
+      (logger/warn "Can't find an event handler for '%s' event" message-name)
+
       ;; Calls the message handler function provided by the message router
       ;; with the following arguments:
       ;; First argument is the `data` which sent by the client, second argument
@@ -51,7 +52,7 @@
 (defn router-builder
   [router-map]
   (fn [{:as ev-msg :keys [id ?data event]}]
-    (let [event-map (assoc ev-msg :event-router router-map)]
+    (let [event-map (assoc ev-msg :message-router router-map)]
       (router event-map))))
 
 (defn send-to-all
