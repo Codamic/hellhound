@@ -48,7 +48,8 @@
   ([event-msg-handler web-server-adapter]
    (new-channel-socket-server event-msg-handler web-server-adapter {}))
   ([event-msg-handler web-server-adapter options]
-   (let [opts (merge {:packer  (packer/->TransitPacker :json {} {})}
+   (let [opts (merge {:packer  (packer/->TransitPacker :json {} {})
+                      :user-id-fn  (fn [_] (str (quot (System/currentTimeMillis) 1000)))}
                      options)]
      (map->WebSocketServer {:web-server-adapter web-server-adapter
                             :handler event-msg-handler
