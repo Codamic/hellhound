@@ -1,4 +1,4 @@
-(ns hellhound.messaging
+(ns hellhound.messaging.core
   "This namespace contains all the necessary means to handle client
   side events.")
 
