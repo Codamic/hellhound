@@ -6,39 +6,39 @@
   :scm         {:url "https://github.com/Codamic/hellhound"}
 
   :dependencies [[org.clojure/clojure        "1.9.0-alpha14"]
-                 [org.clojure/clojurescript  "RELEASE"]
+                 [org.clojure/clojurescript  "1.9.521"]
                  [org.clojure/core.async     "0.3.442"]
 
-                 [bidi                       "2.0.14"]
-                 [reagent                    "0.6.0"]
-                 [ring                       "1.5.1"]
+                 [bidi                       "2.0.17"]
+                 [reagent                    "0.6.1"]
+                 [ring                       "1.6.0"]
                  [ring/ring-defaults         "0.3.0-beta1"]
-                 [re-frame                   "0.8.0"]
+                 [re-frame                   "0.9.2"]
                  [secretary                  "1.2.3"]
-                 [com.stuartsierra/component "0.3.1"]
-                 [com.taoensso/tempura       "1.0.0-RC3"]
+                 [com.stuartsierra/component "0.3.2"]
+                 [com.taoensso/tempura       "1.1.2"]
                  [codamic/sente              "1.11.1"]
-                 [com.taoensso/timbre        "4.7.4"]
-                 [org.danielsz/system        "0.3.2-SNAPSHOT"]
+                 [com.taoensso/timbre        "4.10.0"]
+                 [org.danielsz/system        "0.4.0"]
                  [environ                    "1.1.0"]
-                 [environ                    "1.0.3"]
+                 [environ                    "1.1.0"]
                  [com.cemerick/friend        "0.2.3"]
-                 [ring-logger                "0.7.6"]
-                 [bk/ring-gzip               "0.1.1"]
-                 [org.immutant/immutant      "2.1.5"
+                 [ring-logger                "0.7.7"]
+                 [bk/ring-gzip               "0.2.1"]
+                 [org.immutant/immutant      "2.1.6"
                   :exclusions [ch.qos.logback/logback-classic]]
-                 [com.fzakaria/slf4j-timbre  "0.3.2"]
+                 [com.fzakaria/slf4j-timbre  "0.3.5"]
                  [potemkin                   "0.4.3"]
-                 [com.cognitect/transit-clj  "RELEASE"]
-                 [com.cognitect/transit-cljs "RELEASE"]
+                 [com.cognitect/transit-clj  "0.8.300"]
+                 [com.cognitect/transit-cljs "0.8.239"]
                  [colorize                   "0.1.1"
                   :exclusions [org.clojure/clojure]]
                  [ring/ring-anti-forgery     "1.1.0-beta1"]
-                 [clj-http                   "2.3.0"]
+                 [clj-http                   "3.5.0"]
                  ;;TODO: Move this to dev profile
-                 [re-frisk                   "0.3.2"]
-                 [selmer                     "1.0.9"]
-                 [cheshire                   "5.7.0"]
+                 [re-frisk                   "0.4.5"]
+                 [selmer                     "1.10.7"]
+                 [cheshire                   "5.7.1"]
                  [cljsjs/jquery              "2.2.4-0"]
 
                  ;; Cljs repl dependencies ----------------------------
@@ -103,11 +103,11 @@
   :doo {:build "test"}
 
   :profiles {:dev
-             {:dependencies [[figwheel                   "0.5.4-4"]
-                             [figwheel-sidecar           "0.5.4-4"]
+             {:dependencies [[figwheel                   "0.5.10"]
+                             [figwheel-sidecar           "0.5.10"]
                              [funcool/codeina            "0.5.0"]
                              [com.cemerick/piggieback    "0.2.1"]
-                             [org.clojure/tools.nrepl    "0.2.12"]]
+                             [org.clojure/tools.nrepl    "0.2.13"]]
 
               :plugins [[lein-figwheel  "0.5.4-4"]
                         [lein-doo       "0.1.6"]]
