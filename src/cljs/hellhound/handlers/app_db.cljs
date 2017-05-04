@@ -12,3 +12,14 @@
  :app-db/update
  (fn [db [_ {:keys [keys value]}]]
    (update-in db keys (fn [_]  value))))
+
+;; `app-db/append` event handler, update the value
+;; of the given keys in the `app-db` with appending
+;; value.
+(re-frame/reg-event-db
+ :app-db/append
+ (fn [db [_ {:keys [keys value]}]]
+   (update-in db keys
+              (fn [old]
+                (let [old-val (or old [])]
+                  (concat old-val value))))))
