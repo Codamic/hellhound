@@ -48,7 +48,9 @@
   ([event-msg-handler web-server-adapter]
    (new-channel-socket-server event-msg-handler web-server-adapter {}))
   ([event-msg-handler web-server-adapter options]
+   ;; TODO: Refactor this `let` statement
    (let [opts (merge {:packer  (packer/->TransitPacker :json {} {})
+                      ;; TODO: Use something elegant instead of the epoch time for uids
                       :user-id-fn  (fn [_] (str (quot (System/currentTimeMillis) 1000)))}
                      options)]
      (map->WebSocketServer {:web-server-adapter web-server-adapter
