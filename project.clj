@@ -9,40 +9,52 @@
                  [org.clojure/clojurescript  "1.9.521"]
                  [org.clojure/core.async     "0.3.442"]
 
+                 ;; Database Migrations
+                 [joplin.core                "0.3.10"]
+
+                 ;; Bidirectional routing
                  [bidi                       "2.0.17"]
-                 [reagent                    "0.6.1"]
+
+                 ;; Web Application spec
                  [ring                       "1.6.0"]
                  [ring/ring-defaults         "0.3.0-beta1"]
-                 [re-frame                   "0.9.2"]
-                 [secretary                  "1.2.3"]
-                 [com.stuartsierra/component "0.3.2"]
-                 [com.taoensso/tempura       "1.1.2"]
-                 [codamic/sente              "1.11.1"]
-                 [com.taoensso/timbre        "4.10.0"]
-                 [org.danielsz/system        "0.4.0"]
-                 [environ                    "1.1.0"]
-                 [environ                    "1.1.0"]
-                 [com.cemerick/friend        "0.2.3"]
                  [ring-logger                "0.7.7"]
                  [bk/ring-gzip               "0.2.1"]
-                 [org.immutant/immutant      "2.1.6"
-                  :exclusions [ch.qos.logback/logback-classic]]
-                 [com.fzakaria/slf4j-timbre  "0.3.5"]
-                 [potemkin                   "0.4.3"]
+                 [ring/ring-anti-forgery     "1.1.0-beta1"]
+
+                 ;; Communication
+                 [codamic/sente              "1.11.1"]
+
+                 ;; UI
+                 [reagent                    "0.6.1"]
+                 [re-frame                   "0.9.2"]
+                 ;; Client Side routeing
+                 [secretary                  "1.2.3"]
+                 [re-frisk                   "0.4.5"]
+
+                 ;; I18n
+                 [com.taoensso/tempura       "1.1.2"]
+
+                 ;; Configuration manager
+                 [environ                    "1.1.0"]
+
+                 ;; Transit support
                  [com.cognitect/transit-clj  "0.8.300"]
                  [com.cognitect/transit-cljs "0.8.239"]
+
+
+                 [org.immutant/immutant      "2.1.6"
+                  :exclusions [ch.qos.logback/logback-classic]]
+
+                 ;; Misc
                  [colorize                   "0.1.1"
                   :exclusions [org.clojure/clojure]]
-                 [ring/ring-anti-forgery     "1.1.0-beta1"]
-                 [clj-http                   "3.5.0"]
-                 ;;TODO: Move this to dev profile
-                 [re-frisk                   "0.4.5"]
-                 [selmer                     "1.10.7"]
-                 [cheshire                   "5.7.1"]
-                 [cljsjs/jquery              "2.2.4-0"]
 
-                 ;; Cljs repl dependencies ----------------------------
-                 ]
+                 ;; Template Engine
+                 [selmer                     "1.10.7"]
+
+                 ;; JSON Parser
+                 [cheshire                   "5.7.1"]]
 
   :plugins [[lein-cljsbuild "1.1.3"]
             [lein-environ "1.0.3"]]
@@ -120,4 +132,6 @@
               :prep-tasks ["compile" ["cljsbuild" "once" "min"]]
               :hooks []
               :omit-source true
-              :aot :all}})
+              :aot :all}
+
+             :test {:dependencies [[clj-http "3.5.0"]]}})
