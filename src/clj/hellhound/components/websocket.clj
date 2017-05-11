@@ -6,7 +6,6 @@
   traditional system map."
   (:require
    [hellhound.connection                    :refer [router-builder]]
-   [hellhound.system                        :refer [get-system]]
    [hellhound.components.core               :as component]
    [taoensso.sente.packers.transit          :as packer]
    [taoensso.sente                          :as sente]

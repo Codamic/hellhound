@@ -1,4 +1,4 @@
-(defproject codamic/hellhound "0.13.0-SNAPSHOT"
+(defproject codamic/hellhound "0.14.0-SNAPSHOT"
   :description "A simple full-stack web framework for clojure"
   :license     {"GPLv3"
                 "https://www.gnu.org/licenses/gpl.html"}
