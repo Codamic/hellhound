@@ -22,6 +22,9 @@
                  [bk/ring-gzip               "0.2.1"]
                  [ring/ring-anti-forgery     "1.1.0-beta1"]
 
+                 ;; Time calculation
+                 [clj-time                   "0.13.0"]
+
                  ;; Communication
                  [codamic/sente              "1.11.1"]
 
