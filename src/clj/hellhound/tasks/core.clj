@@ -5,7 +5,8 @@
 (def project-path (System/getProperty "user.dir"))
 (def project-dir  (io/file project-path))
 
-(def migration-dir (io/file project-path "src/db/migrations"))
+(def migration-dir (io/file project-path "src/migrations"))
+(def migration-prefix "migrations")
 
 (defn epoch-time
   []

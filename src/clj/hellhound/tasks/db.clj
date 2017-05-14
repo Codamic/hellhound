@@ -1,5 +1,7 @@
 (ns hellhound.tasks.db
-  (:require [hellhound.tasks.core :refer [in-migrations epoch-time long-str info error warn]]
+  (:require [hellhound.tasks.core :refer [in-migrations epoch-time long-str
+                                          info error warn migration-prefix]]
+
             [clojure.string       :refer [ends-with? starts-with?]]
             [clojure.edn          :as edn]
             [clj-time.core        :refer [before?]]
@@ -11,8 +13,9 @@
 ;; time to think about it
 (def migrations-lock (atom []))
 (def migration-lock-file (io/resource "migration.lock"))
-(def migration_template
-  (long-str "(ns db.migrations.%s)"
+
+(def migration-template
+  (long-str "(ns %s.%s)"
             ""
             "(defn up"
             "  []"
@@ -44,26 +47,17 @@
     (spit migration-lock-file (pr-str migrations))
     (swap! migrations-lock (fn [_] migrations))))
 
-(defn- is-timestamp?
-  [value]
-  true)
+(defn gen-nsname
+  [migration]
+  (symbol (format "%s.%s" migration-prefix migration)))
 
-(defn- timestamp
-  [namespace]
-  (let [timestamp (:timestamp (meta namespace))
-        nsname   (ns-name namespace)]
-
-    (if (is-timestamp? timestamp)
-      timestamp
-      (throw (Exception.
-              (format "Timestamp of '%s' namespace is not valid" nsname))))))
-
-(defn find-migrations
-  []
-  (let [namespaces (all-ns)]
-    (->> namespaces
-         (filter (fn [x] (println (ns-name x)) (starts-with? (ns-name x) "db.migrations")))
-         (sort #(before? (timestamp %1) (timestamp %2))))))
+(defn up
+  "load the given migration and call up function from it"
+  [migration]
+  (info (format "Running the migration file: %s" migration))
+  (require (gen-nsname migration))
+  (let [up-fn (ns-resolve (gen-nsname migration) 'up)]
+    (up-fn)))
 
 (defn migrate
   [& rest]
@@ -71,22 +65,33 @@
     (if (empty? migrations)
       (warn "No migration found")
       (doseq [migration migrations]
-        (println migration)))))
+        (up migration)))))
+
+(defn make-file-path
+  [nsname]
+  (in-migrations (clojure.string/replace
+                  (str nsname ".clj")
+                  #"-" "_")))
 
 (defn new-migrate
   [name & rest]
   (let [epoch     (epoch-time)
-        nsname    (str epoch "_" name)
-        file-path (in-migrations (str nsname ".clj"))]
+        nsname    (str  name "_" epoch)
+        file-path (make-file-path nsname)]
+
     (info "Creating migration file: " file-path)
     (spit file-path
-          (format migration_template nsname))
+          (format migration-template
+                  migration-prefix
+                  (clojure.string/replace nsname #"_" "-")))
+
     (info "Updating migrations lock file")
-    (update-lock nsname)))
+    (update-lock (clojure.string/replace nsname #"_" "-"))))
 
 (defn wrong-command
   [cmd]
   (error (format "Can't find the command '%s'." cmd)))
+
 
 (defn -main
   [command & rest]
