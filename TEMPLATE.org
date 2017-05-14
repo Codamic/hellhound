@@ -1,0 +1,7 @@
+* The HellHound application template
+** migration.lock inside resource path
+** Structure
+   Even if we don't want to use cljs we have to follow this convention
+*** src/clj for clojure
+*** src/cljs for clojruescript
+*** src/cljc for clojure common
