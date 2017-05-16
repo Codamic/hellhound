@@ -9,8 +9,13 @@
                  [org.clojure/clojurescript  "1.9.521"]
                  [org.clojure/core.async     "0.3.442"]
 
-                 ;; Database Migrations
-                 [joplin.core                "0.3.10"]
+
+                 ;; TODO: We have to move these stuff into a different jar
+                 ;; to avoid unnecessary jar installation
+
+                 ;; Cassandra adapter
+                 [cc.qbits/alia "4.0.0-beta10"]
+                 ;; -------------------------------------------------------
 
                  ;; Bidirectional routing
                  [bidi                       "2.0.17"]
