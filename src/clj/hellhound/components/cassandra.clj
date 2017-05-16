@@ -26,4 +26,4 @@
   []
   (let [host (or (environ/env :cassandra-host)
                  ["127.0.0.1"])]
-    (->CassandraClient host)))
+    (->Cassandra host)))
