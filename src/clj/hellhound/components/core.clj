@@ -1,5 +1,6 @@
 (ns hellhound.components.core
-  "A very light weight and effecient implementation of clojure components.")
+  "A very light weight and effecient implementation of clojure components."
+  (:require [hellhound.core :as hellhound]))
 
 ;; Vars ------------------------------------------
 ;; Default structure for a system map
@@ -147,6 +148,9 @@
 (defn start-system
   "Start the given system and call start on all the components"
   [system]
+  ;; Read the configuration for the current runtime environment which
+  ;; specified by `HH_ENV` environment. Default env is `:development`
+  (hellhound/load-runtime-configurations)
   (iterate-components system start-component))
 
 (defn stop-system

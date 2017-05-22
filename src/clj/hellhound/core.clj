@@ -33,7 +33,7 @@
 
 
 ;;;; Runtime Environment Configuration Loaders -------------
-(defn runtime-configuration
+(defn load-runtime-configuration
   "Read and parse the configuration file related to the current runtime
   environment."
   []
