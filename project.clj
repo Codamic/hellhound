@@ -17,10 +17,6 @@
                  ;;[cc.qbits/alia              "4.0.0-beta10"]
                  ;; -------------------------------------------------------
 
-                 ;; DataNase Migratopm
-                 [joplin.core                "0.3.10"]
-                 [joplin.cassandra           "0.3.10"]
-
                  ;; Bidirectional routing
                  [bidi                       "2.0.17"]
 
