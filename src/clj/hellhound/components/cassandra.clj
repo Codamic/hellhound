@@ -15,6 +15,7 @@
         cluster (alia/cluster options)]
     (alia/connect cluster)))
 
+
 (defrecord Cassandra [hosts options]
   component/Lifecycle
   (start [this]
@@ -29,16 +30,10 @@
         (dissoc this :session))
       this)))
 
-(defn new-cassandra-client
-  "Create a new instance of `CassandraClient` component."
-  []
-  (let [hosts ["127.0.0.1"]]
-    (->Cassandra hosts {})))
-
 (defn make-cassandra-client
   "Creates a cassandra component instance."
   ([]
-   (new-cassandra-client))
+   ())
   ([hosts]
    (make-cassandra-client hosts {}))
   ([hosts options]
