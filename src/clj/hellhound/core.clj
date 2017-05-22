@@ -1,7 +1,13 @@
 (ns hellhound.core
   "This namespace contains core functions which are required
-  by the whole framework in order to operate.")
+  by the whole framework in order to operate."
+  (:require [hellhound.config :refer [read-config]]))
 
+;; Definitions ---------------------------------------------
+(def environment-configuration (atom {}))
+
+;; Functions -----------------------------------------------
+;;;; Runtime Environment helpers ---------------------------
 (defn env
   "Return the current runtime profile. Possible values
   `development`, `test`, `production` or any custom
@@ -24,3 +30,18 @@
   "Returns `true` if current runtime profile is `:production`."
   []
   (= :production (env)))
+
+
+;;;; Runtime Environment Configuration Loaders -------------
+(defn runtime-configuration
+  "Read and parse the configuration file related to the current runtime
+  environment."
+  []
+  (let [config (read-config (format "environments/%s.edn" (env)))]
+    (reset! environment-configuration config)
+    config))
+
+(defn application-config
+  "Return the current runtime environment configuration."
+  []
+  @environment-configuration)
