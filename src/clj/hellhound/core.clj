@@ -1,7 +1,8 @@
 (ns hellhound.core
   "This namespace contains core functions which are required
   by the whole framework in order to operate."
-  (:require [hellhound.config :refer [read-config]]))
+  (:require [hellhound.config :refer [read-config]]
+            [clojure.java.io :as io]))
 
 ;; Definitions ---------------------------------------------
 (def environment-configuration (atom {}))
@@ -33,11 +34,15 @@
 
 
 ;;;; Runtime Environment Configuration Loaders -------------
+(defn- config-file
+  []
+  (format "environments/%s.edn" (name (env))))
+
 (defn load-runtime-configuration
   "Read and parse the configuration file related to the current runtime
   environment."
   []
-  (let [config (read-config (format "environments/%s.edn" (env)))]
+  (let [config (read-config (config-file))]
     (reset! environment-configuration config)
     config))
 
