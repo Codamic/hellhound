@@ -150,7 +150,7 @@
   [system]
   ;; Read the configuration for the current runtime environment which
   ;; specified by `HH_ENV` environment. Default env is `:development`
-  (hellhound/load-runtime-configurations)
+  (hellhound/load-runtime-configuration)
   (iterate-components system start-component))
 
 (defn stop-system
