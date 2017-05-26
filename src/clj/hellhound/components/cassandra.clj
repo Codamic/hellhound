@@ -3,14 +3,14 @@
   database."
   (:require [environ.core                   :as environ]
             [qbits.alia                     :as alia]
-            [hellhound.components.core      :as component]
+            [hellhound.components.db        :as db]
             [hellhound.logger.core          :as logger]
-            [hellhound.core                 :refer [application-config]]))
+            [hellhound.core                 :as hellhound]))
 
 
 (defn- cassandra-config
   []
-  (:cassandra (:db (application-config))))
+  (:cassandra (:db (hellhound/application-config))))
 
 (defn- connect
   ([]
@@ -20,9 +20,14 @@
          cluster (alia/cluster conf)]
      (alia/connect cluster))))
 
+(defn- check-session
+  [session name]
+  (if (nil? session)
+    (throw (Exception. (format "'%s' component is not started yet." name)))))
 
 (defrecord Cassandra [options]
-  component/Lifecycle
+  db/DatabaseLifecycle
+
   (start [this]
     (logger/info "Connecting to Cassandra cluster...")
     (assoc this :session (connect options)))
@@ -33,7 +38,12 @@
         (logger/info "Disconnecting from Cassandra cluster...")
         (alia/shutdown (:session this))
         (dissoc this :session))
-      this)))
+      this))
+
+  (setup [this]
+    (let [session (:session this)]
+      (check-session session "Cassandra")
+      (prn "SSSSSSSSSSSSS"))))
 
 
 (defn make-cassandra-client
