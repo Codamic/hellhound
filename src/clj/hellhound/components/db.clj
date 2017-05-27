@@ -4,8 +4,9 @@
   of the mentioned protocol. For example in order to setup the database,
   **HellHound** uses the `setup` function of the implementated protocol.")
 
-(defprotocol DatabaseLifecyle
+(defprotocol DatabaseLifecycle
   (start    [component])
   (stop     [component])
+  (create   [component])
   (setup    [component])
   (teardown [component]))

@@ -3,6 +3,7 @@
   database."
   (:require [environ.core                   :as environ]
             [qbits.alia                     :as alia]
+            [qbits.hayt                     :as hayt]
             [hellhound.components.db        :as db]
             [hellhound.logger.core          :as logger]
             [hellhound.core                 :as hellhound]))
@@ -16,8 +17,7 @@
   ([]
    (connect {}))
   ([config]
-   (let [conf    (merge (cassandra-config) config)
-         cluster (alia/cluster conf)]
+   (let [cluster (alia/cluster (:connecttion config))]
      (alia/connect cluster))))
 
 (defn- check-session
@@ -37,13 +37,33 @@
       (do
         (logger/info "Disconnecting from Cassandra cluster...")
         (alia/shutdown (:session this))
-        (dissoc this :session))
+        (dissoc this :session :keyspace :keyspace-selected))
       this))
 
-  (setup [this]
+  (create [this]
     (let [session (:session this)]
       (check-session session "Cassandra")
-      (prn "SSSSSSSSSSSSS"))))
+
+      (let [keyspace-config (:keyspace (:options this))]
+        (alia/execute
+         session
+         (hayt/create-keyspace (hayt/if-exist false)
+                               (:name keyspace-config)
+                               (hayt/with (:details keyspace-config))))
+
+        (assoc this :keyspace (:name keyspace-config)))))
+
+  (setup [this]
+    (let [session   (:session this)
+          keyspace  (:keyspace this)
+          use-query (alia/prepare "USE :keyspace")]
+
+      (check-session session "Cassandra")
+      (when (nil? keyspace)
+        (throw (Exception. "Keyspace is not set. Run the create function in order to set it up")))
+
+      (alias/execut session use-query {:values {:keyspace keyspace}})
+      (assoc this :keyspace-selected true))))
 
 
 (defn make-cassandra-client
@@ -52,7 +72,8 @@
   ([]
    (make-cassandra-client {}))
   ([options]
-   (->Cassandra options)))
+   (let [config (merge (cassandra-config) options)]
+     (->Cassandra config))))
 
 (defn cassandra-client
   "Create an instance from cassandra component. This function is meant
@@ -60,4 +81,5 @@
   ([system-map]
    (cassandra-client system-map {}))
   ([system-map options]
-   (update-in system-map [:components :cassandra] (->Cassandra options))))
+   (let [config (merge (cassandra-config) options)])
+   (update-in system-map [:components :cassandra] (->Cassandra config))))
