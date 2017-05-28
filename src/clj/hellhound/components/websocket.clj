@@ -6,7 +6,7 @@
   traditional system map."
   (:require
    [hellhound.connection                    :refer [router-builder]]
-   [hellhound.components.core               :as component]
+   [hellhound.components.protocols               :as protocols]
    [taoensso.sente.packers.transit          :as packer]
    [taoensso.sente                          :as sente]
    [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
@@ -14,7 +14,7 @@
 ;; This component is responsible for establish a websocket server
 ;; Base on Sente
 (defrecord WebSocketServer [web-server-adapter handler options adapter]
-  component/Lifecycle
+  protocols/Lifecycle
   (start [component]
     (let [{:keys [ch-recv send-fn ajax-post-fn ajax-get-or-ws-handshake-fn connected-uids]}
           (sente/make-channel-socket-server! adapter  options) ;;web-server-adapter

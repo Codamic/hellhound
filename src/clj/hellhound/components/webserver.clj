@@ -6,11 +6,11 @@
   system with webserver component in it. But if you want to define your
   own system map you can use `make-webserver` function and do it like
   you used to do."
-  (:require [ring.middleware.defaults   :refer [site-defaults]]
-            [hellhound.components.core  :as component]
-            [taoensso.timbre            :as log]
-            [environ.core               :refer [env]]
-            [immutant.web               :as web]))
+  (:require [ring.middleware.defaults       :refer [site-defaults]]
+            [hellhound.components.protocols :as protocols]
+            [taoensso.timbre                :as log]
+            [environ.core                   :refer [env]]
+            [immutant.web                   :as web]))
 
 (defn- http-port
   []
@@ -22,7 +22,7 @@
 
 
 (defrecord Webserver [handler host port]
-  component/Lifecycle
+  protocols/Lifecycle
   (start [component]
     (if-not (:server component)
       (let [config {:host host :port port :path "/"}

@@ -1,6 +1,7 @@
 (ns hellhound.components.core
   "A very light weight and effecient implementation of clojure components."
-  (:require [hellhound.core :as hellhound]))
+  (:require [hellhound.core                 :as hellhound]
+            [hellhound.components.protocols :as protocols]))
 
 ;; Vars ------------------------------------------
 ;; Default structure for a system map
@@ -9,12 +10,6 @@
 
 ;; Main storage for system data.
 (def ^:private default-system (atom {}))
-
-;; Protocols -------------------------------------
-(defprotocol Lifecycle
-  "This protocol defines the structure of each component"
-  (start [component])
-  (stop  [component]))
 
 ;; Private Functions -----------------------------
 (declare get-system-entry start-component)
@@ -121,7 +116,7 @@
   [system f]
   (let [components (:components @system)]
     (doseq [[component-name component-data] components]
-      (if (satisfies? Lifecycle (:record component-data))
+      (if (satisfies? protocols/Lifecycle (:record component-data))
         (do
           (f component-name component-data system))
         (throw (Exception. (format "'%s' component does not satisfy the 'Lifecycle' protocol."
