@@ -8,18 +8,10 @@
     "The ending point of any component's life cycle."))
 
 (defprotocol DatabaseLifecycle
-  "Any database component should implement this protocol. This way
-  **HellHound** can manage database accordingly to the implementation
-  of this protocol. For example in order to create the database,
+  "Any database component should implement this protocol in addition to
+  `Lifecycle` protocol. This way **HellHound** can manage database accordingly
+  to the implementation of this protocol. For example in order to create the database,
   **HellHound** uses the `setup` function of the implementated protocol."
-  (start [component]
-    "Starting point of the database component. Usually this function
-     would be responsible for connecting to the database engine.")
-
-  (stop [component]
-    "Ending point for the commponent life cycle. Usually this function
-     is responsible for disconnecting from the engine and cleaning up.")
-
   (setup [component]
     "This function should bootstrap the database and setup the necessary
      means for the database component to work. **HellHound** will call
