@@ -1,24 +1,28 @@
 (ns hellhound.components.cassandra
   "This namespace provides the necessary means to communicate with
   database."
-  (:require [environ.core                   :as environ]
-            [qbits.alia                     :as alia]
-            [qbits.hayt                     :as hayt]
-            [hellhound.components.protocols :as protocols]
-            [hellhound.logger.core          :as logger]
-            [hellhound.core                 :as hellhound]))
+  (:require
+   [clojure.spec.alpha             :as spec]
+   [environ.core                   :as environ]
+   [qbits.alia                     :as alia]
+   [qbits.hayt                     :as hayt]
+   ;; Internals
+   [hellhound.components.protocols :as protocols]
+   [hellhound.logger.core          :as logger]
+   [hellhound.core                 :as hellhound]))
 
 
-(defn- cassandra-config
+(spec/def ::cassanda-configuration
+  (spec/keys :req [::connection ::keyspace]))
+
+(defn cassandra-config
   []
   (:cassandra (:db (hellhound/application-config))))
 
 (defn- connect
-  ([]
-   (connect {}))
-  ([config]
-   (let [cluster (alia/cluster (:connecttion config))]
-     (alia/connect cluster))))
+  [config]
+  (let [cluster (alia/cluster (:connecttion config))]
+    (alia/connect cluster)))
 
 (defn- check-session
   [session name]
@@ -29,12 +33,16 @@
   protocols/DatabaseLifecycle
 
   (start [this]
+    (spec/valid? ::cassanda-configuration options)
     (logger/info "Connecting to Cassandra cluster...")
-    (let [use-query (alia/prepare "USE :keyspace")
-          session   (connect options)
-          keyspace  (:keyspace options)]
-      (alia/execute session use-query {:values {:keyspace keyspace}})
-      (assoc this :session session)))
+    (let [session   (connect options)
+          keyspace  (:name (:keyspace options))]
+
+      (try
+        (alia/execute session (format "USE %s;" keyspace))
+        (catch  com.datastax.driver.core.exceptions.InvalidQueryException e
+          (throw (Exception. "Keyspace is not present. You need to migrate first."))))
+      (assoc this :session session :keyspace keyspace)))
 
   (stop [this]
     (if (:session this)
@@ -45,8 +53,7 @@
       this))
 
   (setup [this]
-    (let [session (:session this)
-          use-query (alia/prepare "USE :keyspace")]
+    (let [session (:session this)]
       (check-session session "Cassandra")
 
       (let [keyspace-config (:keyspace (:options this))]
@@ -56,7 +63,9 @@
                                (:name keyspace-config)
                                (hayt/with (:details keyspace-config))))
 
-        (assoc this :keyspace (:name keyspace-config))))))
+        (assoc this :keyspace (:name keyspace-config)))))
+
+  (teardown [this]))
 
 
 (defn make-cassandra-client
