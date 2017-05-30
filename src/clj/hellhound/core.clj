@@ -49,4 +49,7 @@
 (defn application-config
   "Return the current runtime environment configuration."
   []
-  @environment-configuration)
+  (let [config @environment-configuration]
+    (if (empty? config)
+      (load-runtime-configuration)
+      config)))
