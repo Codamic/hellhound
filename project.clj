@@ -5,7 +5,7 @@
   :url         "http://github.com/Codamic/hellhound"
   :scm         {:url "https://github.com/Codamic/hellhound"}
 
-  :dependencies [[org.clojure/clojure        "1.9.0-alpha14"]
+  :dependencies [[org.clojure/clojure        "1.9.0-alpha16"]
                  [org.clojure/clojurescript  "1.9.521"]
                  [org.clojure/core.async     "0.3.442"]
 
