@@ -13,13 +13,14 @@
    [hellhound.core                 :as hellhound]))
 
 
+(declare ->Cassandra)
+
+;; Specs ---------------------------------------------------
 (spec/def ::cassanda-configuration
   (spec/keys :req [::connection ::keyspace]))
 
-(defn cassandra-config
-  []
-  (:cassandra (:db (hellhound/application-config))))
 
+;; Private functions ---------------------------------------
 (defn- connect
   [config]
   (let [cluster (alia/cluster (:connecttion config))]
@@ -32,7 +33,11 @@
             (format "'%s' component is not started yet." name)
             {:cause "Cassandra component"}))))
 
+
+;; Public functions ----------------------------------------
 (defn select-keyspace
+  "Use the given keyspace name or throw an exception if the keyspace was
+  missing"
   [session keyspace]
   (try
     (alia/execute session (format "USE %s;" keyspace))
@@ -40,6 +45,32 @@
       (throw
        (ex-info "Keyspace is not present. You need to migrate first." {})))))
 
+(defn cassandra-config
+  "Returns the cassandra configuration"
+  []
+  (:cassandra (:db (hellhound/application-config))))
+
+
+(defn make-cassandra-client
+  "Create an instance of `Cassandra` record to be used with a `component`
+  compatible system."
+  ([]
+   (make-cassandra-client {}))
+  ([options]
+   (let [config (merge (cassandra-config) options)]
+     (->Cassandra config))))
+
+(defn new-cassandra-client
+  "Create an instance from cassandra component. This function is meant
+  to be used with `hellhound.system.defsystem` macro."
+  ([system-map]
+   (new-cassandra-client system-map {}))
+  ([system-map options]
+   (let [config (merge (cassandra-config) options)]
+     (update-in system-map [:components :cassandra] (->Cassandra config)))))
+
+
+;; Component record ----------------------------------------
 (defrecord Cassandra [options]
 
   ;; Lifecycle implementation.
@@ -84,22 +115,3 @@
         (assoc this :keyspace (:name keyspace-config)))))
 
   (teardown [this]))
-
-
-(defn make-cassandra-client
-  "Create an instance of `Cassandra` record to be used with a `component`
-  compatible system."
-  ([]
-   (make-cassandra-client {}))
-  ([options]
-   (let [config (merge (cassandra-config) options)]
-     (->Cassandra config))))
-
-(defn new-cassandra-client
-  "Create an instance from cassandra component. This function is meant
-  to be used with `hellhound.system.defsystem` macro."
-  ([system-map]
-   (new-cassandra-client system-map {}))
-  ([system-map options]
-   (let [config (merge (cassandra-config) options)]
-     (update-in system-map [:components :cassandra] (->Cassandra config)))))
