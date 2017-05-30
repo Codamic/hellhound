@@ -6,6 +6,7 @@
    [environ.core                   :as environ]
    [qbits.alia                     :as alia]
    [qbits.hayt                     :as hayt]
+
    ;; Internals
    [hellhound.components.protocols :as protocols]
    [hellhound.logger.core          :as logger]
@@ -27,30 +28,47 @@
 (defn- check-session
   [session name]
   (if (nil? session)
-    (throw (Exception. (format "'%s' component is not started yet." name)))))
+    (throw (ex-info
+            (format "'%s' component is not started yet." name)
+            {:cause "Cassandra component"}))))
+
+(defn select-keyspace
+  [session keyspace]
+  (try
+    (alia/execute session (format "USE %s;" keyspace))
+    (catch clojure.lang.ExceptionInfo e
+      (throw
+       (ex-info "Keyspace is not present. You need to migrate first." {})))))
 
 (defrecord Cassandra [options]
-  protocols/DatabaseLifecycle
+
+  ;; Lifecycle implementation.
+  protocols/Lifecycle
 
   (start [this]
+    ;; Validate Configuration
     (spec/valid? ::cassanda-configuration options)
+
     (logger/info "Connecting to Cassandra cluster...")
+
+    ;; Connect to the cluster and select the default keyspace
     (let [session   (connect options)
           keyspace  (:name (:keyspace options))]
-
-      (try
-        (alia/execute session (format "USE %s;" keyspace))
-        (catch  com.datastax.driver.core.exceptions.InvalidQueryException e
-          (throw (Exception. "Keyspace is not present. You need to migrate first."))))
+      (select-keyspace session keyspace)
       (assoc this :session session :keyspace keyspace)))
 
   (stop [this]
     (if (:session this)
       (do
         (logger/info "Disconnecting from Cassandra cluster...")
+        ;; Shutting down the connection to cluster
         (alia/shutdown (:session this))
-        (dissoc this :session :keyspace :keyspace-selected))
+        (dissoc this :session :keyspace :keyspace))
       this))
+
+  ;; DatabaseLifecycle implementation. Allow the migration system to operate
+  ;; with this component
+  protocols/DatabaseLifecycle
 
   (setup [this]
     (let [session (:session this)]
@@ -77,11 +95,11 @@
    (let [config (merge (cassandra-config) options)]
      (->Cassandra config))))
 
-(defn cassandra-client
+(defn new-cassandra-client
   "Create an instance from cassandra component. This function is meant
   to be used with `hellhound.system.defsystem` macro."
   ([system-map]
-   (cassandra-client system-map {}))
+   (new-cassandra-client system-map {}))
   ([system-map options]
    (let [config (merge (cassandra-config) options)]
      (update-in system-map [:components :cassandra] (->Cassandra config)))))
