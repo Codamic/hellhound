@@ -5,7 +5,7 @@
    [clojure.java.io      :as io]
    ;; Internals
    [hellhound.core       :as hellhound]
-   [hellhound.tasks.core :as task]
+   [hellhound.tasks.core :as core]
    [hellhound.components.core :as component]))
 
 ;; Definitions ---------------------------------------------
@@ -15,7 +15,7 @@
 (def migration-lock-file (io/resource "migration.lock"))
 
 (def migration-template
-  (long-str "(ns %s.%s)"
+  (core/long-str "(ns %s.%s)"
             ""
             "(defn up"
             "  []"
@@ -27,6 +27,8 @@
             "  ;; Your code to teardown this migration, goes here"
             ")"))
 
+
+(def migration-storage-name "hellhound_migration_storage")
 
 ;; Functions -----------------------------------------------
 (defn db-config
@@ -44,7 +46,7 @@
 
 (defn databases-to-migration
   []
-  (keys db-config))
+  (keys (db-config)))
 
 (defn get-lock
   "Get the migrations listed in the `migration.lock` file and reset the
@@ -67,26 +69,28 @@
 
 (defn gen-nsname
   [migration]
-  (symbol (format "%s.%s" migration-prefix migration)))
+  (symbol (format "%s.%s" core/migration-prefix migration)))
 
 (defn up
   "load the given migration and call up function from it"
   [migration]
-  (task/info (format "Running the migration file: %s" migration))
+  (core/info (format "Running the migration file: %s" migration))
   (require (gen-nsname migration))
   (let [up-fn (ns-resolve (gen-nsname migration) 'up)]
     (up-fn)))
 
 (defn make-file-path
   [nsname]
-  (in-migrations (clojure.string/replace
+  (core/in-migrations (clojure.string/replace
                   (str nsname ".clj")
                   #"-" "_")))
 
 (defn setup-db
   [db-name]
-  (let [db-component    (component/get-component db-name)
-        setup-component (.setup db-component)]))
+  (let [db-component (component/get-component db-name)]
+    (core/info (format "Setting up the '%s' database for migration..." db-name))
+    ()
+    (.setup db-component)))
 
 ;; Command functions ---------------------------------------
 (defn create
@@ -106,28 +110,28 @@
   [& rest]
   (let [migrations @migrations-lock]
     (if (empty? migrations)
-      (warn "No migration found")
+      (core/warn "No migration found")
       (doseq [migration migrations]
         (up migration)))))
 
 (defn new-migrate
   [name & rest]
-  (let [epoch     (epoch-time)
+  (let [epoch     (core/epoch-time)
         nsname    (str  name "_" epoch)
         file-path (make-file-path nsname)]
 
-    (task/info "Creating migration file: " file-path)
+    (core/info "Creating migration file: " file-path)
     (spit file-path
           (format migration-template
-                  migration-prefix
+                  core/migration-prefix
                   (clojure.string/replace nsname #"_" "-")))
 
-    (info "Updating migrations lock file")
+    (core/info "Updating migrations lock file")
     (update-lock (clojure.string/replace nsname #"_" "-"))))
 
 (defn wrong-command
   [cmd]
-  (task/error (format "Can't find the command '%s'." cmd)))
+  (core/error (format "Can't find the command '%s'." cmd)))
 
 
 (defn -main

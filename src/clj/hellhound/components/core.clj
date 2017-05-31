@@ -87,31 +87,48 @@
     (swap! system update-started-system name started-component)
     (assoc all :system system)))
 
+;; Public Functions ------------------------------
 (defn start-component
-  "Start the given component"
-  [name data system]
-  (let [bundle {:name name :data data :system system}]
-    (if-not (started? data)
-      (-> bundle
-          (start-dependencies)
-          (inject-inputs)
-          (run-the-start-method))
-      bundle)))
+  "Start the component given by `name` from the default system map or
+  the given `system`."
+  ([name]
+   (let [component (get-component name)]
+     (start-component name component)))
 
-(defn- stop-component
-  "Stop the given component"
-  [name data system]
-  (if (started? data)
-    (let [requirements (or (:requires data) [])
-          record       (:record   data)]
-      (let [stopped-component (.stop record)]
-        (swap! system update-stopped-system name stopped-component))
+  ([name data]
+   (start-component name data @default-system))
 
-      (if-not (empty? requirements)
-        (doseq [req-name requirements]
-          (stop-component req-name (get (:components @system) req-name) system))))))
+  ([name data system]
+   (let [bundle {:name name :data data :system system}]
+     (if-not (started? data)
+       (-> bundle
+           (start-dependencies)
+           (inject-inputs)
+           (run-the-start-method))
+       bundle))))
 
-(defn- iterate-components
+(defn stop-component
+  "Stop the given component by `name` from default system or
+  given `system` map."
+  ([name]
+   (let [component (get-component name)]
+     (stop-component name component)))
+
+  ([name data]
+   (stop-component name data @default-system))
+
+  ([name data system]
+   (if (started? data)
+     (let [requirements (or (:requires data) [])
+           record       (:record   data)]
+       (let [stopped-component (.stop record)]
+         (swap! system update-stopped-system name stopped-component))
+
+       (if-not (empty? requirements)
+         (doseq [req-name requirements]
+           (stop-component req-name (get (:components @system) req-name) system)))))))
+
+(defn iterate-components
   "Iterate over system components"
   [system f]
   (let [components (:components @system)]
@@ -122,7 +139,6 @@
         (throw (Exception. (format "'%s' component does not satisfy the 'Lifecycle' protocol."
                                    component-name)))))))
 
-;; Public Functions ------------------------------
 (defn set-system!
   "Set the default system"
   [system]
