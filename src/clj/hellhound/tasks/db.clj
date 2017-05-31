@@ -87,10 +87,10 @@
 
 (defn setup-db
   [db-name]
-  (let [db-component (component/get-component db-name)]
-    (core/info (format "Setting up the '%s' database for migration..." db-name))
-    ()
-    (.setup db-component)))
+  (core/info (format "Setting up the '%s' database for migration..." db-name))
+  (-> (component/start-component db-name)
+      :component
+      (.setup)))
 
 ;; Command functions ---------------------------------------
 (defn create

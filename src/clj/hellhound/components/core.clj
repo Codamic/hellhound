@@ -99,7 +99,7 @@
    (start-component name data @default-system))
 
   ([name data system]
-   (let [bundle {:name name :data data :system system}]
+   (let [bundle {:name name :data data :system system :component (:record data)}]
      (if-not (started? data)
        (-> bundle
            (start-dependencies)
@@ -134,8 +134,7 @@
   (let [components (:components @system)]
     (doseq [[component-name component-data] components]
       (if (satisfies? protocols/Lifecycle (:record component-data))
-        (do
-          (f component-name component-data system))
+        (f component-name component-data system)
         (throw (Exception. (format "'%s' component does not satisfy the 'Lifecycle' protocol."
                                    component-name)))))))
 
