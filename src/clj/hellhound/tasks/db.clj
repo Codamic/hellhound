@@ -46,7 +46,7 @@
 
 (defn databases-to-migration
   []
-  (keys (db-config)))
+  (vec (keys (db-config))))
 
 (defn get-lock
   "Get the migrations listed in the `migration.lock` file and reset the
@@ -89,8 +89,9 @@
   [db-name]
   (core/info (format "Setting up the '%s' database for migration..." db-name))
   (-> (component/start-component db-name)
-      :component
-      (.setup)))
+      println
+      (.setup))
+  [])
 
 ;; Command functions ---------------------------------------
 (defn create
@@ -102,7 +103,9 @@
   The most important thing to remember is that the database key name in the
   configuration **should** match the component name in the system map."
   [& rest]
-  (map setup-db (databases-to-migration)))
+  (core/info "Creating databases...")
+  (doseq [db (databases-to-migration)]
+    (setup-db db)))
 
 (defn migrate
   "Run the migrations in order by calling `up` function of each
@@ -134,7 +137,7 @@
   (core/error (format "Can't find the command '%s'." cmd)))
 
 
-(defn -main
+(defn main
   [command & rest]
   (cond
     (= command "migration") (apply new-migrate rest)

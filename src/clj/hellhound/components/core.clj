@@ -12,7 +12,7 @@
 (def ^:private default-system (atom {}))
 
 ;; Private Functions -----------------------------
-(declare get-system-entry start-component)
+(declare get-system-entry start-component  get-system-entry)
 
 (defn- throw-exception
   [& rest]
@@ -92,11 +92,11 @@
   "Start the component given by `name` from the default system map or
   the given `system`."
   ([name]
-   (let [component (get-component name)]
+   (let [component (get-system-entry name)]
      (start-component name component)))
 
   ([name data]
-   (start-component name data @default-system))
+   (start-component name data default-system))
 
   ([name data system]
    (let [bundle {:name name :data data :system system :component (:record data)}]
@@ -111,11 +111,11 @@
   "Stop the given component by `name` from default system or
   given `system` map."
   ([name]
-   (let [component (get-component name)]
+   (let [component (get-system-entry name)]
      (stop-component name component)))
 
   ([name data]
-   (stop-component name data @default-system))
+   (stop-component name data default-system))
 
   ([name data system]
    (if (started? data)
