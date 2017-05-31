@@ -12,7 +12,7 @@
   `Lifecycle` protocol. This way **HellHound** can manage database accordingly
   to the implementation of this protocol. For example in order to create the database,
   **HellHound** uses the `setup` function of the implementated protocol."
-  (setup [component]
+  (setup [component storage-name]
     "This function should bootstrap the database and setup the necessary
      means for the database component to work. **HellHound** will call
      this function only for bootstrapping the database. One of the usual
@@ -23,4 +23,10 @@
   (teardown [component]
     "In order to clean up after initial database changes like creating
      a database or user or any similar action, **HellHound** will call
-     this function."))
+     this function.")
+
+
+  (submit-migration [component migration-name]
+    "This function calls by `up` function of migration system in order to
+     persist the migration name into the migration storage. In case of RDBMs
+     this function should insert a record into storage area which should be table."))

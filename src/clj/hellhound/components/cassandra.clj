@@ -101,7 +101,7 @@
   ;; with this component
   protocols/DatabaseLifecycle
 
-  (setup [this]
+  (setup [this storage-name]
     (let [session (:session this)]
       (check-session session "Cassandra")
 
@@ -112,6 +112,16 @@
                                (:name keyspace-config)
                                (hayt/with (:details keyspace-config))))
 
+        (hayt/create-table
+         (hayt/if-exists false)
+         storage-name
+         (hayt/column-definitions {:name :varchar
+                                  ;; int because we use epoch time
+                                  :timestamp :int
+                                  :applies :Boolean
+                                  :primary-key [:name :timestamp]}))
+
         (assoc this :keyspace (:name keyspace-config)))))
 
-  (teardown [this]))
+  (teardown [this])
+  (submit-migration [this record]))

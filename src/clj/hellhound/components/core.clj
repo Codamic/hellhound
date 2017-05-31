@@ -87,7 +87,7 @@
     (swap! system update-started-system name started-component)
     (assoc all :system system)))
 
-(defn- start-component
+(defn start-component
   "Start the given component"
   [name data system]
   (let [bundle {:name name :data data :system system}]
