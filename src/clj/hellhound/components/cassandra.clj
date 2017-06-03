@@ -16,15 +16,20 @@
 (declare ->Cassandra)
 
 ;; Specs ---------------------------------------------------
+(spec/def ::keyspace
+  (spec/keys :req [::name ::replication]))
+
 (spec/def ::cassanda-configuration
   (spec/keys :req [::connection ::keyspace]))
-
 
 ;; Private functions ---------------------------------------
 (defn- connect
   [config]
   (let [cluster (alia/cluster (:connecttion config))]
-    (alia/connect cluster)))
+    (try
+      (alia/connect cluster)
+      (catch com.datastax.driver.core.exceptions.NoHostAvailableException e
+        (throw (ex-info "Can't connect to Cassandra Cluster." {}))))))
 
 (defn- check-session
   [session name]
@@ -42,8 +47,11 @@
   (try
     (alia/execute session (format "USE %s;" keyspace))
     (catch clojure.lang.ExceptionInfo e
-      (throw
-       (ex-info "Keyspace is not present. You need to migrate first." {})))))
+      (let [err-msg (.getMessage (:exception (ex-data e)))]
+        (if (clojure.string/ends-with? err-msg "does not exist")
+          (do (logger/warn err-msg)
+              (logger/warn "You need to run the migrations first."))
+          (logger/error err-msg))))))
 
 (defn cassandra-config
   "Returns the cassandra configuration"
@@ -79,13 +87,13 @@
   (start [this]
     ;; Validate Configuration
     (spec/valid? ::cassanda-configuration options)
-
     (logger/info "Connecting to Cassandra cluster...")
 
     ;; Connect to the cluster and select the default keyspace
-    (let [session   (connect options)
-          keyspace  (:name (:keyspace options))]
+    (let [session          (connect options)
+          keyspace         (:name (:keyspace options))]
       (select-keyspace session keyspace)
+      (logger/info "Connected to cassandra cluster.")
       (assoc this :session session :keyspace keyspace)))
 
   (stop [this]
@@ -105,21 +113,27 @@
     (let [session (:session this)]
       (check-session session "Cassandra")
 
-      (let [keyspace-config (:keyspace (:options this))]
+      (let [keyspace-config (:keyspace (:options this))
+            replication     {:replication (:replication keyspace-config)}]
+
+        (logger/info "Creating the keyspace...")
         (alia/execute
          session
-         (hayt/create-keyspace (hayt/if-exists false)
-                               (:name keyspace-config)
-                               (hayt/with (:details keyspace-config))))
+         (hayt/create-keyspace (:name keyspace-config)
+                               (hayt/if-exists false)
+                               (hayt/with replication)))
 
-        (hayt/create-table
-         (hayt/if-exists false)
-         storage-name
-         (hayt/column-definitions {:name :varchar
-                                  ;; int because we use epoch time
-                                  :timestamp :int
-                                  :applies :Boolean
-                                  :primary-key [:name :timestamp]}))
+        (logger/info "Creating migration storage...")
+        (alia/execute
+         session
+         (hayt/create-table
+          storage-name
+          (hayt/if-exists false)
+          (hayt/column-definitions {:name :varchar
+                                    ;; int because we use epoch time
+                                    :timestamp :int
+                                    :applies :Boolean
+                                    :primary-key [:name :timestamp]})))
 
         (assoc this :keyspace (:name keyspace-config)))))
 
