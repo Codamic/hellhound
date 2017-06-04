@@ -103,8 +103,6 @@
    (start-component name data default-system))
 
   ([name data system]
-   (println "starting")
-   (println name)
    (let [bundle {:name name :data data :system system}]
      (if-not (started? data)
        (-> bundle
@@ -124,8 +122,6 @@
    (stop-component name data default-system))
 
   ([name data system]
-   (println "stopppppp")
-   (println name)
    (if (started? data)
      (let [requirements (or (:requires data) [])
            record       (:record   data)]

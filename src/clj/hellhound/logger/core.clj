@@ -89,47 +89,26 @@
   (let [c (:channel (component/get-component :logger))]
     (apply log c :fatal string rest)))
 
-;; (defn start-logger
-;;   "Log the `log-chan` info stdout."
-;;   [channel]
-;;   (async/thread
-;;     (let [log-msg1  (async/<!! channel)]
-;;       (loop [log-msg log-msg1]
-;;           (println log-msg)
-;;         (println (= log-msg :exit))
-;;         (if (= log-msg :exit)
-;;           (async/close! channel)
-;;           (when log-msg
-;;             (println "zxczxc")
-;;             (println
-;;              (format "[%s] <%s>: %s"
-;;                      (timestamp)
-;;                      (render-level (:level log-msg))
-;;                      (:msg log-msg)))
-;;             (recur (async/<!! channel))))))))
-
 (defn start-logger
   "Log the `log-chan` info stdout."
   [channel]
   (async/thread
-    (let [log-msg1  (async/<!! channel)]
-      (loop [log-msg log-msg1]
-        (if (= log-msg :exit)
-          (do
-            (async/close! channel)
-            (throw (Exception. "czxczxczxczxczxczx")))
-          (when log-msg
-            (println
-             (format "[%s] <%s>: %s"
-                     (timestamp)
-                     (render-level (:level log-msg))
-                     (:msg log-msg)))
-            (recur (async/<!! channel))))))))
+    (loop [log-msg (async/<!! channel)]
+      (if (= log-msg :exit)
+        (async/close! channel)
+        (when log-msg
+          (println
+           (format "[%s] <%s>: %s"
+                   (timestamp)
+                   (render-level (:level log-msg))
+                   (:msg log-msg)))
+          (recur (async/<!! channel)))))))
 
 (defn stop-logger
   "Stop the logger activity"
   [log-chan]
-  (async/close! log-chan)
+
   (let [c (:channel (component/get-component :logger))]
     (async/>!! c :exit)
-    (async/close! c)))
+    (async/close! c))
+  (async/close! log-chan))

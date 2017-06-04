@@ -108,7 +108,7 @@
   (core/info "Creating databases...")
   (doseq [db (databases-to-migration)]
     (setup-db db)
-    (component/stop))
+    (component/stop-component db))
   (core/info "Stopping the system..."))
 
 (defn migrate
