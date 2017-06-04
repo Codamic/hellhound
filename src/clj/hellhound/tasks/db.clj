@@ -85,15 +85,19 @@
                   (str nsname ".clj")
                   #"-" "_")))
 
+(defn start-component
+  [name]
+  (-> @(:system (component/start-component name))
+      :components
+      (get name)
+      :record))
+
 (defn setup-db
   [db-name]
   (core/info (format "Setting up the '%s' database for migration..." db-name))
-  (-> (:system (component/start-component db-name))
-      (deref)
-      :components
-      (get db-name)
-      :record
-      (.setup migration-storage-name)))
+  (-> (start-component db-name)
+      (.setup migration-storage-name))
+  (component/stop-component db-name))
 
 ;; Command functions ---------------------------------------
 (defn create
@@ -107,8 +111,7 @@
   [& rest]
   (core/info "Creating databases...")
   (doseq [db (databases-to-migration)]
-    (setup-db db)
-    (component/stop-component db))
+    (setup-db db))
   (core/info "Stopping the system..."))
 
 (defn migrate
