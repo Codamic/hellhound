@@ -27,7 +27,7 @@
   [config]
   (let [cluster (alia/cluster (:connecttion config))]
     (try
-      (alia/connect cluster)
+      [cluster (alia/connect cluster)]
       (catch com.datastax.driver.core.exceptions.NoHostAvailableException e
         (throw (ex-info "Can't connect to Cassandra Cluster." {}))))))
 
@@ -90,11 +90,14 @@
     (logger/info "Connecting to Cassandra cluster...")
 
     ;; Connect to the cluster and select the default keyspace
-    (let [session          (connect options)
+    (let [[cluster session]          (connect options)
           keyspace         (:name (:keyspace options))]
       (select-keyspace session keyspace)
       (logger/info "Connected to cassandra cluster.")
-      (assoc this :session session :keyspace keyspace)))
+      (assoc this
+             :cluster cluster
+             :session session
+             :keyspace keyspace)))
 
   (stop [this]
     (if (:session this)
@@ -102,7 +105,8 @@
         (logger/info "Disconnecting from Cassandra cluster...")
         ;; Shutting down the connection to cluster
         (alia/shutdown (:session this))
-        (dissoc this :session :keyspace :keyspace))
+        (alia/shutdown (:cluster this))
+        (dissoc this :session :keyspace))
       this))
 
   ;; DatabaseLifecycle implementation. Allow the migration system to operate
