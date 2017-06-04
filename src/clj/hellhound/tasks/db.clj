@@ -88,10 +88,12 @@
 (defn setup-db
   [db-name]
   (core/info (format "Setting up the '%s' database for migration..." db-name))
-  (-> (component/start-component db-name)
-      println
-      (.setup))
-  [])
+  (-> (:system (component/start-component db-name))
+      (deref)
+      :components
+      (get db-name)
+      :record
+      (.setup migration-storage-name)))
 
 ;; Command functions ---------------------------------------
 (defn create
@@ -105,7 +107,9 @@
   [& rest]
   (core/info "Creating databases...")
   (doseq [db (databases-to-migration)]
-    (setup-db db)))
+    (setup-db db)
+    (component/stop))
+  (core/info "Stopping the system..."))
 
 (defn migrate
   "Run the migrations in order by calling `up` function of each

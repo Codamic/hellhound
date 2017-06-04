@@ -9,15 +9,17 @@
 (defrecord Logger []
   protocols/Lifecycle
   (start [this]
-    (let [log-chan (async/chan 1000)]
-      (start-logger log-chan)
-      (assoc this :channel log-chan)))
+    (let [log-chan (async/chan 1000)
+          tchannel (start-logger log-chan)]
+      (merge this
+             {:channel log-chan
+              :thread-channel tchannel} )))
 
   (stop [this]
-    (if (:channel this)
+    (if (:thread-channel this)
       (do
-        (stop-logger (:channel this))
-        (dissoc this :channel))
+        (stop-logger (:thread-channel this))
+        (dissoc this :channel :thread-channel))
       this)))
 
 

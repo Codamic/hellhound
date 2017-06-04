@@ -81,10 +81,14 @@
 
 (defn- run-the-start-method
   [{:keys [name data system] :as all}]
-  (let [record       (:record data)
-        started-component (.start record)]
+  (let [record            (:record data)]
+
+    ;; I required component was not defined in the system
+    (if (nil? record)
+      (throw (ex-info (format "Can't find '%s' component in the system" name) {})))
+
     ;; Replace the record value with the started instance
-    (swap! system update-started-system name started-component)
+    (swap! system update-started-system name (.start record))
     (assoc all :system system)))
 
 ;; Public Functions ------------------------------
@@ -99,7 +103,9 @@
    (start-component name data default-system))
 
   ([name data system]
-   (let [bundle {:name name :data data :system system :component (:record data)}]
+   (println "starting")
+   (println name)
+   (let [bundle {:name name :data data :system system}]
      (if-not (started? data)
        (-> bundle
            (start-dependencies)
@@ -118,6 +124,8 @@
    (stop-component name data default-system))
 
   ([name data system]
+   (println "stopppppp")
+   (println name)
    (if (started? data)
      (let [requirements (or (:requires data) [])
            record       (:record   data)]

@@ -135,6 +135,7 @@
                                     :applies :Boolean
                                     :primary-key [:name :timestamp]})))
 
+        (logger/info "Migration storage created.")
         (assoc this :keyspace (:name keyspace-config)))))
 
   (teardown [this])
