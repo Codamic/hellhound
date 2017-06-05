@@ -58,6 +58,26 @@
   []
   (:cassandra (:db (hellhound/application-config))))
 
+(defn create-keyspace
+  [session name replication]
+  (alia/execute session
+                (hayt/create-keyspace name
+                                      (hayt/if-exists false)
+                                      (hayt/with replication))))
+
+(def table-schema
+  {:name :varchar
+                                  ;; int because we use epoch time
+                                  :timestamp :int
+                                  :applies :Boolean
+                                  :primary-key [:name :timestamp]})
+(defn create-table
+  [session name]
+  (alia/execute
+   session
+   (hayt/create-table name
+                      (hayt/if-exists false)
+                      (hayt/column-definitions table-schema))))
 
 (defn make-cassandra-client
   "Create an instance of `Cassandra` record to be used with a `component`
@@ -92,21 +112,27 @@
     ;; Connect to the cluster and select the default keyspace
     (let [[cluster session]          (connect options)
           keyspace         (:name (:keyspace options))]
+
+      ;; Select the keyspace if it exists.
       (select-keyspace session keyspace)
+
       (logger/info "Connected to cassandra cluster.")
+
       (assoc this
+             :options options
              :cluster cluster
              :session session
              :keyspace keyspace)))
 
   (stop [this]
     (if (:session this)
-      (do
+      (let [session (:session this)
+            cluster (:cluster this)]
         (logger/info "Disconnecting from Cassandra cluster...")
         ;; Shutting down the connection to cluster
-        (alia/shutdown (:session this))
-        (alia/shutdown (:cluster this))
-        (dissoc this :session :keyspace))
+        (alia/shutdown session)
+        (alia/shutdown cluster)
+        (dissoc this :session :cluster :keyspace))
       this))
 
   ;; DatabaseLifecycle implementation. Allow the migration system to operate
@@ -114,33 +140,19 @@
   protocols/DatabaseLifecycle
 
   (setup [this storage-name]
-    (let [session (:session this)]
-      (check-session session "Cassandra")
+    (check-session (:session this) "Cassandra")
+    (let [session         (:session this)
+          keyspace-config (:keyspace    (:options this))
+          replication     {:replication (:replication keyspace-config)}]
 
-      (let [keyspace-config (:keyspace (:options this))
-            replication     {:replication (:replication keyspace-config)}]
+      (logger/info "Creating the keyspace...")
+      (create-keyspace session (:name keyspace-config) replication)
 
-        (logger/info "Creating the keyspace...")
-        (alia/execute
-         session
-         (hayt/create-keyspace (:name keyspace-config)
-                               (hayt/if-exists false)
-                               (hayt/with replication)))
+      (logger/info "Creating migration storage...")
+      (create-table session storage-name)
 
-        (logger/info "Creating migration storage...")
-        (alia/execute
-         session
-         (hayt/create-table
-          storage-name
-          (hayt/if-exists false)
-          (hayt/column-definitions {:name :varchar
-                                    ;; int because we use epoch time
-                                    :timestamp :int
-                                    :applies :Boolean
-                                    :primary-key [:name :timestamp]})))
-
-        (logger/info "Migration storage created.")
-        (assoc this :keyspace (:name keyspace-config)))))
+      (logger/info "Migration storage created.")
+      (assoc this :keyspace (:name keyspace-config))))
 
   (teardown [this])
   (submit-migration [this record]))
