@@ -10,10 +10,19 @@
    ;; Internals
    [hellhound.components.protocols :as protocols]
    [hellhound.logger.core          :as logger]
-   [hellhound.core                 :as hellhound]))
+   [hellhound.core                 :as hellhound]
+   [hellhound.spec                 :as hspec]))
 
 
 (declare ->Cassandra)
+
+;; Defs ----------------------------------------------------
+(def table-schema
+  {:name :varchar
+                                  ;; int because we use epoch time
+                                  :timestamp :int
+                                  :applies :Boolean
+                                  :primary-key [:name :timestamp]})
 
 ;; Specs ---------------------------------------------------
 (spec/def ::keyspace
@@ -39,6 +48,21 @@
             {:cause "Cassandra component"}))))
 
 
+(defn- create-keyspace
+  [session name replication]
+  (alia/execute session
+                (hayt/create-keyspace name
+                                      (hayt/if-exists false)
+                                      (hayt/with replication))))
+
+(defn- create-table
+  [session name]
+  (alia/execute
+   session
+   (hayt/create-table name
+                      (hayt/if-exists false)
+                      (hayt/column-definitions table-schema))))
+
 ;; Public functions ----------------------------------------
 (defn select-keyspace
   "Use the given keyspace name or throw an exception if the keyspace was
@@ -58,41 +82,23 @@
   []
   (:cassandra (:db (hellhound/application-config))))
 
-(defn create-keyspace
-  [session name replication]
-  (alia/execute session
-                (hayt/create-keyspace name
-                                      (hayt/if-exists false)
-                                      (hayt/with replication))))
-
-(def table-schema
-  {:name :varchar
-                                  ;; int because we use epoch time
-                                  :timestamp :int
-                                  :applies :Boolean
-                                  :primary-key [:name :timestamp]})
-(defn create-table
-  [session name]
-  (alia/execute
-   session
-   (hayt/create-table name
-                      (hayt/if-exists false)
-                      (hayt/column-definitions table-schema))))
-
 (defn make-cassandra-client
   "Create an instance of `Cassandra` record to be used with a `component`
   compatible system."
   ([]
    (make-cassandra-client {}))
+
   ([options]
    (let [config (merge (cassandra-config) options)]
      (->Cassandra config))))
+
 
 (defn new-cassandra-client
   "Create an instance from cassandra component. This function is meant
   to be used with `hellhound.system.defsystem` macro."
   ([system-map]
    (new-cassandra-client system-map {}))
+
   ([system-map options]
    (let [config (merge (cassandra-config) options)]
      (update-in system-map [:components :cassandra] (->Cassandra config)))))
@@ -106,7 +112,7 @@
 
   (start [this]
     ;; Validate Configuration
-    (spec/valid? ::cassanda-configuration options)
+    (hspec/validate ::cassanda-configuration options)
     (logger/info "Connecting to Cassandra cluster...")
 
     ;; Connect to the cluster and select the default keyspace
