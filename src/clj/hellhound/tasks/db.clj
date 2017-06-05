@@ -81,9 +81,10 @@
 
 (defn make-file-path
   [nsname]
-  (core/in-migrations (clojure.string/replace
-                  (str nsname ".clj")
-                  #"-" "_")))
+  (core/in-migrations
+   (clojure.string/replace
+    (str nsname ".clj")
+    #"-" "_")))
 
 (defn start-component
   [name]
@@ -167,6 +168,10 @@
 
 (defn main
   [command & rest]
+  ;; Read and update the migration information from lock file
+  (get-lock)
+
+  ;; Dispatch the command
   (cond
     (= command "migration") (apply new-migrate rest)
     (= command "migrate")   (apply migrate rest)
