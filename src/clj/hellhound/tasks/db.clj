@@ -99,6 +99,13 @@
       (.setup migration-storage-name))
   (component/stop-component db-name))
 
+(defn teardown-db
+  [db-name]
+  (core/info (format "Tearing down the '%s' database..." db-name))
+  (-> (start-component db-name)
+      (.teardown))
+  (component/stop-component db-name))
+
 ;; Command functions ---------------------------------------
 (defn create
   "Calls the `setup` function of each database component provided in the
@@ -112,6 +119,20 @@
   (core/info "Creating databases...")
   (doseq [db (databases-to-migration)]
     (setup-db db))
+  (core/info "Stopping the system..."))
+
+(defn destroy
+  "Calls the `teardown` function of each database component provided in the
+  environment configuration. Basically each key under the `:db` entry
+  in the configuration file. The goal of this task is to create and setup
+  the necessary db related stuff.
+
+  The most important thing to remember is that the database key name in the
+  configuration **should** match the component name in the system map."
+  [& rest]
+  (core/info "Dropping databases...")
+  (doseq [db (databases-to-migration)]
+    (teardown-db db))
   (core/info "Stopping the system..."))
 
 (defn migrate
@@ -150,4 +171,5 @@
     (= command "migration") (apply new-migrate rest)
     (= command "migrate")   (apply migrate rest)
     (= command "create")    (apply create rest)
+    (= command "destroy")   (apply destroy rest)
     :else (wrong-command command)))

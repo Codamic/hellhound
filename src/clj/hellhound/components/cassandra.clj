@@ -25,8 +25,16 @@
                                   :primary-key [:name :timestamp]})
 
 ;; Specs ---------------------------------------------------
+(spec/def ::name string?)
+(spec/def ::replication string?)
 (spec/def ::keyspace
   (spec/keys :req [::name ::replication]))
+
+(spec/def ::contact-hosts
+  (spec/coll-of string?))
+
+(spec/def ::connection
+  (spec/keys :req [::contact-hosts]))
 
 (spec/def ::cassanda-configuration
   (spec/keys :req [::connection ::keyspace]))
@@ -54,6 +62,11 @@
                 (hayt/create-keyspace name
                                       (hayt/if-exists false)
                                       (hayt/with replication))))
+
+(defn- drop-keyspace
+  [session name]
+  (alia/execute session
+                (hayt/drop-keyspace name (hayt/if-exists))))
 
 (defn- create-table
   [session name]
@@ -160,5 +173,12 @@
       (logger/info "Migration storage created.")
       (assoc this :keyspace (:name keyspace-config))))
 
-  (teardown [this])
+  (teardown [this]
+    (check-session (:session this) "Cassandra")
+
+    (let [session         (:session this)
+          keyspace-config (:keyspace (:options this))]
+      (logger/info "Dropping keyspace '%s'..." (:name keyspace-config))
+      (drop-keyspace session (:name keyspace-config))))
+
   (submit-migration [this record]))

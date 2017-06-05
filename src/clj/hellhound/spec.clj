@@ -14,6 +14,9 @@
 
 (defn validate
   [spec value]
-  (if-not (spec/valid? spec value)
-    (throw-exception spec value)
-    value))
+  ;; TODO: ENABLE this function when decided to work on spec
+  ;;       task
+  ;; (if-not (spec/valid? spec value)
+  ;;   (throw-exception spec value)
+  ;;   value)
+  value)
