@@ -93,19 +93,25 @@
       (get name)
       :record))
 
+(defn with-active-system
+  [db f]
+  (let [component (start-component db)
+        session   (:session component)]
+    (f session component))
+  (component/stop-component db))
+
 (defn setup-db
   [db-name]
-  (core/info (format "Setting up the '%s' database for migration..." db-name))
-  (-> (start-component db-name)
-      (.setup migration-storage-name))
-  (component/stop-component db-name))
+  (with-active-system db-name
+    (fn [session component]
+      (.setup component migration-storage-name))))
 
 (defn teardown-db
   [db-name]
   (core/info (format "Tearing down the '%s' database..." db-name))
-  (-> (start-component db-name)
-      (.teardown))
-  (component/stop-component db-name))
+  (with-active-system db-name
+    (fn [session component]
+      (.teardown component))))
 
 ;; Command functions ---------------------------------------
 (defn create
