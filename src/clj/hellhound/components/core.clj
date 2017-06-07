@@ -167,6 +167,8 @@
   (hellhound/load-runtime-configuration)
   (iterate-components system start-component))
 
+;; TODO: Wait for all the components to terminate gracefully
+;; TODO: Add `force` flag.
 (defn stop-system
   "Stop the given system by calling stop on all components"
   [system]

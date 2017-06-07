@@ -7,6 +7,7 @@
   (stop  [component]
     "The ending point of any component's life cycle."))
 
+
 (defprotocol DatabaseLifecycle
   "Any database component should implement this protocol in addition to
   `Lifecycle` protocol. This way **HellHound** can manage database accordingly

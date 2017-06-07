@@ -1,12 +1,11 @@
 (ns hellhound.tasks.db
   (:require
-   [clojure.edn          :as edn]
-   [environ.core         :refer [env]]
-   [clojure.java.io      :as io]
+   [clojure.edn               :as edn]
+   [clojure.java.io           :as io]
    ;; Internals
-   [hellhound.core       :as hellhound]
-   [hellhound.tasks.core :as core]
-   [hellhound.components.core :as component]))
+   [hellhound.core            :as hellhound]
+   [hellhound.tasks.core      :as core]
+   [hellhound.components.core :as system]))
 
 ;; Definitions ---------------------------------------------
 ;; Lock is not a great name i know, but i don't have
@@ -88,29 +87,38 @@
 
 (defn start-component
   [name]
-  (-> @(:system (component/start-component name))
+  (-> @(:system (system/start-component name))
       :components
       (get name)
       :record))
 
+(defn start-databases
+  ""
+  []
+  (doseq [component (databases-to-migration)]
+    (start-component component)))
+
+(defn stop-databases
+  "Stop the whole system"
+  []
+  (system/stop))
+
 (defn with-active-system
   [db f]
-  (let [component (start-component db)
-        session   (:session component)]
-    (f session component))
-  (component/stop-component db))
+  (let [component-record (system/get-component db)]
+    (f component-record)))
 
 (defn setup-db
   [db-name]
   (with-active-system db-name
-    (fn [session component]
+    (fn [component]
       (.setup component migration-storage-name))))
 
 (defn teardown-db
   [db-name]
   (core/info (format "Tearing down the '%s' database..." db-name))
   (with-active-system db-name
-    (fn [session component]
+    (fn [component]
       (.teardown component))))
 
 ;; Command functions ---------------------------------------
@@ -125,8 +133,8 @@
   [& rest]
   (core/info "Creating databases...")
   (doseq [db (databases-to-migration)]
-    (setup-db db))
-  (core/info "Stopping the system..."))
+    (setup-db db)))
+
 
 (defn destroy
   "Calls the `teardown` function of each database component provided in the
@@ -171,6 +179,19 @@
   [cmd]
   (core/error (format "Can't find the command '%s'." cmd)))
 
+(defn run-command
+  "Run the given function with given args after starting the database
+  components"
+  [f args]
+
+  ;; Start all the database components mentioned in environment's
+  ;; configuration under the `:db` key
+  (core/info "Starting all the database components...")
+  (start-databases)
+  (apply f args)
+  ;; Stop all the running components
+  (core/info "Stopping the system...")
+  (stop-databases))
 
 (defn main
   [command & rest]
@@ -179,8 +200,8 @@
 
   ;; Dispatch the command
   (cond
-    (= command "migration") (apply new-migrate rest)
-    (= command "migrate")   (apply migrate rest)
-    (= command "create")    (apply create rest)
-    (= command "destroy")   (apply destroy rest)
+    (= command "migration") (run-command new-migrate rest)
+    (= command "migrate")   (run-command migrate rest)
+    (= command "create")    (run-command create rest)
+    (= command "destroy")   (run-command destroy rest)
     :else (wrong-command command)))
