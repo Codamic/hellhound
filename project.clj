@@ -1,15 +1,25 @@
-(defproject codamic/hellhound "0.14.0-SNAPSHOT"
-  :description "A simple full-stack web framework for clojure"
+(defproject codamic/hellhound "1.0.0-SNAPSHOT"
+  :description "A simple full-stack web framework for clojure on top of Pnedestal"
   :license     {"GPLv3"
                 "https://www.gnu.org/licenses/gpl.html"}
   :url         "http://github.com/Codamic/hellhound"
   :scm         {:url "https://github.com/Codamic/hellhound"}
 
-  :dependencies [[org.clojure/clojure        "1.9.0-alpha16"]
+  :dependencies [[org.clojure/clojure        "1.8.0"]
                  [org.clojure/clojurescript  "1.9.521"]
-                 [org.clojure/core.async     "0.3.442"]
 
+                 [io.pedestal/pedestal.service "0.5.2"]
 
+                 ;; TODO: Move the adapters to seperate jars. For example hellhound.jetty
+                 ;;[io.pedestal/pedestal.jetty "0.5.2"]
+                 [io.pedestal/pedestal.immutant "0.5.2"]
+                 ;; [io.pedestal/pedestal.tomcat "0.5.2"]
+
+                 [io.pedestal/pedestal.log         "0.5.2"]
+                 [io.pedestal/pedestal.interceptor "0.5.2"]
+                 [io.pedestal/pedestal.route       "0.5.2"]
+                 ;; Communication
+                 [codamic/sente              "1.11.1"]
                  ;; TODO: We have to move these stuff into a different jar
                  ;; to avoid unnecessary jar installation
 
@@ -17,21 +27,9 @@
                  ;;[cc.qbits/alia              "4.0.0-beta10"]
                  ;; -------------------------------------------------------
 
-                 ;; Bidirectional routing
-                 [bidi                       "2.0.17"]
-
-                 ;; Web Application spec
-                 [ring                       "1.6.0"]
-                 [ring/ring-defaults         "0.3.0-beta1"]
-                 [ring-logger                "0.7.7"]
-                 [bk/ring-gzip               "0.2.1"]
-                 [ring/ring-anti-forgery     "1.1.0-beta1"]
-
                  ;; Time calculation
                  [clj-time                   "0.13.0"]
 
-                 ;; Communication
-                 [codamic/sente              "1.11.1"]
 
                  ;; UI
                  [reagent                    "0.6.1"]
@@ -43,18 +41,11 @@
                  ;; I18n
                  [com.taoensso/tempura       "1.1.2"]
 
-                 ;; Configuration manager
-                 [environ                    "1.1.0"]
-
                  ;; Transit support
                  [com.cognitect/transit-clj  "0.8.300"]
                  [com.cognitect/transit-cljs "0.8.239"]
 
 
-                 [org.immutant/immutant      "2.1.6"
-                  :exclusions [ch.qos.logback/logback-classic]]
-
-                 ;; Misc
                  [colorize                   "0.1.1"
                   :exclusions [org.clojure/clojure]]
 
@@ -107,18 +98,18 @@
                 :source-paths ["src/cljs" "test/cljs" "src/cljc" "test/cljc"]
                 :compiler {:output-to "resources/public/js/compiled/testable.js"
                            :main hellhound.test-runner
-                           :optimizations :advance}}
+                           :optimizations :advance}}]}
 
-               ;; {:id "min"
-               ;;  :source-paths ["src/cljs" "src/cljc"]
-               ;;  :jar true
-               ;;  :compiler {:main hellhound.core
-               ;;             :output-to "resources/public/js/compiled/hellhound.js"
-               ;;             :output-dir "target"
-               ;;             :source-map-timestamp true
-               ;;             :optimizations :advanced
-               ;;             :pretty-print false}}
-               ]}
+  ;; {:id "min"
+  ;;  :source-paths ["src/cljs" "src/cljc"]
+  ;;  :jar true
+  ;;  :compiler {:main hellhound.core
+  ;;             :output-to "resources/public/js/compiled/hellhound.js"
+  ;;             :output-dir "target"
+  ;;             :source-map-timestamp true
+  ;;             :optimizations :advanced
+  ;;             :pretty-print false}}
+
 
   :doo {:build "test"}
 
