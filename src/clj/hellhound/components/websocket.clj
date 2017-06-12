@@ -58,7 +58,7 @@
                             :adapter (get-sch-adapter)}))))
 
 
-(defn make-websocket
+(defn new-websocket
   "Creates a websocket component instance."
   ([router]
    (new-channel-socket-server (router-builder router) (get-sch-adapter) {}))
@@ -66,10 +66,10 @@
    (new-channel-socket-server (router-builder router) (get-sch-adapter) options)))
 
 
-(defn websocket-server
+(defn make-websocket-component
   "Create an instance from websocket component. This function is meant
   to be used with `hellhound.system.defsystem` macro."
   ([system-map]
-   (websocket-server system-map {}))
+   (make-websocket-component system-map {}))
   ([system-map options]
-   (update-in system-map [:components :websocket] (make-websocket options))))
+   (update-in system-map [:components :websocket] (new-websocket options))))
