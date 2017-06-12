@@ -95,22 +95,22 @@
   []
   (:cassandra (:db (hellhound/application-config))))
 
-(defn make-cassandra-client
+(defn new-cassandra-client
   "Create an instance of `Cassandra` record to be used with a `component`
   compatible system."
   ([]
-   (make-cassandra-client {}))
+   (new-cassandra-client {}))
 
   ([options]
    (let [config (merge (cassandra-config) options)]
      (->Cassandra config))))
 
 
-(defn new-cassandra-client
+(defn make-cassandra-component
   "Create an instance from cassandra component. This function is meant
   to be used with `hellhound.system.defsystem` macro."
   ([system-map]
-   (new-cassandra-client system-map {}))
+   (make-cassandra-component system-map {}))
 
   ([system-map options]
    (let [config (merge (cassandra-config) options)]
