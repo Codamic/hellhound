@@ -1,12 +1,14 @@
 (ns hellhound.components.core
   "A very light weight and effecient implementation of clojure components."
   (:require [hellhound.core                 :as hellhound]
+            [hellhound.components.defaults  :as defaults]
             [hellhound.components.protocols :as protocols]))
 
 ;; Vars ------------------------------------------
 ;; Default structure for a system map
 (def ^:private default-system-structure
-  {:components {}})
+  {:components {}
+   :services   (defaults/services)})
 
 ;; Main storage for system data.
 (def ^:private default-system (atom {}))
