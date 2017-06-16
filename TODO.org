@@ -1,0 +1,3 @@
+* Guides
+** [TODO] Getting started
+** [TODO] why we chose table routing syntax
