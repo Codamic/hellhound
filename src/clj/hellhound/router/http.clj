@@ -1,18 +1,14 @@
 (ns hellhound.router.http
   (:require
    [io.pedestal.http.route.definition.table :as table]
-   [hellhound.components.core               :as system]))
+   [hellhound.components.core               :as system]
+   [hellhound.core                          :as hellhound]))
 
 
 (defn- websocket
   []
   (system/get-component :websocket))
 
-(defn route-table
-  "Return the current route table. Use this function for debuggin purposes."
-  [
-
-   @__routes__])
 
 (defn not-found
   "Default route for bidi. This means that a route that does not
@@ -21,29 +17,26 @@
   ;; TODO: We should provide a better view of routes here
   {:status 404
    :headers {"Content-Type" "text/html"}
-   :body (str "<pre>"
-              (clojure.string/replace (with-out-str
-                                        (pprint (route-table)))
-                                      "\n" "<br />")
-              "</pre>")})
+   :body ""})
+
 
 (defn ws-handshake
   [context]
-  (let [ajax-ws-handshake (:ring-ajax-get-or-ws-handshake (websocket))])
-  (ajax-ws-handshake req))
+  (let [ajax-ws-handshake (:ring-ajax-get-or-ws-handshake (websocket))]
+    (ajax-ws-handshake context)))
 
 (defn ajax-ws-post
   [context]
   (let [post-fn (:ring-ajax-post (websocket))]
-    (post-fn req)))
+    (post-fn context)))
 
 (defmacro defroutes
   [name & body]
   (let [config (hellhound/application-config)
         host   (or (:host config) "localhost")
         scheme (or (:scheme config) "http")]
-   `(table/expand-routes
-     #{{:host ~host :scheme ~scheme}
-       ["/hellhound" :get  ~ws-handshake  :as :hellhound-ws-handshake]
-       ["/hellhound" :post ~ajax-ws-post  :as :hellhound-ws]
-       ~@body})))
+    `(def ~name (io.pedestal.http.route/expand-routes
+                   #{{:host ~host :scheme ~scheme}
+                     ["/hellhound" :get  hellhound.router.http.ws-handshake  :as :hellhound-ws-handshake]
+                     ["/hellhound" :post hellhound.router.http.ajax-ws-post  :as :hellhound-ws]
+                     ~body}))))

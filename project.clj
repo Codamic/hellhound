@@ -5,9 +5,9 @@
   :url         "http://github.com/Codamic/hellhound"
   :scm         {:url "https://github.com/Codamic/hellhound"}
 
-  :dependencies [[org.clojure/clojure        "1.8.0"]
+  :dependencies [[org.clojure/clojure        "1.9.0-alpha17"]
                  [org.clojure/clojurescript  "1.9.521"]
-
+                 [org.clojure/spec.alpha "0.1.123"]
                  [io.pedestal/pedestal.service "0.5.2"]
 
                  ;; TODO: Move the adapters to seperate jars. For example hellhound.jetty

@@ -12,4 +12,9 @@
   "Read the content of the config file with the given `config-name`
   and return a clojure data structure."
   [config-name]
-  (edn/read-string (slurp (io/resource config-name))))
+  (let [resource (io/resource config-name)]
+    (if (nil? resource)
+      (throw (ex-info
+              (format "Can't find the '%s' config file" config-name)
+              {})))
+    (edn/read-string (slurp resource))))
