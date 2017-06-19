@@ -1,15 +1,21 @@
 (ns hellhound.router.http
   (:require
-   [io.pedestal.http.route.definition.table :as table]
+   [clojure.spec.alpha                      :as spec]
+   [io.pedestal.http.route                  :as route]
    [hellhound.components.core               :as system]
    [hellhound.core                          :as hellhound]))
 
+;; Specs ---------------------------------------------------
+(spec/def ::vector-of-routes (spec/coll-of vector?))
+(spec/def ::user-routes (spec/and set? ::vector-of-routes))
 
+;; Private Functions ---------------------------------------
 (defn- websocket
   []
   (system/get-component :websocket))
 
 
+;; Public Functions ----------------------------------------
 (defn not-found
   "Default route for bidi. This means that a route that does not
   exists in the router will cause a 404 error."
@@ -30,13 +36,22 @@
   (let [post-fn (:ring-ajax-post (websocket))]
     (post-fn context)))
 
-(defmacro defroutes
-  [name & body]
+
+(defn hellhound-routes
+  []
   (let [config (hellhound/application-config)
         host   (or (:host config) "localhost")
         scheme (or (:scheme config) "http")]
-    `(def ~name (io.pedestal.http.route/expand-routes
-                   #{{:host ~host :scheme ~scheme}
-                     ["/hellhound" :get  hellhound.router.http.ws-handshake  :as :hellhound-ws-handshake]
-                     ["/hellhound" :post hellhound.router.http.ajax-ws-post  :as :hellhound-ws]
-                     ~body}))))
+    #{
+      ;;{:host host :scheme scheme}
+      ["/hellhound" :get  [ws-handshake]  :route-name :hellhoud/ws-handshake]
+      ["/hellhound" :post [ajax-ws-post]  :route-name :hellhound/ws]}))
+
+
+(defn expand-routes
+  [routes]
+  (let [new-routes (clojure.set/union
+                    (hellhound-routes)
+                    (spec/conform ::user-routes routes))]
+    (route/expand-routes
+       new-routes)))

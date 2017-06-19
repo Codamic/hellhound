@@ -7,7 +7,7 @@
 
   :dependencies [[org.clojure/clojure        "1.9.0-alpha17"]
                  [org.clojure/clojurescript  "1.9.521"]
-                 [org.clojure/spec.alpha "0.1.123"]
+                 [org.clojure/core.async     "0.3.443"]
                  [io.pedestal/pedestal.service "0.5.2"]
 
                  ;; TODO: Move the adapters to seperate jars. For example hellhound.jetty
