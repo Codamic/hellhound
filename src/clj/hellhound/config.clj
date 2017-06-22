@@ -8,6 +8,19 @@
   (:require [clojure.edn     :as edn]
             [clojure.java.io :as io]))
 
+(def ^{:doc "Default configuration hash-map of the hellhound application.
+check out key values of `:keys-doc` meta key."}
+  ^{:keys-doc1
+    {:http-host "The default hostname or ip address to be use as
+                    webserver address (default: localhost)"
+     :http-port "The port number for the web server. (default: 3000"}}
+
+
+  default-config
+
+  {:http-host "localhost"
+   :http-port 3000})
+
 (defn read-config
   "Read the content of the config file with the given `config-name`
   and return a clojure data structure."
