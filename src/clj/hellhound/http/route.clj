@@ -4,7 +4,8 @@
    [clojure.spec.alpha                      :as spec]
    [io.pedestal.http.route                  :as route]
    [hellhound.components.core               :as system]
-   [hellhound.core                          :as hellhound]))
+   [hellhound.core                          :as hellhound]
+   [hellhound.http.static                   :as static]))
 
 ;; Specs ---------------------------------------------------
 (spec/def ::vector-of-routes (spec/coll-of vector?))
@@ -45,6 +46,7 @@
         scheme (or (:scheme config) "http")]
     #{
       ;;{:host host :scheme scheme}
+      ["/assets"    :get  [static/serve-resource] :route-name :public-filesre]
       ["/hellhound" :get  [ws-handshake]  :route-name :hellhoud/ws-handshake]
       ["/hellhound" :post [ajax-ws-post]  :route-name :hellhound/ws]}))
 
