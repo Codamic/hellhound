@@ -1,11 +1,11 @@
 (ns hellhound.http.route
-  "HellHound's http router namespace."
+  "HellHound's http router namespace.
+  DOCTODO"
   (:require
    [clojure.spec.alpha                      :as spec]
    [io.pedestal.http.route                  :as route]
    [hellhound.components.core               :as system]
-   [hellhound.core                          :as hellhound]
-   [hellhound.http.static                   :as static]))
+   [hellhound.core                          :as hellhound]))
 
 ;; Specs ---------------------------------------------------
 (spec/def ::vector-of-routes (spec/coll-of vector?))
@@ -40,21 +40,30 @@
 
 
 (defn hellhound-routes
+  "DOCTODO"
   []
   (let [config (hellhound/application-config)
         host   (or (:host config) "localhost")
         scheme (or (:scheme config) "http")]
-    #{
-      ;;{:host host :scheme scheme}
-      ["/assets"    :get  [static/serve-resource] :route-name :public-filesre]
-      ["/hellhound" :get  [ws-handshake]  :route-name :hellhoud/ws-handshake]
+    #{["/hellhound" :get  [ws-handshake]  :route-name :hellhoud/ws-handshake]
       ["/hellhound" :post [ajax-ws-post]  :route-name :hellhound/ws]}))
 
 
 (defn expand-routes
+  "Retruns a set of user defined routes and injects hellhounds
+  routes into the set.
+
+  DOCTODO"
   [routes]
   (let [new-routes (clojure.set/union
                     (hellhound-routes)
                     (spec/conform ::user-routes routes))]
     (route/expand-routes
-       new-routes)))
+     new-routes)))
+
+(defmacro defroutes
+  "A shortcut macro for defining routes.
+  DOCTODO"
+  [routes-name routes]
+  `(def ~routes-name
+     (hellhound.http.route/expand-routes #{~@routes})))
