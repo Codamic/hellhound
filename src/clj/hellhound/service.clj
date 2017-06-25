@@ -19,7 +19,6 @@
    ::http/container-options {:h2c? true
                              :h2? false}})
 
-
 (defn create-service-map
   "Creates a system map and fills some default values for the map"
   [system-map]

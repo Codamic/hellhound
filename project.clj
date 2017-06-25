@@ -6,7 +6,7 @@
   :scm         {:url "https://github.com/Codamic/hellhound"}
 
   :dependencies [[org.clojure/clojure        "1.9.0-alpha17"]
-                 [org.clojure/clojurescript  "1.9.521"]
+                 [org.clojure/clojurescript  "1.9.562"]
                  [org.clojure/core.async     "0.3.443"]
                  [io.pedestal/pedestal.service "0.5.2"]
 
@@ -32,8 +32,8 @@
 
 
                  ;; UI
-                 [reagent                    "0.6.1"]
-                 [re-frame                   "0.9.2"]
+                 [reagent                    "0.6.2"]
+                 [re-frame                   "0.9.4"]
                  ;; Client Side routeing
                  [secretary                  "1.2.3"]
                  [re-frisk                   "0.4.5"]
@@ -57,6 +57,7 @@
 
   :plugins [[lein-cljsbuild "1.1.3"]
             [lein-environ "1.0.3"]]
+
 
   :min-lein-version "2.6.1"
 
@@ -117,7 +118,7 @@
              {:dependencies [[figwheel                   "0.5.10"]
                              [figwheel-sidecar           "0.5.10"]
                              [funcool/codeina            "0.5.0"]
-                             [com.cemerick/piggieback    "0.2.1"]
+                             [com.cemerick/piggieback    "0.2.2"]
                              [org.clojure/tools.nrepl    "0.2.13"]]
 
               :plugins [[lein-figwheel  "0.5.4-4"]
