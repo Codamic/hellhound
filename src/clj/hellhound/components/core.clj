@@ -6,12 +6,12 @@
 
 ;; Vars ------------------------------------------
 ;; Default structure for a system map
-(def ^:private default-system-structure
+(def default-system-structure
   {:components {}
    :services   (defaults/services)})
 
 ;; Main storage for system data.
-(def ^:private default-system (atom {}))
+(def default-system (atom {}))
 
 ;; Private Functions -----------------------------
 (declare get-system-entry start-component  get-system-entry)
@@ -160,39 +160,3 @@
 (defn get-component
   [component-name]
   (:record (get-system-entry component-name)))
-
-(defn start-system
-  "Start the given system and call start on all the components"
-  [system]
-  ;; Read the configuration for the current runtime environment which
-  ;; specified by `HH_ENV` environment. Default env is `:development`
-  (hellhound/load-runtime-configuration)
-  (iterate-components system start-component))
-
-;; TODO: Wait for all the components to terminate gracefully
-;; TODO: Add `force` flag.
-(defn stop-system
-  "Stop the given system by calling stop on all components"
-  [system]
-  (iterate-components system stop-component))
-
-(defn start
-  "Start the default system"
-  []
-  (start-system default-system))
-
-(defn stop
-  "Stop the default system"
-  []
-  (stop-system default-system))
-
-(defn restart
-  "Restart the default system"
-  []
-  (stop)
-  (start))
-
-(defmacro defsystem
-  "Define a system map according to clojure component defination."
-  [system-name & body]
-  `(defn ~system-name [] (-> default-system-structure ~@body)))
