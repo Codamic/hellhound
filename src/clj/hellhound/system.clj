@@ -40,10 +40,11 @@
      (-> hellhound.component.core/default-system-structure
          ~@body)))
 
-(defmacro hellhound-system
+(defmacro with-hellhound-system
   "Define a system map with some pre defined components."
   [system-name & body]
   `(-> hellhound.core/default-system-structure
        ;; TODO: Pass the options from config file
        (hellhound.component.websocket/make-websocket-component {})
-       (hellhound.component.pedestal/make-pedestal-component {})))
+       (hellhound.component.pedestal/make-pedestal-component {})
+       ~@body))
