@@ -9,11 +9,11 @@
 
 (def default-system-map
   {:env                  (hellhound/env)
-   ::http/resource-path  (hellhound/fetch-config-key :public-files-path)
+   ::http/resource-path  (hellhound/get-config :public-files-path)
    ::http/secure-headers {:content-security-policy-settings {:object-src "none"}}
    ::http/type           :immutant
-   ::http/host           (hellhound/fetch-config-key :http-host)
-   ::http/port           (hellhound/fetch-config-key :http-port)
+   ::http/host           (hellhound/get-config :http-host)
+   ::http/port           (hellhound/get-config :http-port)
    ;; TODO: Add immutant related features in the
    ;; map blow
    ::http/container-options {:h2c? true
