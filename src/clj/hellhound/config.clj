@@ -10,6 +10,7 @@
 
 (def ^{:doc "Default configuration hash-map of the hellhound application.
 check out key values of `:keys-doc` meta key."}
+
   ^{:keys-doc1
     {:http-host "The default hostname or ip address to be use as
                     webserver address (default: localhost)"
@@ -24,6 +25,21 @@ check out key values of `:keys-doc` meta key."}
    :http-port         3000
    :public-files-path "public"})
 
+(defn var-reader
+  "Reader function for `#hh/var` edn tag which resolve the given
+  string as a var and returns the value related to that var."
+  [value]
+  (let [[namespace var-symbol] (map #(symbol %)
+                                    (clojure.string/split value #"/"))]
+    (delay
+     (let [resolved-symbol (ns-resolve namespace var-symbol)]
+       (if-not (nil? resolved-symbol)
+         @resolved-symbol
+         nil)))))
+
+(def readers
+  {'hh/var var-reader})
+
 (defn read-config
   "Read the content of the config file with the given `config-name`
   and return a clojure data structure."
@@ -31,6 +47,5 @@ check out key values of `:keys-doc` meta key."}
   (let [resource (io/resource config-name)]
     (if (nil? resource)
       (throw (ex-info
-              (format "Can't find the '%s' config file" config-name)
-              {})))
-    (edn/read-string (slurp resource))))
+              (format "Can't find the '%s' config file" config-name) {})))
+    (edn/read-string {:readers readers} (slurp resource))))
