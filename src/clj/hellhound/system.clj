@@ -46,5 +46,6 @@
   `(-> hellhound.core/default-system-structure
        ;; TODO: Pass the options from config file
        (hellhound.component.websocket/make-websocket-component {})
-       (hellhound.component.pedestal/make-pedestal-component {})
+       (hellhound.component.pedestal/make-pedestal-component
+         (hellhound.core/get-config :pedestal :service-map))
        ~@body))
