@@ -54,8 +54,9 @@
       (load-runtime-configuration)
       config-data)))
 
-(defn fetch-config-key
-  "Fetch the given key from the environment config of the project
-  other. Returns the default value from hellhound.config"
-  [key]
-  (or ((application-config) key) (config/default-config key)))
+(defn get-config
+  "Fetch the given key (or nested keys) from the environment config of
+  the project other. Returns the default value from hellhound.config"
+  [& keys]
+  (or (get-in (application-config) keys)
+      (get-in config/default-config keys)))
