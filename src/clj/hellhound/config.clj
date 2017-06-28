@@ -1,51 +1,43 @@
 (ns hellhound.config
-  "This namespace contains several helpers functions to load a `edn`
-  configuration file from classpath.
+  "This namespace contains core functions which are required
+  by the whole framework in order to operate. Functions which
+  provide easy way to read application configurations based
+  on current environment. Default environment is `development`.
+  In order to change the environment you need to set the `HH_ENV`
+  environment variable to new value like `production`."
+  (:require [hellhound.config.parser  :as parser]
+            [hellhound.env            :as env]
+            [hellhound.config.helpers :as helpers]))
 
-  ## why not to use `environ` and `project.clj`?
-  Because `environ` convert the values to string and also it's hard
-  to fit a hash-map into a environment variable in production."
-  (:require [clojure.edn     :as edn]
-            [clojure.java.io :as io]))
+;; Definitions ---------------------------------------------
+(def environment-configuration (atom {}))
 
-(def ^{:doc "Default configuration hash-map of the hellhound application.
-check out key values of `:keys-doc` meta key."}
+;;;; Runtime Environment Configuration Loaders -------------
+(defn- config-file
+  []
+  (format "environments/%s.edn" (name (env/env))))
 
-  ^{:keys-doc1
-    {:http-host "The default hostname or ip address to be use as
-                    webserver address (default: localhost)"
-     :http-port "The port number for the web server. (default: 3000"
-     :public-files-path "Path to the directory in `resources` which contains
-                         public files such as images,css,js,etc."}}
+(defn load-runtime-configuration
+  "Read and parse the configuration file related to the current runtime
+  environment."
+  []
+  (let [config-data (parser/read-config (config-file))]
+    (reset! environment-configuration config-data)
+    config-data))
 
+(defn application-config
+  "Return the current runtime environment configuration."
+  []
+  (let [config-data @environment-configuration]
+    (if (empty? config-data)
+      (load-runtime-configuration)
+      config-data)))
 
-  default-config
-
-  {:http-host         "localhost"
-   :http-port         3000
-   :public-files-path "public"})
-
-(defn var-reader
-  "Reader function for `#hh/var` edn tag which resolve the given
-  string as a var and returns the value related to that var."
-  [value]
-  (let [[namespace var-symbol] (map #(symbol %)
-                                    (clojure.string/split value #"/"))]
-    (delay
-     (let [resolved-symbol (ns-resolve namespace var-symbol)]
-       (if-not (nil? resolved-symbol)
-         @resolved-symbol
-         nil)))))
-
-(def readers
-  {'hh/var var-reader})
-
-(defn read-config
-  "Read the content of the config file with the given `config-name`
-  and return a clojure data structure."
-  [config-name]
-  (let [resource (io/resource config-name)]
-    (if (nil? resource)
-      (throw (ex-info
-              (format "Can't find the '%s' config file" config-name) {})))
-    (edn/read-string {:readers readers} (slurp resource))))
+(defn get-config
+  "Fetch the given key (or nested keys) from the environment config of
+  the project other. Returns the default value from hellhound.config"
+  [& config-keys]
+  (let [app-value (get-in (application-config) config-keys)]
+    (if (nil? app-value)
+      (helpers/default-value-for config-keys)
+      (helpers/derefiy app-value))))
