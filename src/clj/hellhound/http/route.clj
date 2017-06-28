@@ -42,9 +42,8 @@
 (defn hellhound-routes
   "DOCTODO"
   []
-  (let [config (hellhound/application-config)
-        host   (or (:host config) "localhost")
-        scheme (or (:scheme config) "http")]
+  (let [host   (hellhound/get-config :host)
+        scheme (hellhound/get-config :scheme)]
     #{["/hellhound" :get  [ws-handshake]  :route-name :hellhoud/ws-handshake]
       ["/hellhound" :post [ajax-ws-post]  :route-name :hellhound/ws]}))
 
