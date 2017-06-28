@@ -54,9 +54,21 @@
       (load-runtime-configuration)
       config-data)))
 
+(defn- default-value-for
+  [key-names]
+  (delay (get-in config/default-config)))
+
+(defn- derefiy
+  [value]
+  (if (delay? value)
+    value
+    (delay value)))
+
 (defn get-config
   "Fetch the given key (or nested keys) from the environment config of
   the project other. Returns the default value from hellhound.config"
   [& keys]
-  (or (get-in (application-config) keys)
-      (get-in config/default-config keys)))
+  (let [app-value (get-in (application-config) keys)]
+    (if (nil? app-value)
+      (default-value-for keys)
+      (derefiy app-value))))
