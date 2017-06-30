@@ -1,9 +1,23 @@
 (ns hellhound.components.core
   "A very light weight and effecient implementation of clojure components."
-  (:require [hellhound.core                 :as hellhound]
-            [hellhound.components.defaults  :as defaults]
-            [hellhound.components.protocols :as protocols]))
+  (:require
+   [clojure.spec.alpha             :as spec]
+   [hellhound.core                 :as hellhound]
+   [hellhound.components.defaults  :as defaults]
+   [hellhound.components.protocols :as protocols]))
 
+;; Specs -----------------------------------------
+(spec/def ::started? boolean?)
+(spec/def ::requires (spec/coll-of keyword?))
+(spec/def ::inputs   (spec/coll-of keyword?))
+
+(spec/def ::instance #(satisfies? protocols/Lifecycle))
+
+(spec/def ::component-map
+  (spec/keys :req [::instance]
+             :opt [::started? ::requires ::inputs]))
+
+(spec/def ::components (spec/map-of keyword? ::component-map))
 ;; Vars ------------------------------------------
 ;; Default structure for a system map
 (def default-system-structure
@@ -28,13 +42,13 @@
 (defn- update-started-system
   "Update the system with the given started component data"
   [system name component]
-  (let [sys (update-in system [:components name :record] (fn [_] component))]
+  (let [sys (update-in system [:components name :instance] (fn [_] component))]
     (update-in sys [:components name :started?] (fn [_] true))))
 
 (defn- update-stopped-system
   "Update the system with the given sopped component data"
   [system name component]
-  (let [sys (update-in system [:components name :record] (fn [_] component))]
+  (let [sys (update-in system [:components name :instance] (fn [_] component))]
     (update-in sys [:components name :started?] (fn [_] false))))
 
 
@@ -45,7 +59,7 @@
     (if-not (started? component)
       (throw-exception "Unit '%s' is not started yet." component-name))
 
-    (let [input (:output (:record component))]
+    (let [input (:output (:instance component))]
       (if (nil? input)
         (throw-exception "Unit '%s' does not provide an :output."
                          component-name))
@@ -64,7 +78,7 @@
 (defn- start-dependencies
   [{:keys [name data system] :as all}]
   (let [requirements (or (:requires data) [])
-        record       (:record   data)]
+        record       (:instance   data)]
 
     (if-not (empty? requirements)
       ;; In case of any requirement we need to start them first
@@ -76,14 +90,14 @@
   [{:keys [name data system] :as all}]
   (let [inputs (gather-inputs name)]
     (if-not (empty? inputs)
-      (let [new-record   (assoc (:record data) :inputs inputs)
-            new-data     (update-in data [:record] (fn [_] new-record))]
+      (let [new-record   (assoc (:instance data) :inputs inputs)
+            new-data     (update-in data [:instance] (fn [_] new-record))]
         {:name name :data new-data :system system})
       all)))
 
 (defn- run-the-start-method
   [{:keys [name data system] :as all}]
-  (let [record            (:record data)]
+  (let [record            (:instance data)]
 
     ;; I required component was not defined in the system
     (if (nil? record)
@@ -126,7 +140,7 @@
   ([name data system]
    (if (started? data)
      (let [requirements (or (:requires data) [])
-           record       (:record   data)]
+           record       (:instance   data)]
        (let [stopped-component (.stop record)]
          (swap! system update-stopped-system name stopped-component))
 
@@ -139,7 +153,7 @@
   [system f]
   (let [components (:components @system)]
     (doseq [[component-name component-data] components]
-      (if (satisfies? protocols/Lifecycle (:record component-data))
+      (if (satisfies? protocols/Lifecycle (:instance component-data))
         (f component-name component-data system)
         (throw (Exception. (format "'%s' component does not satisfy the 'Lifecycle' protocol."
                                    component-name)))))))
@@ -159,4 +173,4 @@
 
 (defn get-component
   [component-name]
-  (:record (get-system-entry component-name)))
+  (:instance (get-system-entry component-name)))
