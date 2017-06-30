@@ -40,4 +40,4 @@
   (let [app-value (get-in (application-config) config-keys)]
     (if (nil? app-value)
       (helpers/default-value-for config-keys)
-      (helpers/derefiy app-value))))
+      app-value)))
