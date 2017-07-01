@@ -20,9 +20,11 @@
   and `inputs`."
   ([instance]
    (create-component instance [] []))
+
   ([instance requirements]
    (create-component instance requirements []))
+
   ([instance requirements inputs]
    (-> {:instance (spec/conform :core/instance instance)}
-       (merge-into :requires requirements)
-       (merge-into :inputs   inputs))))
+       (merge-into :requires (or requirements []))
+       (merge-into :inputs   (or inputs [])))))

@@ -7,6 +7,7 @@
   (:require
    [io.pedestal.http               :as http]
    [hellhound.core                 :as hellhound]
+   [hellhound.components           :as components]
    [hellhound.components.protocols :as protocols]))
 
 (declare map->Pedestal)
@@ -23,12 +24,18 @@
   (map->Pedestal {:service-map service-map
                   :serive      service}))
 
-(defn make-pedestal-component
-  "Create new pedestal record to with the key name of `:pedestal`
+(defn make-pedestal-instance
+  "Create new pedestal instance to with the key name of `:pedestal`
   to be injected into `hellhound`'s system map"
-  [system-map service-map service]
-  (update-in system-map [:components :pedestal]
-             (new-pedestal service-map sercice)))
+  ([service-map service]
+   (make-pedestal-instance service-map service {}))
+
+  ([service-map service options]
+   (let [{:keys [requirements inputs]} options]
+     {:pedestal (components/create-component
+                 (new-pedestal service-map service)
+                 requirements
+                 inputs)})))
 
 ;; Record --------------------------------------------------
 (defrecord Pedestal [service-map service]
