@@ -6,14 +6,13 @@
   you need to look into `hellhound.components.websocket`"
   (:require
    [clojure.spec.alpha            :as spec]
-   [hellhound.components.core     :as core]))
+   [hellhound.components.specs    :as comp-specs]))
 
 (defn- merge-into
-  [coll keyname value]
+  [coll keyname key-spec value]
   (if (empty? value)
     coll
-    (merge coll{keyname (spec/conform
-                         (keyword "core/" (name keyname))
+    (merge coll{keyname (spec/conform key-spec
                          value)})))
 (defn create-component
   "Creates a component map with the given `instance` and `requirements`
@@ -25,6 +24,6 @@
    (create-component instance requirements []))
 
   ([instance requirements inputs]
-   (-> {:instance (spec/conform ::core/instance instance)}
-       (merge-into :requires (or requirements []))
-       (merge-into :inputs   (or inputs [])))))
+   (-> {:instance (spec/conform ::comp-specs/instance instance)}
+       (merge-into :requires ::comp-specs/requires (or requirements []))
+       (merge-into :inputs   ::comp-specs/inputs (or inputs [])))))
