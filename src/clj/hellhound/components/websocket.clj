@@ -5,11 +5,13 @@
   `hellhound.system.defsystem` macro or use the `make-websocket` with a
   traditional system map."
   (:require
-   [hellhound.connection                    :refer [router-builder]]
-   [hellhound.components.protocols               :as protocols]
    [taoensso.sente.packers.transit          :as packer]
    [taoensso.sente                          :as sente]
-   [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]))
+   [taoensso.sente.server-adapters.immutant :refer [get-sch-adapter]]
+   [hellhound.connection                    :refer [router-builder]]
+   [hellhound.components                    :as components]
+   [hellhound.components.protocols          :as protocols]))
+
 
 ;; This component is responsible for establish a websocket server
 ;; Base on Sente
@@ -66,10 +68,18 @@
    (new-channel-socket-server (router-builder router) (get-sch-adapter) options)))
 
 
-(defn make-websocket-component
+(defn make-instance
   "Create an instance from websocket component. This function is meant
   to be used with `hellhound.system.defsystem` macro."
-  ([system-map]
-   (make-websocket-component system-map {}))
-  ([system-map options]
-   (update-in system-map [:components :websocket] (new-websocket options))))
+  ([]
+   (make-instance {} {}))
+
+  ([options]
+   (make-instance options {}))
+
+  ([options instance-opt]
+   (let [{:keys [requirements inputs]} instance-opt])
+   {:websocket (components/create-component
+                (new-websocket options)
+                requirements
+                inputs)}))

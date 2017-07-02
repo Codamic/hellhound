@@ -1,3 +1,6 @@
+* Left off
+** Extract websocket event router configuration to system level
+
 * Guides
 ** [TODO] Getting started
 ** [TODO] why we chose table routing syntax
