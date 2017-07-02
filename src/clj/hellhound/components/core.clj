@@ -4,28 +4,8 @@
    [clojure.spec.alpha             :as spec]
    [hellhound.core                 :as hellhound]
    [hellhound.components.defaults  :as defaults]
-   [hellhound.components.protocols :as protocols]))
-
-;; Specs -----------------------------------------
-(spec/def ::started? boolean?)
-(spec/def ::requires (spec/coll-of keyword?))
-(spec/def ::inputs   (spec/coll-of keyword?))
-
-(spec/def ::instance #(satisfies? protocols/Lifecycle))
-
-(spec/def ::component-map
-  (spec/keys :req [::instance]
-             :opt [::started? ::requires ::inputs]))
-
-(spec/def ::components (spec/map-of keyword? ::component-map))
-;; Vars ------------------------------------------
-;; Default structure for a system map
-(def default-system-structure
-  {:components {}
-   :services   (defaults/services)})
-
-;; Main storage for system data.
-(def default-system (atom {}))
+   [hellhound.components.protocols :as protocols]
+   [hellhound.config.defaults :as default]))
 
 ;; Private Functions -----------------------------
 (declare get-system-entry start-component  get-system-entry)
@@ -116,7 +96,7 @@
      (start-component name component)))
 
   ([name data]
-   (start-component name data default-system))
+   (start-component name data defaults/system))
 
   ([name data system]
    (let [bundle {:name name :data data :system system}]
@@ -135,7 +115,7 @@
      (stop-component name component)))
 
   ([name data]
-   (stop-component name data default-system))
+   (stop-component name data defaults/system))
 
   ([name data system]
    (if (started? data)
@@ -157,20 +137,3 @@
         (f component-name component-data system)
         (throw (Exception. (format "'%s' component does not satisfy the 'Lifecycle' protocol."
                                    component-name)))))))
-
-(defn set-system!
-  "Set the default system"
-  [system]
-  (swap! default-system (fn [_] system)))
-
-(defn system
-  []
-  @default-system)
-
-(defn get-system-entry
-  [component-name]
-  (get (:components (system)) component-name))
-
-(defn get-component
-  [component-name]
-  (:instance (get-system-entry component-name)))

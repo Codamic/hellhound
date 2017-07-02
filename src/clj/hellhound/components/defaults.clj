@@ -6,6 +6,14 @@
    [clojure.spec.alpha :as spec]
    [hellhound.core     :as hellhound]))
 
+;; Vars ------------------------------------------
+;; Default structure for a system map
+(def system-structure
+  {:components {}})
+
+;; Main storage for system data.
+(def system (atom {}))
+
 (defn services
   "Default configuration of services to be used inside the
   system map."
