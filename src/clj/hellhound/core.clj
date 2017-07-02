@@ -4,4 +4,9 @@
 
 ;; Shortcut functions --------------------------------------
 (def get-config config/get-config)
+
+;; ENV
 (def env env/env)
+(def development? env/development?)
+(def test? env/test?)
+(def production? env/production?)
