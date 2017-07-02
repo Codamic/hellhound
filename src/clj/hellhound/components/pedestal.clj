@@ -13,42 +13,35 @@
 (declare map->Pedestal)
 
 ;; Functions -----------------------------------------------
-(defn test?
-  []
-  (hellhound/test?))
-
-
 (defn new-pedestal
   "Creates a new pedestal record."
-  [service-map service]
-  (map->Pedestal {:service-map service-map
-                  :serive      service}))
+  [service-map]
+  (map->Pedestal {:service-map service-map}))
 
-(defn make-pedestal-instance
+
+(defn make-instance
   "Create new pedestal instance to with the key name of `:pedestal`
   to be injected into `hellhound`'s system map"
-  ([service-map service]
-   (make-pedestal-instance service-map service {}))
+  ([service-map]
+   (make-instance service-map {}))
 
-  ([service-map service options]
+  ([service-map options]
    (let [{:keys [requirements inputs]} options]
      {:pedestal (components/create-component
-                 (new-pedestal service-map service)
+                 (new-pedestal service-map)
                  requirements
                  inputs)})))
 
 ;; Record --------------------------------------------------
-(defrecord Pedestal [service-map service]
+(defrecord Pedestal [service-map]
   protocols/Lifecycle
   (start [this]
-    (if service
-      this
-      (cond-> service-map
-        true                      http/create-server
-        (not (test? service-map)) http/start
-        true                      ((partial assoc this :service)))))
+    (cond-> service-map
+      true                      http/create-server
+      (not (hellhound/test?))   http/start
+      true                      ((partial assoc this :service))))
 
   (stop [this]
-    (when (and service (not (test? service-map))))
-    (http/stop service)
-    (assoc this :service nil)))
+    (when (and (:service this) (not (hellhound/test?)))
+      (http/stop (:service this))
+      (assoc this :service nil))))
