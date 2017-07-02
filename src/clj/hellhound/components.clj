@@ -5,8 +5,8 @@
   `hellhound.components.component-name` for example for websocket component
   you need to look into `hellhound.components.websocket`"
   (:require
-   [clojure.spec.alpha :as spec]
-   [hellhound.core     :as core]))
+   [clojure.spec.alpha            :as spec]
+   [hellhound.components.core     :as core]))
 
 (defn- merge-into
   [coll keyname value]
@@ -25,6 +25,6 @@
    (create-component instance requirements []))
 
   ([instance requirements inputs]
-   (-> {:instance (spec/conform :core/instance instance)}
+   (-> {:instance (spec/conform ::core/instance instance)}
        (merge-into :requires (or requirements []))
        (merge-into :inputs   (or inputs [])))))
