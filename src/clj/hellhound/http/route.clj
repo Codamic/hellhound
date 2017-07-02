@@ -4,7 +4,7 @@
   (:require
    [clojure.spec.alpha                      :as spec]
    [io.pedestal.http.route                  :as route]
-   [hellhound.components.core               :as system]
+   [hellhound.system                        :as system]
    [hellhound.core                          :as hellhound]))
 
 ;; Specs ---------------------------------------------------
