@@ -62,10 +62,9 @@
 
 (defn new-websocket
   "Creates a websocket component instance."
-  ([router]
-   (new-channel-socket-server (router-builder router) (get-sch-adapter) {}))
-  ([router options]
-   (new-channel-socket-server (router-builder router) (get-sch-adapter) options)))
+  [{:as options :keys {router}}]
+  (new-channel-socket-server (router-builder router) (get-sch-adapter) options))
+
 
 
 (defn make-instance
