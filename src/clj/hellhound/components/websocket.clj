@@ -70,9 +70,6 @@
 (defn make-instance
   "Create an instance from websocket component. This function is meant
   to be used with `hellhound.system.defsystem` macro."
-  ([]
-   (make-instance {} {}))
-
   ([options]
    (make-instance options {}))
 
