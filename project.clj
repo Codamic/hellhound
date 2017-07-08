@@ -55,8 +55,8 @@
                  ;; JSON Parser
                  [cheshire                   "5.7.1"]]
 
-  :plugins [[lein-cljsbuild "1.1.3"]
-            [lein-environ "1.0.3"]]
+  :plugins [[lein-cljsbuild "1.1.3"]]
+
 
 
   :min-lein-version "2.6.1"

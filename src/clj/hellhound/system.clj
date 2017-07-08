@@ -57,4 +57,4 @@
   [system-name & body]
   `(def ~system-name
      (merge hellhound.components.defaults/system-structure
-            {:components ~@body})))
+            {:components (merge ~@body)})))
