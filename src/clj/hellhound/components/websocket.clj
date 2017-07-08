@@ -62,7 +62,7 @@
 
 (defn new-websocket
   "Creates a websocket component instance."
-  [{:as options :keys {router}}]
+  [{:as options :keys [router]}]
   (new-channel-socket-server (router-builder router) (get-sch-adapter) options))
 
 
@@ -74,8 +74,8 @@
    (make-instance options {}))
 
   ([options instance-opt]
-   (let [{:keys [requirements inputs]} instance-opt])
-   {:websocket (components/create-component
-                (new-websocket options)
-                requirements
-                inputs)}))
+   (let [{:keys [requirements inputs]} instance-opt]
+     {:websocket (components/create-component
+                  (new-websocket options)
+                  requirements
+                  inputs)})))

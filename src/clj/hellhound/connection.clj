@@ -4,7 +4,7 @@
   application. In order to define a message router checkout the
   `hellhound.messaging.core` namespace. This namespace is an internal
   namespace which used by the `websocket` component."
-  (:require [hellhound.components      :as components]
+  (:require [hellhound.system          :as system]
             [hellhound.logger.core     :as logger]))
 
 
@@ -58,5 +58,5 @@
 (defn send-to-all
   "Send the given event to all the connected users."
   [event]
-  (let [func (:chsk-send! (components/get-component :websocket))]
+  (let [func (:chsk-send! (system/get-component :websocket))]
     (func :sente/all-users-without-uid event)))

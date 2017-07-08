@@ -5,7 +5,7 @@
             [io.aviso.ansi          :as ansi]
             [clj-time.core          :as time]
             [clj-time.format        :refer [formatter unparse]]
-            [hellhound.components.core :as component]))
+            [hellhound.system       :as system]))
 
 
 ;; TODO: Use logger configuration from application-configuration in here
@@ -66,27 +66,27 @@
 
 (defn debug
   [string & rest]
-  (let [c (:channel (component/get-component :logger))]
+  (let [c (:channel (system/get-component :logger))]
     (apply log c :debug string rest)))
 
 (defn info
   [string & rest]
-  (let [c (:channel (component/get-component :logger))]
+  (let [c (:channel (system/get-component :logger))]
     (apply log c :info string rest)))
 
 (defn warn
   [string & rest]
-  (let [c (:channel (component/get-component :logger))]
+  (let [c (:channel (system/get-component :logger))]
     (apply log c :warn string rest)))
 
 (defn error
   [string & rest]
-  (let [c (:channel (component/get-component :logger))]
+  (let [c (:channel (system/get-component :logger))]
     (apply log c :error string rest)))
 
 (defn fatal
   [string & rest]
-  (let [c (:channel (component/get-component :logger))]
+  (let [c (:channel (system/get-component :logger))]
     (apply log c :fatal string rest)))
 
 (defn start-logger
@@ -108,7 +108,7 @@
   "Stop the logger activity"
   [log-chan]
 
-  (let [c (:channel (component/get-component :logger))]
+  (let [c (:channel (system/get-component :logger))]
     (async/>!! c :exit)
     (async/close! c))
   (async/close! log-chan))
