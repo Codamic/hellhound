@@ -9,7 +9,6 @@
   (:require [ring.middleware.defaults       :refer [site-defaults]]
             [hellhound.components.protocols :as protocols]
             [taoensso.timbre                :as log]
-            [environ.core                   :refer [env]]
             [immutant.web                   :as web]))
 
 (defn- http-port

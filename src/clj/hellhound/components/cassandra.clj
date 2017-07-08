@@ -3,7 +3,6 @@
   database."
   (:require
    [clojure.spec.alpha             :as spec]
-   [environ.core                   :as environ]
    [qbits.alia                     :as alia]
    [qbits.hayt                     :as hayt]
 

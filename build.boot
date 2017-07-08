@@ -18,8 +18,6 @@
                  [codamic/sente              "1.11.1"]
                  [com.taoensso/timbre        "4.7.4"]
                  [org.danielsz/system        "0.3.2-SNAPSHOT"]
-                 [environ                    "1.1.0"]
-                 [boot-environ               "1.1.0"]
                  [com.cemerick/friend        "0.2.3"]
                  [ring-logger                "0.7.6"]
                  [org.immutant/immutant      "2.1.5"

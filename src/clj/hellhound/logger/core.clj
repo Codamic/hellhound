@@ -5,11 +5,11 @@
             [io.aviso.ansi          :as ansi]
             [clj-time.core          :as time]
             [clj-time.format        :refer [formatter unparse]]
-            [environ.core           :refer [env]]
             [hellhound.components.core :as component]))
 
 
-(def default-level (keyword (or (env :log-level) "debug")))
+;; TODO: Use logger configuration from application-configuration in here
+(def default-level (keyword (or false "debug")))
 
 ;(def ^:private log-chan (async/chan 1000))
 
