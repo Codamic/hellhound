@@ -14,14 +14,14 @@
     coll
     (merge coll{keyname (spec/conform key-spec
                          value)})))
-(defn create-component
-  "Creates a component map with the given `instance` and `requirements`
+(defn create-instance
+  "Creates an instance map with the given `instance` and `requirements`
   and `inputs`."
   ([instance]
-   (create-component instance [] []))
+   (create-instance instance [] []))
 
   ([instance requirements]
-   (create-component instance requirements []))
+   (create-instance instance requirements []))
 
   ([instance requirements inputs]
    (-> {:instance (spec/conform ::comp-specs/instance instance)}

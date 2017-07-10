@@ -3,9 +3,8 @@
   (:require
    [clojure.spec.alpha             :as spec]
    [hellhound.core                 :as hellhound]
-   [hellhound.components.defaults  :as defaults]
-   [hellhound.components.protocols :as protocols]
-   [hellhound.config.defaults :as default]))
+   [hellhound.system.core          :as system]
+   [hellhound.components.protocols :as protocols]))
 
 ;; Private Functions -----------------------------
 (declare get-system-entry start-component  get-system-entry)
@@ -96,7 +95,7 @@
      (start-component name component)))
 
   ([name data]
-   (start-component name data defaults/system))
+   (start-component name data (system/get-system)))
 
   ([name data system]
    (let [bundle {:name name :data data :system system}]
@@ -115,7 +114,7 @@
      (stop-component name component)))
 
   ([name data]
-   (stop-component name data defaults/system))
+   (stop-component name data (system/get-system)))
 
   ([name data system]
    (if (started? data)
@@ -126,12 +125,12 @@
 
        (if-not (empty? requirements)
          (doseq [req-name requirements]
-           (stop-component req-name (get (:components @system) req-name) system)))))))
+           (stop-component req-name (get (:components system) req-name) system)))))))
 
 (defn iterate-components
   "Iterate over system components"
   [system f]
-  (let [components (:components @system)]
+  (let [components (:components system)]
     (doseq [[component-name component-data] components]
       (if (satisfies? protocols/Lifecycle (:instance component-data))
         (f component-name component-data system)

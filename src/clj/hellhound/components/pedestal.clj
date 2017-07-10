@@ -27,7 +27,7 @@
 
   ([service-map options]
    (let [{:keys [requirements inputs]} options]
-     {:pedestal (components/create-component
+     {:pedestal (components/create-instance
                  (new-pedestal service-map)
                  requirements
                  inputs)})))

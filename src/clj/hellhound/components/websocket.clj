@@ -75,7 +75,7 @@
 
   ([options instance-opt]
    (let [{:keys [requirements inputs]} instance-opt]
-     {:websocket (components/create-component
+     {:websocket (components/create-instance
                   (new-websocket options)
                   requirements
                   inputs)})))

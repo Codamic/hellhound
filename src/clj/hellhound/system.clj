@@ -1,17 +1,19 @@
 (ns hellhound.system
   (:require [hellhound.components.core     :as component]
             [hellhound.config              :as config]
-            [hellhound.components.defaults :as defaults]
-            [hellhound.config.defaults :as default]))
+            [hellhound.system.core         :as system-core]
+            [hellhound.config.defaults     :as default]))
 
 (defn set-system!
   "Set the default system"
   [system]
-  (swap! defaults/system (fn [_] system)))
+  (println "defaultsasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssdefaultsasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssdefaultsasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
+  (clojure.pprint/pprint system)
+  (system-core/reset-system! system))
 
 (defn system
   []
-  @defaults/system)
+  (system-core/get-system))
 
 (defn get-system-entry
   [component-name]
@@ -39,12 +41,12 @@
 (defn start
   "Start the default system"
   []
-  (start-system defaults/system))
+  (start-system (system)))
 
 (defn stop
   "Stop the default system"
   []
-  (stop-system defaults/system))
+  (stop-system (system)))
 
 (defn restart
   "Restart the default system"

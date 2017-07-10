@@ -1,9 +1,9 @@
 (ns hellhound.core
   (:require
    [reagent.core         :as reagent]
-   [reframe.core         :as re-frame]
+   [re-frame.core         :as re-frame]
    [re-frisk.core        :as re-frisk]
-   [hellhound.connection :refer [send-fn!] ]))
+   [hellhound.connection :as connection]))
 
 
 (def debug?
@@ -12,7 +12,7 @@
 (defn ->server
   "Send the given `data` to the server."
   [data]
-  (let [send @send-fn!]
+  (let [send @connection/send-fn!]
     (if (nil? send)
       (throw (js/Error. "Not connected to server."))
       (send data 5000))))
@@ -40,6 +40,7 @@
   [{:keys [router dev-setup main-view dispatch-events] :as options}]
 
   (re-frame/dispatch-sync dispatch-events)
-  (when? (debug?)
+  (when debug?
     (setup-development dev-setup))
-  (mount-root main-view))
+  (mount-root main-view)
+  (connection/start-event-router! "localhost:3000"))
