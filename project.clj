@@ -19,10 +19,13 @@
                  [io.pedestal/pedestal.interceptor "0.5.2"]
                  [io.pedestal/pedestal.route       "0.5.2"]
                  ;; Communication
-                 [codamic/sente              "1.11.1"]
+                 [codamic/sente                    "1.11.1"]
                  ;; TODO: We have to move these stuff into a different jar
                  ;; to avoid unnecessary jar installation
 
+                 ;; Logging
+                 [com.taoensso/timbre              "4.10.0"]
+                 [com.fzakaria/slf4j-timbre        "0.3.7"]
                  ;; Cassandra adapter
                  ;;[cc.qbits/alia              "4.0.0-beta10"]
                  ;; -------------------------------------------------------
