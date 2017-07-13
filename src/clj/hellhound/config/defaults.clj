@@ -10,10 +10,12 @@ check out key values of `:keys-doc` meta key."}
                     webserver address (default: localhost)"
      :http-port "The port number for the web server. (default: 3000"
      :public-files-path "Path to the directory in `resources` which contains
-                         public files such as images,css,js,etc."}}
+                         public files such as images,css,js,etc."
+     :logger "A map defining timbre configurations."}}
 
   config
 
   {:http-host         "localhost"
    :http-port         3000
-   :public-files-path "public"})
+   :public-files-path "public"
+   :logger {:level :trace}})

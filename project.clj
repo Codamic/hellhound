@@ -5,27 +5,39 @@
   :url         "http://github.com/Codamic/hellhound"
   :scm         {:url "https://github.com/Codamic/hellhound"}
 
+  :exclusions [ch.qos.logback/logback-classic]
+
   :dependencies [[org.clojure/clojure        "1.9.0-alpha17"]
                  [org.clojure/clojurescript  "1.9.562"]
                  [org.clojure/core.async     "0.3.443"]
+
+                 ;; Logging
+                 [org.slf4j/slf4j-api              "1.7.25"]
+                 [com.taoensso/timbre              "4.10.0"]
+                 [com.fzakaria/slf4j-timbre        "0.3.7"]
+                 [org.slf4j/log4j-over-slf4j       "1.7.25"]
+                 [org.slf4j/jul-to-slf4j           "1.7.25"]
+                 [org.slf4j/jcl-over-slf4j         "1.7.25"]
+
                  [io.pedestal/pedestal.service "0.5.2"]
 
                  ;; TODO: Move the adapters to seperate jars. For example hellhound.jetty
                  ;;[io.pedestal/pedestal.jetty "0.5.2"]
+
+
                  [io.pedestal/pedestal.immutant "0.5.2"]
+
                  ;; [io.pedestal/pedestal.tomcat "0.5.2"]
 
-                 [io.pedestal/pedestal.log         "0.5.2"]
                  [io.pedestal/pedestal.interceptor "0.5.2"]
                  [io.pedestal/pedestal.route       "0.5.2"]
-                 ;; Communication
-                 [codamic/sente                    "1.11.1"]
                  ;; TODO: We have to move these stuff into a different jar
                  ;; to avoid unnecessary jar installation
 
-                 ;; Logging
-                 [com.taoensso/timbre              "4.10.0"]
-                 [com.fzakaria/slf4j-timbre        "0.3.7"]
+
+                 ;; Communication
+                 [codamic/sente                    "1.11.1"]
+
                  ;; Cassandra adapter
                  ;;[cc.qbits/alia              "4.0.0-beta10"]
                  ;; -------------------------------------------------------
