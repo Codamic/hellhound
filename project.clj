@@ -1,7 +1,7 @@
 (defproject codamic/hellhound "1.0.0-SNAPSHOT"
   :description "A simple full-stack web framework for clojure on top of Pnedestal"
-  :license     {"GPLv3"
-                "https://www.gnu.org/licenses/gpl.html"}
+  :license     {"mit"
+                "https://opensource.org/licenses/MIT"}
   :url         "http://github.com/Codamic/hellhound"
   :scm         {:url "https://github.com/Codamic/hellhound"}
 

@@ -36,6 +36,6 @@ TBA
 TBA
 ## License
 
-Copyright © 2016-2017 Codamic Technologies
+Copyright © 2016-2017 Sameer Rahmani.
 
-Distributed under the GPL v3.
+Distributed under the MIT License.
