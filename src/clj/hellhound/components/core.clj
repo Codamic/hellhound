@@ -7,7 +7,7 @@
    [hellhound.components.protocols :as protocols]))
 
 ;; Private Functions -----------------------------
-(declare get-system-entry start-component  get-system-entry)
+(declare start-component)
 
 (defn- throw-exception
   [& rest]
@@ -33,7 +33,7 @@
 
 (defn- extract-output-of
   [component-name]
-  (let [component (get-system-entry component-name)]
+  (let [component (system/get-system-entry component-name)]
 
     (if-not (started? component)
       (throw-exception "Unit '%s' is not started yet." component-name))
@@ -48,7 +48,7 @@
   "Gather all the inputs for the given component name from the provided list of
   input components"
   [name]
-  (let [input-names (:inputs (get-system-entry name))]
+  (let [input-names (:inputs (system/get-system-entry name))]
     (if (and (not (nil? input-names))
              (vector? input-names))
       (map  extract-output-of input-names)
@@ -62,7 +62,7 @@
     (if-not (empty? requirements)
       ;; In case of any requirement we need to start them first
       (doseq [req-name requirements]
-        (start-component req-name (get-system-entry req-name) system)))
+        (start-component req-name (system/get-system-entry req-name) system)))
     all))
 
 (defn- inject-inputs
@@ -83,7 +83,9 @@
       (throw (ex-info (format "Can't find '%s' component in the system" name) {})))
 
     ;; Replace the record value with the started instance
-    (swap! system update-started-system name (.start record))
+    ;;(swap! system update-started-system name (.start record))
+    (system/update-system!
+     (fn [system] (update-started-system system name (.start record))))
     (assoc all :system system)))
 
 ;; Public Functions ------------------------------
@@ -91,7 +93,7 @@
   "Start the component given by `name` from the default system map or
   the given `system`."
   ([name]
-   (let [component (get-system-entry name)]
+   (let [component (system/get-system-entry name)]
      (start-component name component)))
 
   ([name data]
@@ -110,7 +112,7 @@
   "Stop the given component by `name` from default system or
   given `system` map."
   ([name]
-   (let [component (get-system-entry name)]
+   (let [component (system/get-system-entry name)]
      (stop-component name component)))
 
   ([name data]
@@ -121,7 +123,9 @@
      (let [requirements (or (:requires data) [])
            record       (:instance   data)]
        (let [stopped-component (.stop record)]
-         (swap! system update-stopped-system name stopped-component))
+         ;;(swap! system update-stopped-system name stopped-component))
+         (system/update-system!
+          (fn [system] (update-stopped-system system name stopped-component))))
 
        (if-not (empty? requirements)
          (doseq [req-name requirements]

@@ -7,21 +7,15 @@
 (defn set-system!
   "Set the default system"
   [system]
-  (println "defaultsasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssdefaultsasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssdefaultsasdasdasdasdasssssssssssssssssssssssssssssssssssssssssssssssssssssssss")
-  (clojure.pprint/pprint system)
   (system-core/reset-system! system))
 
 (defn system
   []
   (system-core/get-system))
 
-(defn get-system-entry
-  [component-name]
-  (get (:components (system)) component-name))
-
 (defn get-component
   [component-name]
-  (:instance (get-system-entry component-name)))
+  (:instance (system-core/get-system-entry component-name)))
 
 (defn start-system
   "Start the given system and call start on all the components"

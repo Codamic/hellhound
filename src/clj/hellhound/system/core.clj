@@ -16,3 +16,7 @@
 (defn reset-system!
   [value]
   (reset! system value))
+
+(defn get-system-entry
+  [component-name]
+  (get (:components (get-system)) component-name))
