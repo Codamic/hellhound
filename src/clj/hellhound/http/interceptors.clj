@@ -3,11 +3,12 @@
   service maps."
   (:require
    [io.pedestal.http   :as http]
-   [io.aviso.exception :as excep]))
+   [io.aviso.exception :as excep]
+   [hellhound.logger   :as logger]))
 
 (defn- error-handler-on-error
   [ctx err]
-  (println "asdasdasd")
+  (logger/exception err)
   (println (excep/format-exception err)))
 
 

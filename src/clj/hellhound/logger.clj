@@ -1,7 +1,8 @@
 (ns hellhound.logger
   (:require
-   [taoensso.timbre             :as timbre]
-   [hellhound.logger.formatters :as formatter]))
+   [taoensso.timbre              :as timbre]
+   [hellhound.logger.formatters  :as formatter]
+   [hellhound.logger.middlewares :as middlewares]))
 
 
 (defn- fline [and-form] (:line (meta and-form)))
@@ -33,6 +34,10 @@
 (defmacro error
   [& args]
   `(taoensso.timbre/log! :error  :p ~args
+                         ~{:?line (fline &form)}))
+(defmacro exception
+  [& args]
+  `(taoensso.timbre/log! :exception  :p ~args
                          ~{:?line (fline &form)}))
 (defmacro fatal
   [& args]
@@ -87,6 +92,7 @@
    {:level :trace
     :enabled? true
     :output-fn formatter/default-dev-formatter
+    :middleware [middlewares/exceptions]
     :appenders
     {:debug-appender {:enabled? true :min-level :debug :output-fn  :inherit
                       :fn (fn [data]

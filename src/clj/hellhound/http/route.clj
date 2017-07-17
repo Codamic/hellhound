@@ -4,6 +4,8 @@
   (:require
    [clojure.spec.alpha                      :as spec]
    [io.pedestal.http.route                  :as route]
+   [io.pedestal.http.body-params            :as body-params]
+   [io.pedestal.http.ring-middlewares       :as ring]
    [hellhound.system                        :as system]
    [hellhound.core                          :as hellhound]))
 
@@ -33,19 +35,23 @@
   (let [ajax-ws-handshake (:ring-ajax-get-or-ws-handshake (websocket))]
     (ajax-ws-handshake context)))
 
+
 (defn ajax-ws-post
   [context]
   (let [post-fn (:ring-ajax-post (websocket))]
-    (post-fn context)))
+    (assoc context :response (post-fn context))))
 
+(defn ring-middlewares
+  [handler]
+  [(body-params/body-params) ring/keyword-params ring/params handler])
 
 (defn hellhound-routes
   "DOCTODO"
   []
   (let [host   (hellhound/get-config :host)
         scheme (hellhound/get-config :scheme)]
-    #{["/hellhound" :get  [ws-handshake]  :route-name :hellhoud/ws-handshake]
-      ["/hellhound" :post [ajax-ws-post]  :route-name :hellhound/ws]}))
+    #{["/hellhound" :get  (ring-middlewares ws-handshake)  :route-name :hellhoud/ws-handshake]
+      ["/hellhound" :post (ring-middlewares ajax-ws-post)  :route-name :hellhound/ws]}))
 
 
 (defn expand-routes
