@@ -81,7 +81,6 @@
   `(taoensso.timbre/log! :report :f ~args
                          ~{:?line (fline &form)}))
 
-
 (defn init!
   []
   (timbre/set-config!
@@ -89,7 +88,7 @@
     :enabled? true
     :output-fn formatter/default-dev-formatter
     :appenders
-    {:debug-appender {:enabled? true :min-level :trace :output-fn  :inherit
+    {:debug-appender {:enabled? true :min-level :debug :output-fn  :inherit
                       :fn (fn [data]
                             (let [{:keys [output_]} data
                                   formatted-output-str (force output_)]

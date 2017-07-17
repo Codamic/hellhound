@@ -4,12 +4,12 @@
   {:author "Sameer Rahmani (@lxsameer)"}
   (:require [taoensso.timbre :as timbre]))
 
-(def LEVELS {:trace (timbre/color-str :white "TRACE")
-             :debug (timbre/color-str :blue "DEBUG")
-             :info  (timbre/color-str :green   "INFO")
+(def LEVELS {:trace (timbre/color-str :cyan   "TRACE")
+             :debug (timbre/color-str :blue   "DEBUG")
+             :info  (timbre/color-str :green  "INFO")
              :warn  (timbre/color-str :yellow "WARN")
              :error (timbre/color-str :red    "ERROR")
-             :fatal (timbre/color-str :purple    "FATAL")})
+             :fatal (timbre/color-str :purple "FATAL")})
 
 (defn ^String process-level
   [^clojure.lang.Keyword level-keyword]

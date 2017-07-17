@@ -31,9 +31,6 @@
 (defn ws-handshake
   [context]
   (let [ajax-ws-handshake (:ring-ajax-get-or-ws-handshake (websocket))]
-    (println "<<<<<<<")
-    (println ajax-ws-handshake)
-    (clojure.pprint/pprint (system/system))
     (ajax-ws-handshake context)))
 
 (defn ajax-ws-post
