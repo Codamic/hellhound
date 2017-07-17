@@ -19,12 +19,11 @@
                  [org.slf4j/jul-to-slf4j           "1.7.25"]
                  [org.slf4j/jcl-over-slf4j         "1.7.25"]
 
-                 [io.pedestal/pedestal.service "0.5.2"]
+                 [io.aviso/pretty                  "0.1.34"]
 
+                 [io.pedestal/pedestal.service "0.5.2"]
                  ;; TODO: Move the adapters to seperate jars. For example hellhound.jetty
                  ;;[io.pedestal/pedestal.jetty "0.5.2"]
-
-
                  [io.pedestal/pedestal.immutant "0.5.2"]
 
                  ;; [io.pedestal/pedestal.tomcat "0.5.2"]

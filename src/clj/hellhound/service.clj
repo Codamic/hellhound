@@ -3,8 +3,9 @@
   application, you have to use `create-service-map` function in
   this namespace."
   (:require
-   [io.pedestal.http :as http]
-   [hellhound.core  :as hellhound]))
+   [io.pedestal.http            :as http]
+   [hellhound.http.interceptors :as interceptors]
+   [hellhound.core              :as hellhound]))
 
 
 (def default-service-map
@@ -20,17 +21,13 @@
    ::http/container-options {:h2c? true
                              :h2? false}})
 
-(defn remove-unnecessary-interpretors
-  [service-map]
-  (let [interceptors (::http/interceptors service-map)]
-    (assoc service-map ::http/interceptors (rest interceptors))))
-
 (defn create-service-map
   "Creates a system map and fills some default values for the map"
   [service-map]
   (-> (merge default-service-map service-map)
       (http/default-interceptors)
-      (remove-unnecessary-interpretors)))
+      (interceptors/default)))
+
 
 (defmacro defservice-map
   "A short cut for creating service maps using `create-service-map`
