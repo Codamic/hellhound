@@ -33,10 +33,6 @@
                  ;; TODO: We have to move these stuff into a different jar
                  ;; to avoid unnecessary jar installation
 
-
-                 ;; Communication
-                 [codamic/sente                    "1.11.1"]
-
                  ;; Cassandra adapter
                  ;;[cc.qbits/alia              "4.0.0-beta10"]
                  ;; -------------------------------------------------------
@@ -58,10 +54,6 @@
                  ;; Transit support
                  [com.cognitect/transit-clj  "0.8.300"]
                  [com.cognitect/transit-cljs "0.8.239"]
-
-
-                 [colorize                   "0.1.1"
-                  :exclusions [org.clojure/clojure]]
 
                  ;; Template Engine
                  [selmer                     "1.10.7"]
