@@ -4,15 +4,19 @@
   the event coming from clients to `event-router` and send
   back the result"
   (:require
+   [clojure.core.async                   :as async]
    [io.pedestal.http.immutant.websockets :as websocket]
    [hellhound.logger                     :as log]))
 
-(def ws-clients (atom {}))
 
-(defn new-ws-client
+(def clients (atom {}))
+
+(defn new-client
   [ws-session send-ch]
+  ;; TODO: Send connection info to client
   (async/put! send-ch "This will be a text message")
-  (swap! ws-clients assoc ws-session send-ch))
+  ;; TODO assoc a strcuture instead of a function
+  (swap! clients assoc ws-session send-ch))
 
 ;; This is just for demo purposes
 (defn send-and-close! []
@@ -21,7 +25,7 @@
     ;; And now let's close it down...
     (async/close! send-ch)
     ;; And now clean up
-    (swap! ws-clients dissoc ws-session)))
+    (swap! clients dissoc ws-session)))
 
 ;; Also for demo purposes...
 (defn send-message-to-all!
@@ -36,7 +40,7 @@
 (def ws-routes
   {"/hellhound/ws"
    {
-    :on-connect (webscoket/start-ws-connection new-ws-client)
+    :on-connect (webscoket/start-ws-connection new-client)
     :on-text    (fn [msg] (log/info :msg (str "A client sent - " msg)))
     :on-binary  (fn [payload offset length] (log/info :msg "Binary Message!" :bytes payload))
     :on-error   (fn [t] (log/error :msg "WS Error happened" :exception t))
