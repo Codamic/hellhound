@@ -5,6 +5,7 @@
   (:require
    [io.pedestal.http            :as http]
    [hellhound.http.interceptors :as interceptors]
+   [hellhound.http.websocket    :as ws]
    [hellhound.core              :as hellhound]))
 
 
