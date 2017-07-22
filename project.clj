@@ -23,8 +23,8 @@
 
                  [io.pedestal/pedestal.service "0.5.2"]
                  ;; TODO: Move the adapters to seperate jars. For example hellhound.jetty
-                 ;;[io.pedestal/pedestal.jetty "0.5.2"]
-                 [io.pedestal/pedestal.immutant "0.5.2"]
+                 [io.pedestal/pedestal.jetty "0.5.2"]
+                 ;;[io.pedestal/pedestal.immutant "0.5.2"]
 
                  ;; [io.pedestal/pedestal.tomcat "0.5.2"]
 
