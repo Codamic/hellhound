@@ -93,10 +93,12 @@
     :enabled? true
     :output-fn formatter/default-dev-formatter
     :middleware [middlewares/exceptions]
+    :ns-blacklist [#"org.eclipse.*"]
     :appenders
     {:debug-appender {:enabled? true :min-level :debug :output-fn  :inherit
                       :fn (fn [data]
                             (let [{:keys [output_]} data
                                   formatted-output-str (force output_)]
                               (println formatted-output-str)))}}}))
+
 (init!)
