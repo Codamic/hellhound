@@ -13,7 +13,7 @@
   {:env                  (hellhound/env)
    ::http/resource-path  (hellhound/get-config :public-files-path)
    ::http/secure-headers {:content-security-policy-settings {:object-src "none"}}
-   ::http/type           :immutant
+   ::http/type           :jetty
    ::http/host           (hellhound/get-config :http-host)
    ::http/port           (hellhound/get-config :http-port)
 
