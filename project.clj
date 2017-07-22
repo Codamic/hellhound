@@ -30,6 +30,8 @@
 
                  [io.pedestal/pedestal.interceptor "0.5.2"]
                  [io.pedestal/pedestal.route       "0.5.2"]
+
+                 [danlentz/clj-uuid                "0.1.7"]
                  ;; TODO: We have to move these stuff into a different jar
                  ;; to avoid unnecessary jar installation
 
