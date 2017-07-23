@@ -7,7 +7,8 @@
    [clojure.core.async                   :as async]
    [clj-uuid                             :as uuid]
    [io.pedestal.http.jetty.websockets    :as websocket]
-   [hellhound.logger                     :as log]))
+   [hellhound.logger                     :as log]
+   [hellhound.http.websocket.json        :as json]))
 
 ;; An atom containing all the connected clients
 (def clients (atom {}))
@@ -61,5 +62,7 @@
                   (log/info :msg "WS Closed:" :reason reason-text))}})
 
 (defn add-endpoint
-  [request]
+  [request {:keys [packer]
+            :as   options
+            :or   [packer (json/JsonPacker.)]}]
   (websocket/add-ws-endpoints request ws-routes))
