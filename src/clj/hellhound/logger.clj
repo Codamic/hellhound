@@ -93,7 +93,7 @@
     :enabled? true
     :output-fn formatter/default-dev-formatter
     :middleware [middlewares/exceptions]
-    :ns-blacklist [#"org.eclipse.*"]
+    :ns-blacklist [#"org.eclipse.*" #"io.pedestal.*"]
     :appenders
     {:debug-appender {:enabled? true :min-level :debug :output-fn  :inherit
                       :fn (fn [data]
