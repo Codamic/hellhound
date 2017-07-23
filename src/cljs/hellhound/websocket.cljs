@@ -66,10 +66,13 @@
 
 (defn connect!
   "Connect to remote websocket server"
-  [url {:keys [packer]
-        :as options
-        :or {packer  (create-json-packer)}}]
+  ([url]
+   (connect! url {}))
 
-  (if-let [conn (js/WebSocket url)]
-    (set-channels! conn packer)
-    (handle-connection-error)))
+  ([url {:keys [packer]
+         :as options
+         :or {packer  (create-json-packer)}}]
+
+   (if-let [conn (js/WebSocket. url)]
+     (set-channels! conn packer)
+     (handle-connection-error))))
