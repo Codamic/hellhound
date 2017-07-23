@@ -40,9 +40,4 @@
   (-> service-map
       (http/default-interceptors)
       (remove-unnecessary-interpretors)
-      (hellhound-interceptors)
-      ((fn [x]
-         (println "<<<<<<<<")
-         (println (keys x))
-         (clojure.pprint/pprint (::http/interceptors x))
-         x))))
+      (hellhound-interceptors)))
