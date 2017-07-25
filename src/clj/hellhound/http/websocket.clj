@@ -6,7 +6,7 @@
   (:require
    [clojure.core.async                   :as async]
    [clj-uuid                             :as uuid]
-   [io.pedestal.http.jetty.websockets    :as websocket]
+   [io.pedestal.http.immutant.websockets :as websocket]
    [hellhound.logger                     :as log]
    [hellhound.http.websocket.json        :as json]))
 
@@ -26,11 +26,11 @@
 (defn new-client-connected!
   "This function is responsible to populate the client attom
    when a new client joined"
-  [ws-session send-ch]
-  (let [id (get-client-id ws-session)]
+  [send-ch]
+  (log/info "CH: " (class send-ch))
+  (let [id 2]
     (async/put! send-ch id)
-    (swap! clients assoc id {:session ws-session
-                             :send-fn send-ch})))
+    (swap! clients assoc id {:send-fn send-ch})))
 
 ;; This is just for demo purposes
 (defn send-and-close! []
@@ -51,14 +51,13 @@
     (when (.isOpen session))))
 `      (async/put! channel message)
 
-(defn ws-on-connect
-  "Default `on-connect` callback for the websocket connection"
-  [& rest]
-  (websocket/start-ws-connection new-client-connected!))
+(def ws-on-connect (websocket/start-ws-connection new-client-connected!))
 
 (defn ws-on-text
   "Default `on-text` callback for the websocket server"
-  [msg]
+  [session msg]
+  (log/info "<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+  (log/info (class session))
   (log/info :msg (str "A client sent " msg)))
 
 (defn ws-on-binary
@@ -67,36 +66,37 @@
   (log/info :msg "Binary Message!" :bytes payload))
 
 (defn ws-on-error
-  [t]
+  [session t]
   (log/error :msg "WS Error happened" :exception t))
 
 (defn ws-on-close
-  [num-code reason-text]
-  (log/info :msg "WS Closed:" :reason reason-text))
+  [channel {:keys [code reason]}]
+  (log/info :msg "WS Closed:" :reason reason))
 
 (defn ws-routes
-  [url packer {:keys [on-connect on-text on-binary on-error on-close]
-               :as   options
-               :or   {on-connect ws-on-connect
-                      on-text    ws-on-text
-                      on-binary  ws-on-binary
-                      on-error   ws-on-error
-                      on-close   ws-on-close}}]
+  [req url packer {:keys [on-connect on-text on-binary on-error on-close]
+                   :as   options
+                   :or   {on-connect ws-on-connect
+                          on-text    ws-on-text
+                          on-binary  ws-on-binary
+                          on-error   ws-on-error
+                          on-close   ws-on-close}}]
 
+  (clojure.pprint/pprint req)
   {url
    {:on-connect ws-on-connect
-    :on-text    ws-on-text
-    :on-binary  ws-on-binary
+    :on-message ws-on-text
+    ;;:on-binary  ws-on-binary
     :on-error   ws-on-error
     :on-close   ws-on-close}})
 
 (defn add-endpoint
   [{:keys [url packer]
     :as   options
-    :or   [url    "/hellhound/ws"
-                   packer (json/JsonPacker.)]}]
+    :or   {url    "/hellhound/ws"
+           packer (json/->JsonPacker)}}]
   (fn [request]
-    (websocket/add-ws-endpoints request (ws-routes url packer options))))
+    (websocket/add-ws-endpoints request (ws-routes request url packer options))))
 
 (defn add-websocket
   "Add websocket endpoints to the given `service-map`."

@@ -13,7 +13,7 @@
   {:env                  (hellhound/env)
    ::http/resource-path  (hellhound/get-config :public-files-path)
    ::http/secure-headers {:content-security-policy-settings {:object-src "none"}}
-   ::http/type           :jetty
+   ::http/type           :immutant
    ::http/host           (hellhound/get-config :http-host)
    ::http/port           (hellhound/get-config :http-port)
 
@@ -21,7 +21,7 @@
    ;; map blow
    ::http/container-options {:h2c? true
                              :h2? false
-                             :context-configurator (ws/add-endpoint)}})
+                             :context-configurator (ws/add-endpoint {})}})
 
 (defn create-service-map
   "Creates a system map and fills some default values for the map"
