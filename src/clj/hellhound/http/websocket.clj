@@ -71,17 +71,17 @@
   (log/error :msg "WS Error happened" :exception t))
 
 (defn ws-on-close
-  [num-code reason-text
-   (log/info :msg "WS Closed:" :reason reason-text)])
+  [num-code reason-text]
+  (log/info :msg "WS Closed:" :reason reason-text))
 
 (defn ws-routes
-  [url {:keys [on-connect on-text on-binary on-error on-close]
-        :as   options
-        :or   {on-connect ws-on-connect
-               on-text    ws-on-text
-               on-binary  ws-on-binary
-               on-error   ws-on-error
-               on-close   ws-on-close}}]
+  [url packer {:keys [on-connect on-text on-binary on-error on-close]
+               :as   options
+               :or   {on-connect ws-on-connect
+                      on-text    ws-on-text
+                      on-binary  ws-on-binary
+                      on-error   ws-on-error
+                      on-close   ws-on-close}}]
 
   {url
    {:on-connect ws-on-connect
@@ -91,12 +91,13 @@
     :on-close   ws-on-close}})
 
 (defn add-endpoint
-  [request {:keys [packer]
-            :as   options
-            :or   [packer (json/JsonPacker.)]}]
-  (websocket/add-ws-endpoints request (ws-routes)))
+  [{:keys [url packer]
+    :as   options
+    :or   [url    "/hellhound/ws"
+                   packer (json/JsonPacker.)]}]
+  (fn [request]
+    (websocket/add-ws-endpoints request (ws-routes url packer options))))
 
 (defn add-websocket
   "Add websocket endpoints to the given `service-map`."
-  [service-map {:keys [packer url] :as   options}]
-  (assoc service-map))
+  [service-map {:keys [packer url] :as options}])

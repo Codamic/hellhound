@@ -21,7 +21,7 @@
    ;; map blow
    ::http/container-options {:h2c? true
                              :h2? false
-                             :context-configurator ws/add-endpoint}})
+                             :context-configurator (ws/add-endpoint)}})
 
 (defn create-service-map
   "Creates a system map and fills some default values for the map"
