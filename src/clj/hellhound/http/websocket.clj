@@ -51,18 +51,52 @@
     (when (.isOpen session))))
 `      (async/put! channel message)
 
-(def ws-routes
-  {"/hellhound/ws"
-   {
-    :on-connect (websocket/start-ws-connection new-client-connected!)
-    :on-text    (fn [msg] (log/info :msg (str "A client sent - " msg)))
-    :on-binary  (fn [payload offset length] (log/info :msg "Binary Message!" :bytes payload))
-    :on-error   (fn [t] (log/error :msg "WS Error happened" :exception t))
-    :on-close   (fn [num-code reason-text]
-                  (log/info :msg "WS Closed:" :reason reason-text))}})
+(defn ws-on-connect
+  "Default `on-connect` callback for the websocket connection"
+  [& rest]
+  (websocket/start-ws-connection new-client-connected!))
+
+(defn ws-on-text
+  "Default `on-text` callback for the websocket server"
+  [msg]
+  (log/info :msg (str "A client sent " msg)))
+
+(defn ws-on-binary
+  "Default `on-text` callback for the websocket server"
+  [payload offset length]
+  (log/info :msg "Binary Message!" :bytes payload))
+
+(defn ws-on-error
+  [t]
+  (log/error :msg "WS Error happened" :exception t))
+
+(defn ws-on-close
+  [num-code reason-text
+   (log/info :msg "WS Closed:" :reason reason-text)])
+
+(defn ws-routes
+  [url {:keys [on-connect on-text on-binary on-error on-close]
+        :as   options
+        :or   {on-connect ws-on-connect
+               on-text    ws-on-text
+               on-binary  ws-on-binary
+               on-error   ws-on-error
+               on-close   ws-on-close}}]
+
+  {url
+   {:on-connect ws-on-connect
+    :on-text    ws-on-text
+    :on-binary  ws-on-binary
+    :on-error   ws-on-error
+    :on-close   ws-on-close}})
 
 (defn add-endpoint
   [request {:keys [packer]
             :as   options
             :or   [packer (json/JsonPacker.)]}]
-  (websocket/add-ws-endpoints request ws-routes))
+  (websocket/add-ws-endpoints request (ws-routes)))
+
+(defn add-websocket
+  "Add websocket endpoints to the given `service-map`."
+  [service-map {:keys [packer url] :as   options}]
+  (assoc service-map))
