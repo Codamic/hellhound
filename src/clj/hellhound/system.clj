@@ -1,4 +1,7 @@
 (ns hellhound.system
+  "Systems are the most important thing in the **HellHound** ecosystem.
+  Systems define how your application should work."
+  ^{:author "Sameer Rahmani (@lxsameer)"}
   (:require [hellhound.components.core     :as component]
             [hellhound.config              :as config]
             [hellhound.system.core         :as system-core]
@@ -18,12 +21,15 @@
   (:instance (system-core/get-system-entry component-name)))
 
 (defn start-system
-  "Start the given system and call start on all the components"
+  "Start the given system. RunsCreate an instance of all the components by running
+  the given `factory` functions. Then starts all the components by calling
+  `start` function of the instances."
   [system]
   ;; Read the configuration for the current runtime environment which
   ;; specified by `HH_ENV` environment. Default env is `:development`
   (config/load-runtime-configuration)
-  (component/iterate-components system component/start-component))
+  (component/instantiate-components system))
+
 
 ;; TODO: Wait for all the components to terminate gracefully
 ;; TODO: Add `force` flag.
