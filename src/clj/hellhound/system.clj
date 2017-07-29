@@ -4,21 +4,21 @@
   ^{:author "Sameer Rahmani (@lxsameer)"}
   (:require [hellhound.components.core     :as component]
             [hellhound.config              :as config]
-            [hellhound.system.core         :as system-core]
+            [hellhound.system.core         :as core]
             [hellhound.config.defaults     :as default]))
 
 (defn set-system!
   "Set the default system"
   [system]
-  (system-core/reset-system! system))
+  (core/reset-system! system))
 
 (defn system
   []
-  (system-core/get-system))
+  (core/get-system))
 
 (defn get-component
   [component-name]
-  (:instance (system-core/get-system-entry component-name)))
+  (:instance (core/get-system-entry component-name)))
 
 (defn start-system
   "Start the given system. RunsCreate an instance of all the components by running
