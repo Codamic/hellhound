@@ -24,9 +24,10 @@
 
 (defn- start-system
   [system]
-  34)
+  (let [components (components system)]))
 
 
-(extend-protocol protocols/System
+(extend-protocol protocols/Systemci
   clojure.lang.PersistentArrayMap
-  (start [this]))
+  (start [this])
+  (components [this] (:components this)))
