@@ -6,6 +6,15 @@
 and reaches the alpha stage pretty soon. If you like to be part of this process please
 leave us a message.
 
+# Rationale
+
+* Stateless server
+* Scalable
+* Fault tolarance
+* Dispatch jobs to a worker
+* async
+
+
 A web framework to build data driven web applications with clojure and clojurescript.
 Using **HellHound**, you can create a SPA application, web service or web application
 easily by just paying attention to what really matters to you. You won't get involve
