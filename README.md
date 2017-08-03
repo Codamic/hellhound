@@ -8,11 +8,14 @@ leave us a message.
 
 # Rationale
 
-* Stateless server
+* Stateless
 * Scalable
 * Fault tolarance
 * Dispatch jobs to a worker
 * async
+* stream support
+* data everywhere
+* Extendable
 
 
 A web framework to build data driven web applications with clojure and clojurescript.
