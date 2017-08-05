@@ -24,8 +24,29 @@
   (get (:components (get-system)) component-name))
 
 
+(defn for-each-component
+  [components f]
+  (doseq [component components]
+    (f component)))
+
+
+(defn start-dependencies
+  [system component]
+  ())
+
+(defn start-component!
+  [system component]
+  (let [dependencies (dependencies component)]
+    (map #(start-component)))
+  (start-dependencies systbem component)
+  (wire-component-io))
+
+
 (defn start-system!
-  [system])
+  [system]
+  (for-each-component (components system)
+                      #(start-component! system %)))
+
 
 
 (s/fdef get-components
@@ -38,7 +59,12 @@
   [system]
   (:components system))
 
-(extend-protocol protocols/Systemci
+(extend-protocol protocols/System
   clojure.lang.PersistentArrayMap
-  (start! [this])
-  (components [this] (get-components this)))
+  (start! [this]
+    (:hellhound.component/start-fn this))
+
+  (components [this] (get-components this))
+
+  (get-component [this component-name]
+    (component-name (components this))))

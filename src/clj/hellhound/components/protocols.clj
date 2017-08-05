@@ -1,5 +1,6 @@
 (ns hellhound.components.protocols)
 
+
 (defprotocol Lifecycle
   "This protocol defines the structure of each component"
   (start [component]
