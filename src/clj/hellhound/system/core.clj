@@ -24,49 +24,51 @@
   (get (:components (get-system)) component-name))
 
 
-(defn for-each-component
-  [components f]
-  (doseq [component components]
-    (f component)))
-
-
-(defn start-dependencies
-  [system component]
-  ())
-
 
 (defn starting-context
+  "Generates the `context` map to be passed to `start!` of the component"
   [component]
   {})
 
 (defn call-start
+  "Calls `start!` function of the component and generates the context for it."
   [component]
   (when-not (started? component)
     (start! component (starting-context component))))
 
 (defn component-dependencies
+  "Returns a vector of all the components of the `system` which the given
+  `component` depends on them."
   [system component]
   (map #(get-component system %
                        (dependencies component))))
 
-(defn start-component!
-  [system component]
-  (let [components-map   (conj (component-dependencies system component)
-                               component)]
-
+(defn with-component-dependencies
+  "Runs the given function for all the dependencies of the given `component`
+  and the `component` itself and update the given `system` with the result
+  of the execution."
+  [system component f]
+  (let [components-map  (conj (component-dependencies system component)
+                              component)]
     (update-system system
                    :components
-                   (map call-start components-map))))
+                   (map f components-map))))
+
+(defn start-component!
+  "Starts the given `component` of the given `system`."
+  [system component]
+  (with-component-dependencies system component call-start))
 
 
 (defn stop-component!
-  [system component])
+  "Stops the given `component` of the given `system`."
+  [system component]
+  (with-component-dependencies system component call-stop))
 
 (defn start-system!
+  "Starts the given `system` map."
   [system]
-  (for-each-component (components system)
-                      #(start-component! system %)))
-
+  (map #(start-component! system %) (components system)))
 
 
 (s/fdef get-components
