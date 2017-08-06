@@ -34,13 +34,33 @@
   [system component]
   ())
 
+
+(defn starting-context
+  [component]
+  {})
+
+(defn call-start
+  [component]
+  (when-not (started? component)
+    (start! component (starting-context component))))
+
+(defn component-dependencies
+  [system component]
+  (map #(get-component system %
+                       (dependencies component))))
+
 (defn start-component!
   [system component]
-  (let [dependencies (dependencies component)]
-    (map #(start-component)))
-  (start-dependencies systbem component)
-  (wire-component-io))
+  (let [components-map   (conj (component-dependencies system component)
+                               component)]
 
+    (update-system system
+                   :components
+                   (map call-start components-map))))
+
+
+(defn stop-component!
+  [system component])
 
 (defn start-system!
   [system]
@@ -58,6 +78,7 @@
   "Returns the components catalog of the given `system`."
   [system]
   (:components system))
+
 
 (extend-protocol protocols/System
   clojure.lang.PersistentArrayMap
