@@ -14,7 +14,10 @@
     "Returns a hashmap of all the components defined in the system")
 
   (get-component [this component-name]
-    "Return the instance of the component with the given name"))
+    "Return the instance of the component with the given name")
+
+  (update! [this key value]
+    "Updates the system with given value under the given key"))
 
 
 

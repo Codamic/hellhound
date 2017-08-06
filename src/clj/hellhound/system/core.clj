@@ -50,7 +50,7 @@
   [system component f]
   (let [components-map  (conj (component-dependencies system component)
                               component)]
-    (update-system system
+    (update! system
                    :components
                    (map f components-map))))
 
@@ -90,4 +90,7 @@
   (components [this] (get-components this))
 
   (get-component [this component-name]
-    (component-name (components this))))
+    (component-name (components this)))
+
+  (update! [this key value]
+    (swap! system #(update-in % key value))))
