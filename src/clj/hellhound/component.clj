@@ -1,4 +1,6 @@
-(ns hellhound.component)
+(ns hellhound.component
+  (:require
+   [hellhound.system.protocols :as protocols]))
 
 
 (extend-protocol protocols/Component

@@ -24,7 +24,6 @@
   (get (:components (get-system)) component-name))
 
 
-
 (defn starting-context
   "Generates the `context` map to be passed to `start!` of the component"
   [component]
@@ -50,7 +49,7 @@
   [system component f]
   (let [components-map  (conj (component-dependencies system component)
                               component)]
-    (update! system
+    (updat! system
                    :components
                    (map f components-map))))
 

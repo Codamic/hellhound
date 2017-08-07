@@ -61,20 +61,55 @@
    ::stop-fn (fn [this] (println "stoping"))})
 
 (def example-system
-  {:components [{}]})
+  {:components [example-component]})
+
+
+
+(s/fdef get-components
+        :args (s/cat :system map?)
+        :ret vector?
+        :fn #(= (:ret %) (-> :args :system :components)))
+
+(defn get-components
+  "Returns the components catalog of the given `system`."
+  [system]
+  (:components system))
+
+;; Default system atom
+(def system (atom {}))
+
+(defn set-system!
+  [system-map]
+  (reset! system system-map))
+
+(defn update-system-components!
+  [components]
+  (let [new-system (update-in @system key)])
+  (reset system [key value]
+           (swap! system #(update-in % key value))))
+
+
+(set-system! example-system)
+
+
 
 (extend-protocol ISystem
   clojure.lang.PersistentArrayMap
-  (start! [this]
-    (:hellhound.component/start-fn this))
-
-  (components [this] (get-components this))
+  (components [this]
+    (get-components this))
 
   (get-component [this component-name]
     (component-name (components this)))
 
-  (update! [this key value]
-    (swap! system #(update-in % key value))))
+  clojure.lang.Atom
+  (components [this]
+    (get-components @this))
+  (get-component [this component-name]
+    (component-name (components @this))))
+
+
+
+
 
 
 
@@ -123,14 +158,3 @@
   "Starts the given `system` map."
   [system]
   (map #(start-component! system %) (components system)))
-
-
-(s/fdef get-components
-        :args (s/cat :system map?)
-        :ret vector?
-        :fn #(= (:ret %) (-> :args :system :components)))
-
-(defn get-components
-  "Returns the components catalog of the given `system`."
-  [system]
-  (:components system))

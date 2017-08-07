@@ -131,7 +131,7 @@
               :plugins [[lein-figwheel  "0.5.4-4"]
                         [lein-doo       "0.1.6"]]
 
-              :source-paths ["dev"]
+              :source-paths ["playground"]
               :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}
 
              :uberjar
