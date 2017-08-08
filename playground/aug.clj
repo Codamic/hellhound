@@ -1,23 +1,8 @@
-(ns aug)
-
-(defprotocol ISystem
-  (start [this]
-    "Starts the system.")
-
-  (stop  [this]
-    "stops the system")
-
-  (restart [this]
-    "Restarts the system")
-
-  (components [this]
-    "Returns a hashmap of all the components defined in the system")
-
-  (get-component [this component-name]
-    "Return the instance of the component with the given name")
-
-  (update! [this key value]
-    "Updates the system with given value under the given key"))
+(ns aug
+  (:require [clojure.spec.alpha :as s])
+  (:import (clojure.lang IPersistentMap
+                         PersistentArrayMap
+                         ISeq)))
 
 
 
@@ -32,13 +17,15 @@
   (started? [component]
     "Returns a `true` if component started and `false` otherwise.")
 
+  (get-name [component]
+    "Returns the name of the component.")
+
   (dependencies [component]
     "Returns a vector of dependency names."))
 
 
-
 (extend-protocol IComponent
-  clojure.lang.PersistentArrayMap
+  PersistentArrayMap
   (start! [this context]
     (let [start-fn (::start-fn this)]
       (start-fn this context)))
@@ -49,6 +36,9 @@
 
   (started? [this]
     (or (::started? this) false))
+
+  (get-name [this]
+    (::name this))
 
   (dependencies [this]
     (::depends-on this)))
@@ -63,6 +53,9 @@
 (def example-system
   {:components [example-component]})
 
+;; Default system atom
+(def system (atom {}))
+
 
 
 (s/fdef get-components
@@ -70,17 +63,40 @@
         :ret vector?
         :fn #(= (:ret %) (-> :args :system :components)))
 
-(defn get-components
+(defn ^ISeq get-components
   "Returns the components catalog of the given `system`."
-  [system]
+  [^IPersistentMap system]
   (:components system))
 
-;; Default system atom
-(def system (atom {}))
+
+
+(defn conform-component
+  [component]
+  (if (satisfies? IComponent component)
+    [(get-name component) component]
+    ;; Throw if component didn't satisfy the protocol.
+    (ex-info "Provided component does not satisfies `IComponent` protocol."
+             {:cause component})))
+
+(defn ^IPersistentMap components-map
+  [^IPersistentMap system-map]
+  (into {} (map conform-component
+                (get-components system-map))))
 
 (defn set-system!
-  [system-map]
-  (reset! system system-map))
+  "Sets the system of HellHound."
+  [^IPersistentMap system-map]
+  (reset! system (merge system-map
+                        {:components (components-map system-map)})))
+
+
+
+
+
+
+
+
+
 
 (defn update-system-components!
   [components]
@@ -98,7 +114,7 @@
   (components [this]
     (get-components this))
 
-  (get-component [this component-name]
+  (get-component [this component-name]'
     (component-name (components this)))
 
   clojure.lang.Atom
