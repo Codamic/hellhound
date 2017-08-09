@@ -90,8 +90,27 @@
                         {:components (components-map system-map)})))
 
 
+(defn with-component-dependencies
+  "Runs the given function for all the dependencies of the given `component`
+  and the `component` itself and update the given `system` with the result
+  of the execution."
+  [system-map component f]
+  (let [components-map  (conj (component-dependencies system-map component)
+                              component)]
+    (updat! system-map :components
+                   (map f components-map))))
 
 
+(defn start-component!
+  "Starts the given `component` of the given `system`."
+  [system-map component]
+  (with-component-dependencies system-map component call-start))
+
+
+(defn start!
+  "Starts the given `system-map`."
+  [system-map]
+  (map #(start-component! system-map %) (get-components system-map)))
 
 
 
