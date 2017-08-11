@@ -28,7 +28,8 @@
   PersistentArrayMap
   (start! [this context]
     (let [start-fn (::start-fn this)]
-      (start-fn this context)))
+      (assoc (start-fn this context)
+             ::started? true)))
 
   (stop! [this]
     (let [stop-fn (::stop-fn this)]
@@ -46,10 +47,17 @@
 (def example-component
   {::depends-on [:sa]
    ::name :server
-   ::started? true
-   ::start-fn (fn [this context] (println (str "<<<<" context)))
-   ::stop-fn (fn [this] (println "stoping"))})
+   ::start-fn (fn [this context] (println (str "<<<<" this)) this)
+   ::stop-fn (fn [this] (println "stoping") this)})
 
+(def example-component2
+  {::name :sa
+   ::start-fn (fn [this context] (println (str "<<sasasasa<<" this)) this)
+   ::stop-fn (fn [this] (println "stoping") this)})
+
+(def parsed-system
+  {:components {:sa example-component2
+                :server example-component}})
 (def example-system
   {:components [example-component]})
 
@@ -89,6 +97,8 @@
   (reset! system (merge system-map
                         {:components (components-map system-map)})))
 
+(defn update-system-components!
+  [system])
 
 (defn with-component-dependencies
   "Runs the given function for all the dependencies of the given `component`
@@ -97,20 +107,47 @@
   [system-map component f]
   (let [components-map  (conj (component-dependencies system-map component)
                               component)]
-    (updat! system-map :components
-                   (map f components-map))))
+    (updat-system! system-map :components
+            (map f components-map))))
 
 
+;; DONE ---------------------------------------------
+(defn get-dependencies-of
+  [system-map component]
+  (let [dependencies (dependencies component)]
+    (filter #(some #{(::name %)} dependencies)
+            (vals (get-components system-map)))))
+
+(get-dependencies-of parsed-system example-component)
+
+;; DONE ----------------------------------------------
 (defn start-component!
   "Starts the given `component` of the given `system`."
   [system-map component]
-  (with-component-dependencies system-map component call-start))
+  (if (started? component)
+    system-map
+    (update-in (reduce start-component! system-map
+                       (get-dependencies-of system-map component))
+               [:components (get-name component)]
+               (fn [_] (start! component {})))))
 
 
-(defn start!
+(start-component! parsed-system example-component)
+
+
+;; DONE ----------------
+(s/def ::system-map map?)
+
+(defn start-system!
   "Starts the given `system-map`."
   [system-map]
-  (map #(start-component! system-map %) (get-components system-map)))
+  (if-not (s/valid? ::system-map system-map)
+    (throw (ex-info "Provided system is not valid" {:cause (s/explain ::system-map system-map)}))
+    (reduce start-component! system-map (vals (get-components system-map)))))
+
+(start-system! parsed-system)
+;; ----------------------
+
 
 
 
