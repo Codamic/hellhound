@@ -1,37 +1,19 @@
 (ns hellhound.system.protocols)
 
-(defprotocol System
-  (start [this]
-    "Starts the system.")
 
-  (stop  [this]
-    "stops the system")
-
-  (restart [this]
-    "Restarts the system")
-
-  (components [this]
-    "Returns a hashmap of all the components defined in the system")
-
-  (get-component [this component-name]
-    "Return the instance of the component with the given name")
-
-  (update! [this key value]
-    "Updates the system with given value under the given key"))
-
-
-
-(defprotocol Component
+(defprotocol IComponent
   "This protocol defines a very basic component for hellhound system."
-  (start! [component]
+  (start! [component context]
     "Starts the component.")
 
   (stop!  [component]
     "Stops the component.")
 
-  (started?
-    [component])
-  "Returns a `true` if component started and `false` otherwise."
+  (started? [component]
+    "Returns a `true` if component started and `false` otherwise.")
+
+  (get-name [component]
+    "Returns the name of the component.")
 
   (dependencies [component]
     "Returns a vector of dependency names."))

@@ -23,7 +23,6 @@
   (dependencies [component]
     "Returns a vector of dependency names."))
 
-
 (extend-protocol IComponent
   PersistentArrayMap
   (start! [this context]
@@ -33,7 +32,7 @@
 
   (stop! [this]
     (let [stop-fn (::stop-fn this)]
-      (stop-fn this)))
+      (assoc (stop-fn this) ::started? false)))
 
   (started? [this]
     (or (::started? this) false))
@@ -47,19 +46,21 @@
 (def example-component
   {::depends-on [:sa]
    ::name :server
+   ::started? true
    ::start-fn (fn [this context] (println (str "<<<<" this)) this)
    ::stop-fn (fn [this] (println "stoping") this)})
 
 (def example-component2
   {::name :sa
+   ::started? true
    ::start-fn (fn [this context] (println (str "<<sasasasa<<" this)) this)
-   ::stop-fn (fn [this] (println "stoping") this)})
+   ::stop-fn (fn [this] (println "stoping111111") this)})
 
 (def parsed-system
   {:components {:sa example-component2
                 :server example-component}})
 (def example-system
-  {:components [example-component]})
+  {:components [example-component2 example-component]})
 
 ;; Default system atom
 (def system (atom {}))
@@ -91,31 +92,22 @@
   (into {} (map conform-component
                 (get-components system-map))))
 
+(defn update-system-components
+  [system-map]
+  (merge system-map
+         {:components (components-map system-map)}))
+
 (defn set-system!
   "Sets the system of HellHound."
-  [^IPersistentMap system-map]
-  (reset! system (merge system-map
-                        {:components (components-map system-map)})))
-
-(defn update-system-components!
-  [system])
-
-(defn with-component-dependencies
-  "Runs the given function for all the dependencies of the given `component`
-  and the `component` itself and update the given `system` with the result
-  of the execution."
-  [system-map component f]
-  (let [components-map  (conj (component-dependencies system-map component)
-                              component)]
-    (updat-system! system-map :components
-            (map f components-map))))
+  [^IPersistentMap]
+  (reset! system (update-system-components)))
 
 
 ;; DONE ---------------------------------------------
 (defn get-dependencies-of
   [system-map component]
   (let [dependencies (dependencies component)]
-    (filter #(some #{(::name %)} dependencies)
+    (filter #(some #{(get-name %)} dependencies)
             (vals (get-components system-map)))))
 
 (get-dependencies-of parsed-system example-component)
@@ -134,9 +126,25 @@
 
 (start-component! parsed-system example-component)
 
+;; DONE ----------------
+(defn stop-component!
+  [system-map component]
+  (if-not (started? component)
+    system-map
+    (reduce stop-component!
+            (update-in system-map
+                       [:components (get-name component)]
+                       (fn [_] (stop! component)))
+            (get-dependencies-of system-map component))))
+
+
+(stop-component! parsed-system example-component)
 
 ;; DONE ----------------
-(s/def ::system-map map?)
+(s/def ::system-map (s/and map?
+                           #(contains? % :components)
+                           #(map? (:components %))))
+
 
 (defn start-system!
   "Starts the given `system-map`."
@@ -148,8 +156,12 @@
 (start-system! parsed-system)
 ;; ----------------------
 
+;; DONE ----------------------
+(defn stop-system!
+  [system-map]
+  (reduce stop-component! system-map (vals (get-components system-map))))
 
-
+;; ------------------------
 
 
 
