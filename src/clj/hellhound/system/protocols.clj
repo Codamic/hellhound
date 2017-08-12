@@ -1,4 +1,6 @@
-(ns hellhound.system.protocols)
+(ns hellhound.system.protocols
+  "All the components of hellhound system should implements `IComponent`
+  protocol. Either by extending a type of by using a record.")
 
 
 (defprotocol IComponent

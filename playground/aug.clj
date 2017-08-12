@@ -5,7 +5,6 @@
                          ISeq)))
 
 
-
 (defprotocol IComponent
   "This protocol defines a very basic component for hellhound system."
   (start! [component context]
@@ -162,6 +161,7 @@
   (reduce stop-component! system-map (vals (get-components system-map))))
 
 ;; ------------------------
+
 
 
 

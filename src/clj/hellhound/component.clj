@@ -1,18 +1,16 @@
 (ns hellhound.component
-  (:require
-   [hellhound.system.protocols :as protocols]))
+  (:require [hellhound.system.protocols :as protocols]))
 
 
 (extend-protocol protocols/IComponent
-  clojure.lang.IPersistentMap
+  clojure.lang.PersistentArrayMap
   (start! [this context]
     (let [start-fn (::start-fn this)]
       (assoc (start-fn this context)
              ::started? true)))
-
   (stop! [this]
     (let [stop-fn (::stop-fn this)]
-      (stop-fn this)))
+      (assoc (stop-fn this) ::started? false)))
 
   (started? [this]
     (or (::started? this) false))
