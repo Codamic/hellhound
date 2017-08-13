@@ -3,9 +3,10 @@
   (:require
    [clojure.spec.alpha         :as s]
    [hellhound.component        :as comp])
+
   (:import (clojure.lang IPersistentMap
                          PersistentArrayMap
-                         ISeq)))
+                         PersistentVector)))
 
 ;; Main storage for system data.
 (def system (atom {}))
@@ -19,7 +20,7 @@
         :ret vector?
         :fn #(= (:ret %) (-> :args :system :components)))
 
-(defn ^ISeq get-components
+(defn ^PersistentVector get-components
   "Returns the components catalog of the given `system`."
   [^IPersistentMap system]
   (:components system))

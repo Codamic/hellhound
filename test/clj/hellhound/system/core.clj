@@ -4,5 +4,6 @@
             [clojure.spec.test.alpha :as stest]))
 
 
-(t/testing "Core specs"
-  (stest/check `hellhound.system.core/start-system))
+(t/testing "System Core specs"
+  (-> (stest/enumerate-namespace 'hellhound.system.core)
+      (stest/check)))
