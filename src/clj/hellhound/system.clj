@@ -2,23 +2,18 @@
   "Systems are the most important thing in the **HellHound** ecosystem.
   Systems define how your application should work."
   ^{:author "Sameer Rahmani (@lxsameer)"}
-  (:require [hellhound.components.core     :as component]
-            [hellhound.config              :as config]
+  (:require [hellhound.config              :as config]
             [hellhound.system.core         :as core]
             [hellhound.config.defaults     :as default]))
 
 (defn set-system!
   "Set the default system"
   [system]
-  (core/reset-system! system))
+  (core/set-system! system))
 
 (defn system
   []
   (core/get-system))
-
-(defn get-component
-  [component-name]
-  (:instance (core/get-system-entry component-name)))
 
 (defn start-system
   "Start the given system. RunsCreate an instance of all the components by running
@@ -27,32 +22,16 @@
   [system]
   ;; Read the configuration for the current runtime environment which
   ;; specified by `HH_ENV` environment. Default env is `:development`
-  (config/load-runtime-configuration)
-  (component/instantiate-components system))
+  (config/load-runtime-configuration))
 
-
-;; TODO: Wait for all the components to terminate gracefully
-;; TODO: Add `force` flag.
-(defn stop-system
-  "Stop the given system by calling stop on all components"
-  [system]
-  (component/iterate-components system component/stop-component))
-
-(defn start
-  "Start the default system"
+(defn start!
   []
-  (start-system (system)))
+  (core/start-system! @core/system))
 
-(defn stop
-  "Stop the default system"
+(defn stop!
   []
-  (stop-system (system)))
+  (core/stop-system! @core/system))
 
-(defn restart
-  "Restart the default system"
-  []
-  (stop)
-  (start))
 
 (defmacro defsystem
   "Define a system map according to clojure component defination."

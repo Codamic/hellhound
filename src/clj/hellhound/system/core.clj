@@ -2,7 +2,10 @@
   "All the functions for managing system state live in this namespace"
   (:require
    [clojure.spec.alpha         :as s]
-   [hellhound.system.protocols :as protocols]))
+   [hellhound.component        :as comp])
+  (:import (clojure.lang IPersistentMap
+                         PersistentArrayMap
+                         ISeq)))
 
 ;; Main storage for system data.
 (def system (atom {}))
@@ -23,8 +26,8 @@
 
 (defn conform-component
   [component]
-  (if (satisfies? IComponent component)
-    [(get-name component) component]
+  (if (satisfies? comp/IComponent component)
+    [(comp/get-name component) component]
     ;; Throw if component didn't satisfy the protocol.
     (ex-info "Provided component does not satisfies `IComponent` protocol."
              {:cause component})))
@@ -41,34 +44,34 @@
 
 (defn set-system!
   "Sets the system of HellHound."
-  [^IPersistentMap]
-  (reset! system (update-system-components)))
+  [^IPersistentMap system-map]
+  (reset! system (update-system-components system-map)))
 
 (defn get-dependencies-of
   [system-map component]
-  (let [dependencies (dependencies component)]
-    (filter #(some #{(get-name %)} dependencies)
+  (let [dependencies (comp/dependencies component)]
+    (filter #(some #{(comp/get-name %)} dependencies)
             (vals (get-components system-map)))))
 
 (defn start-component!
   "Starts the given `component` of the given `system`."
   [system-map component]
-  (if (started? component)
+  (if (comp/started? component)
     system-map
     (update-in (reduce start-component! system-map
                        (get-dependencies-of system-map component))
-               [:components (get-name component)]
-               (fn [_] (start! component {})))))
+               [:components (comp/get-name component)]
+               (fn [_] (comp/start! component {})))))
 
 
 (defn stop-component!
   [system-map component]
-  (if-not (started? component)
+  (if-not (comp/started? component)
     system-map
     (reduce stop-component!
             (update-in system-map
-                       [:components (get-name component)]
-                       (fn [_] (stop! component)))
+                       [:components (comp/get-name component)]
+                       (fn [_] (comp/stop! component)))
             (get-dependencies-of system-map component))))
 
 (s/def ::system-map (s/and map?
