@@ -15,15 +15,15 @@
   []
   @system)
 
-(s/fdef get-components
-        :args (s/cat :system map?)
-        :ret vector?
-        :fn #(= (:ret %) (-> :args :system :components)))
-
 (defn ^PersistentVector get-components
   "Returns the components catalog of the given `system`."
   [^IPersistentMap system]
   (:components system))
+
+(s/fdef hellhound.system.core/get-components
+        :args (s/cat :system map?)
+        :ret vector?
+        :fn #(< (:ret %) (-> :args :system :components)))
 
 (defn conform-component
   [component]

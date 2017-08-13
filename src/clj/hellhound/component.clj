@@ -1,5 +1,4 @@
 (ns hellhound.component
-  (:require [hellhound.system.protocols :as protocols])
   (:import (clojure.lang PersistentArrayMap)))
 
 

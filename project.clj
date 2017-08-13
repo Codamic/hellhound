@@ -10,7 +10,7 @@
   :dependencies [[org.clojure/clojure        "1.9.0-alpha17"]
                  [org.clojure/clojurescript  "1.9.562"]
                  [org.clojure/core.async     "0.3.443"]
-
+                 [org.clojure/test.check     "0.10.0-alpha2"]
                  ;; Logging
                  [org.slf4j/slf4j-api              "1.7.25"]
                  [com.taoensso/timbre              "4.10.0"]
@@ -124,7 +124,6 @@
               :plugins [[lein-figwheel  "0.5.4-4"]
                         [lein-doo       "0.1.6"]]
 
-              :source-paths ["playground"]
               :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}}
 
              :uberjar
