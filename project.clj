@@ -20,14 +20,7 @@
                  [org.slf4j/jcl-over-slf4j         "1.7.25"]
 
                  [io.aviso/pretty                  "0.1.34"]
-
-                 [io.pedestal/pedestal.service "0.5.3-SNAPSHOT"]
-                 ;; TODO: Move the adapters to seperate jars. For example hellhound.jetty
-                 ;;[io.pedestal/pedestal.jetty "0.5.3-SNAPSHOT"]
-                 [io.pedestal/pedestal.immutant "0.5.3-SNAPSHOT"]
-
-                 [io.pedestal/pedestal.interceptor "0.5.3-SNAPSHOT"]
-                 [io.pedestal/pedestal.route       "0.5.3-SNAPSHOT"]
+                 [aleph                            "0.4.4-alpha4"]
 
                  [danlentz/clj-uuid                "0.1.7"]
                  ;; TODO: We have to move these stuff into a different jar
