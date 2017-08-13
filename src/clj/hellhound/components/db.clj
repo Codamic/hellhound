@@ -1,2 +1,0 @@
-(ns hellhound.components.db
-)
