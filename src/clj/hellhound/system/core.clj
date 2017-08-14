@@ -23,7 +23,7 @@
 (s/fdef hellhound.system.core/get-components
         :args (s/cat :system map?)
         :ret vector?
-        :fn #(< (:ret %) (-> :args :system :components)))
+        :fn #(= (:ret %) (-> :args :system :components)))
 
 (defn conform-component
   [component]
