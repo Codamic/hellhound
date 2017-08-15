@@ -13,3 +13,7 @@
 
 ;; (t/deftest something
 ;;   (assert (stest/check 'hellhound.system.core/get-components)))
+(t/deftest get-components
+  (let [check-results (stest/check `hellhound.system.core/get-components)
+        passed       (every? nil? (map :failure check-results))]
+    (t/is passed (first check-results))))
