@@ -24,6 +24,8 @@
                        :test `(fn []
                                 (let [check-results# (clojure.spec.test.alpha/check ~sym-or-syms ~opts)
                                       checks-passed?# (every? nil? (map :failure check-results#))]
+                                  (println "---------------------------------")
+                                  (println checks-passed?#)
                                   (if checks-passed?#
                                     (clojure.test/do-report {:type    :pass}
                                                   :message (str "Generative tests pass for "
