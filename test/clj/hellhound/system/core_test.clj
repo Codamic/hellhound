@@ -56,13 +56,13 @@
 ;;                          (:clojure.spec.test.alpha/val failure#))})))
 ;;        checks-passed?#)))
 
+;; (doseq [sym (clojure.spec.test.alpha/enumerate-namespace 'hellhound.system.core)]
+;;   (println (meta (macroexpand (defspec-test sym)))))
+(defn spec-ns
+  [ns-sym]
+  (doseq [[sym actual-var] (ns-publics ns-sym)
+          :let [full-symbol  (symbol (name ns-sym) (name sym))]]
+    (alter-meta! actual-var assoc :test #(check full-symbol))
+    (t/test-var actual-var)))
 
-(defmacro defspec-test
-  ([name] `(defspec-test ~name nil))
-  ([name opts]
-   (when clojure.test/*load-tests*
-     `(def ~(vary-meta name assoc :test `(hellhound.system.core_test/check ~name))
-        (fn [] (clojure.test/test-var (var ~name)))))))
-
-(doseq [sym (clojure.spec.test.alpha/enumerate-namespace 'hellhound.system.core)]
-  (defspec-test sym))
+(spec-ns 'hellhound.system.core)
