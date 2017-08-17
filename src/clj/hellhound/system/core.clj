@@ -12,6 +12,7 @@
 (def system (atom {}))
 
 (defn get-system
+  "A shortcut function for derefing `system`."
   []
   @system)
 
@@ -21,12 +22,20 @@
   (:components system))
 
 (defn conform-component
+  "Checks for a valid compnoent structure and returns a pair of component
+  name and the component structure."
   [component]
   (if (satisfies? comp/IComponent component)
     [(comp/get-name component) component]
     ;; Throw if component didn't satisfy the protocol.
-    (ex-info "Provided component does not satisfies `IComponent` protocol."
-             {:cause component})))
+    (throw (ex-info "Provided component does not satisfies `IComponent` protocol."
+                    {:cause component}))))
+
+(s/fdef hellhound.system.core/conform-component
+        :args (s/cat :component :hellhound.component/component)
+        :ret  vector?
+        :fn #(= (:ret %) [(:hellhound.component/name (:component (:args %)))
+                          (:component (:args %))]))
 
 (defn ^IPersistentMap components-map
   [^IPersistentMap system-map]

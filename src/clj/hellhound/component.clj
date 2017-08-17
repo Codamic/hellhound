@@ -1,4 +1,5 @@
 (ns hellhound.component
+  (:require [clojure.spec.alpha :as s])
   (:import (clojure.lang PersistentArrayMap)))
 
 
@@ -37,3 +38,18 @@
 
   (dependencies [this]
     (::depends-on this)))
+
+
+(s/def ::name keyword?)
+(s/def ::start-fn (s/fspec :args (s/cat :this map? :context map?)
+                           :ret map?
+                           :fn #(= (get-name (:ret %))
+                                   (get-name (:this (:args %))))))
+
+(s/def ::stop-fn (s/fspec :args (s/cat :this map? :context map?)
+                          :ret map?
+                          :fn #(= (get-name (:ret %))
+                                  (get-name (:this (:args %))))))
+
+(s/def ::component (s/and #(satisfies? IComponent)
+                          (s/keys :req [::name ::start-fn ::stop-fn])))
