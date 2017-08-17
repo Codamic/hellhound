@@ -20,18 +20,6 @@
   [^IPersistentMap system]
   (:components system))
 
-(s/fdef hellhound.system.core/get-components
-        :args (s/cat :system map?)
-        :ret vector?
-        :fn #(= (:ret %) (-> :args :system :components)))
-
-(defn gtest [a] a)
-
-(s/fdef hellhound.system.core/gtest
-        :args (s/cat :a int?)
-        :ret int?
-        :fn #(= (:ret %) (-> :args :a)))
-
 (defn conform-component
   [component]
   (if (satisfies? comp/IComponent component)

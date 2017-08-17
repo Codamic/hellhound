@@ -9,7 +9,7 @@
         passed       (every? nil? (map :failure check-results))]
     ;; TODO: Instead of using is replace the following experssion with
     ;;       a clojure.test/do-report
-    (t/is passed (first check-results))))
+    (t/is (= passed true) (first check-results))))
 
 
 (defn ns-spec-tests

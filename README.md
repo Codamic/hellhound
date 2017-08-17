@@ -1,6 +1,6 @@
 <div align="center"><img src="https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.png" /></div>
 
-# HellHound
+# HellHound [![Build Status](https://travis-ci.org/Codamic/hellhound.svg?branch=master)](https://travis-ci.org/Codamic/hellhound)
 
 **IMPORTANT NOTE**: This software is not ready to use yet. It's under heavy development
 and reaches the alpha stage pretty soon. If you like to be part of this process please
