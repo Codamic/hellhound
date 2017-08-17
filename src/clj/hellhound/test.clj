@@ -7,9 +7,10 @@
   [x]
   (let [check-results (stest/check x)
         passed       (every? nil? (map :failure check-results))]
-    (t/is passed
-          ;;(first check-results)
-          x)))
+    ;; TODO: Instead of using is replace the following experssion with
+    ;;       a clojure.test/do-report
+    (t/is passed (first check-results))))
+
 
 (defn ns-spec-tests
   [ns-sym]
