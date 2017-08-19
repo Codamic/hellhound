@@ -1,5 +1,6 @@
 (ns hellhound.component
-  (:require [clojure.spec.alpha :as s])
+  (:require [clojure.spec.alpha :as s]
+            [clojure.spec.gen.alpha :as gen])
   (:import (clojure.lang PersistentArrayMap)))
 
 
@@ -37,19 +38,35 @@
     (::name this))
 
   (dependencies [this]
-    (::depends-on this)))
+     (::depends-on this)))
 
 
-(s/def ::name keyword?)
+(s/def ::name qualified-keyword?)
 (s/def ::start-fn (s/fspec :args (s/cat :this map? :context map?)
                            :ret map?
-                           :fn #(= (get-name (:ret %))
-                                   (get-name (:this (:args %))))))
+                           :fn #(= (::name (:ret %))
+                                   (::name (:this (:args %))))))
 
 (s/def ::stop-fn (s/fspec :args (s/cat :this map? :context map?)
                           :ret map?
-                          :fn #(= (get-name (:ret %))
-                                  (get-name (:this (:args %))))))
+                          :fn #(= (::name (:ret %))
+                                  (::name (:this (:args %))))))
 
-(s/def ::component (s/and #(satisfies? IComponent)
-                          (s/keys :req [::name ::start-fn ::stop-fn])))
+(s/def ::depends-on (s/coll-of keyword? :kind vector? :distinct true))
+(s/def ::component (s/keys :req [::name ::start-fn ::stop-fn]
+                           :opt [::depends-on]))
+
+
+(gen/sample (s/gen ::name))
+(gen/sample (s/gen ::start-fn))
+(gen/sample (s/gen ::component))
+a
+(get-name a)
+(started? a)
+(dependencies a)
+(start! a {})
+(keyword-ns? ::name)
+(s/gen ::name)
+(gen/sample (gen/list gen/boolean))
+
+(gen/sample (gen/vector gen/keyword))
