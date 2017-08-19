@@ -4,14 +4,14 @@
   (:require [clojure.spec.alpha :as s]))
 
 (defn throw-exception
-  [spec value msg]
+  [^clojure.lang.Keyword spec value ^String msg]
   (throw
-   (ex-info (format "%s. Given value does not follow the `%s` spec.\n" msg spec)
+   (ex-info (format "%s Given value does not follow the `%s` spec.\n" msg spec)
             {:provided-value value
              :expected-spec  spec
              :explain        (s/explain-data spec value)})))
 
 (defn validate
-  [spec value msg]
+  [^clojure.lang.Keyword spec value ^String msg]
   (when-not (s/valid? spec value)
     (throw-exception spec value msg)))

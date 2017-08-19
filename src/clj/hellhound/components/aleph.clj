@@ -6,6 +6,7 @@
    [clojure.spec.alpha :as s]
    [aleph.http         :as http]
    [hellhound.logger   :as log]
+   [hellhound.spec     :as spec]
    [hellhound.core     :as hellhound]))
 
 (s/def ::port (s/int-in 1 65535))
@@ -37,6 +38,7 @@
   ([routes]
    (aleph routes (hellhound/get-config :http)))
   ([routes config]
+   (spec/validate ::aleph-config config "Aleph configuration is invalid.")
    {:hellhound.component/name ::aleph
     :hellhound.component/start-fn (aleph-start1 routes config)
     :hellhound.component/stop-nf aleph-stop!}))
