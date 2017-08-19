@@ -12,30 +12,18 @@
   (core/set-system! system))
 
 (defn system
+  "Returns the processed system."
   []
   (core/get-system))
 
-(defn start-system
-  "Start the given system. RunsCreate an instance of all the components by running
-  the given `factory` functions. Then starts all the components by calling
-  `start` function of the instances."
-  [system]
+(defn start!
+  "Starts the default system by calling start on all the components."
+  []
   ;; Read the configuration for the current runtime environment which
   ;; specified by `HH_ENV` environment. Default env is `:development`
-  (config/load-runtime-configuration))
-
-(defn start!
-  []
+  (config/load-runtime-configuration)
   (core/start-system! @core/system))
 
 (defn stop!
   []
   (core/stop-system! @core/system))
-
-
-(defmacro defsystem
-  "Define a system map according to clojure component defination."
-  [system-name & body]
-  `(def ~system-name
-     (merge hellhound.components.defaults/system-structure
-            {:components (merge ~@body)})))

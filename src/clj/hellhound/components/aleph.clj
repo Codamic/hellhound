@@ -1,4 +1,7 @@
 (ns hellhound.components.aleph
+  "Aleph web/websocket server component.
+  In order this use this component simply call the `aleph-factory` function."
+  ^{:author "Sameer Rahmani (@lxsameer)"}
   (:require
    [aleph.http :as http]
    [hellhound.logger :as log]
@@ -25,6 +28,8 @@
 
 
 (defn aleph-factory
+  "Returns a new aleph component by given `routes` and optional `address`
+  map. For details about `address` map checkout aleph docs."
   ([routes]
    (aleph-factory routes (hellhound/get-config :http)))
   ([routes address]
