@@ -1,22 +1,17 @@
 (ns hellhound.spec
   "Utility namespace for spec management and validation in
   HellHound."
-  (:require [clojure.spec.alpha :as spec]))
-
+  (:require [clojure.spec.alpha :as s]))
 
 (defn throw-exception
-  [spec value]
+  [spec value msg]
   (throw
-   (ex-info (format "Given value does not follow the `%s` spec.\n"  spec)
+   (ex-info (format "%s. Given value does not follow the `%s` spec.\n" msg spec)
             {:provided-value value
              :expected-spec  spec
-             :explain        (spec/explain-data spec value)})))
+             :explain        (s/explain-data spec value)})))
 
 (defn validate
-  [spec value]
-  ;; TODO: ENABLE this function when decided to work on spec
-  ;;       task
-  ;; (if-not (spec/valid? spec value)
-  ;;   (throw-exception spec value)
-  ;;   value)
-  value)
+  [spec value msg]
+  (when-not (s/valid? spec value)
+    (throw-exception spec value msg)))
