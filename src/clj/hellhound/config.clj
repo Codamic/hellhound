@@ -35,7 +35,18 @@
 
 (defn get-config
   "Fetch the given key (or nested keys) from the environment config of
-  the project other. Returns the default value from hellhound.config"
+  the project other. Returns the default value from `hellhound.config`.
+
+  Examples:
+
+  ```clojure
+  ;; Returns the value of `:http` from the config file
+  (get-config :http)
+
+  ;; Returns the value of `:host` key inside `:http` map.
+  (get-config :http :host)
+  ```
+  "
   [& config-keys]
   (let [app-value (get-in (application-config) config-keys)]
     (if (nil? app-value)
