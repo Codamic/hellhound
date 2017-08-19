@@ -9,9 +9,15 @@
    [hellhound.spec     :as spec]
    [hellhound.core     :as hellhound]))
 
-(s/def ::port (s/int-in 1 65535))
-(s/def ::host string?)
-(s/def ::aleph-config (s/keys :req [::host ::port]))
+;; TODO: Extract the spec check into a predicate function called map-with
+(s/def ::aleph-config
+  (s/and map?
+         #(and (contains? % :host)
+               (string? (:host %)))
+         #(and (contains? % :port)
+               (int? (:port %)))))
+
+
 
 (defn aleph-start!
   "Returns a function to start the aleph server from given
