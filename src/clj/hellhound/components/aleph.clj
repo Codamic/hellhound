@@ -36,9 +36,9 @@
   "Returns a new aleph component by given `routes` and optional `config`
   map. For details about `config` map checkout aleph docs."
   ([routes]
-   (aleph routes (hellhound/get-config :http)))
+   (factory routes (hellhound/get-config :http)))
   ([routes config]
    (spec/validate ::aleph-config config "Aleph configuration is invalid.")
    {:hellhound.component/name ::aleph
-    :hellhound.component/start-fn (aleph-start1 routes config)
+    :hellhound.component/start-fn (aleph-start! routes config)
     :hellhound.component/stop-nf aleph-stop!}))
