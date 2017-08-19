@@ -55,18 +55,3 @@
 (s/def ::depends-on (s/coll-of keyword? :kind vector? :distinct true))
 (s/def ::component (s/keys :req [::name ::start-fn ::stop-fn]
                            :opt [::depends-on]))
-
-
-(gen/sample (s/gen ::name))
-(gen/sample (s/gen ::start-fn))
-(gen/sample (s/gen ::component))
-a
-(get-name a)
-(started? a)
-(dependencies a)
-(start! a {})
-(keyword-ns? ::name)
-(s/gen ::name)
-(gen/sample (gen/list gen/boolean))
-
-(gen/sample (gen/vector gen/keyword))
