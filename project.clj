@@ -19,20 +19,12 @@
                  [org.slf4j/jul-to-slf4j           "1.7.25"]
                  [org.slf4j/jcl-over-slf4j         "1.7.25"]
 
-                 [io.aviso/pretty                  "0.1.34"]
                  [aleph                            "0.4.4-alpha4"]
-
+                 [bidi                             "2.1.2"]
                  [danlentz/clj-uuid                "0.1.7"]
-                 ;; TODO: We have to move these stuff into a different jar
-                 ;; to avoid unnecessary jar installation
-
-                 ;; Cassandra adapter
-                 ;;[cc.qbits/alia              "4.0.0-beta10"]
-                 ;; -------------------------------------------------------
 
                  ;; Time calculation
                  [clj-time                   "0.13.0"]
-
 
                  ;; UI
                  [reagent                    "0.6.2"]
