@@ -18,7 +18,8 @@
 (defn ws
   [req]
   (log/info "Accpting WS connection")
-  (let [input-stream @(http/websocket-connection req)]
+  (let [input-stream @(http/websocket-connection req)
+        router-stream (stream/stream 100)]
     (stream/connect input-stream input-stream)))
 
 
