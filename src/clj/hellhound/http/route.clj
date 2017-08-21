@@ -22,16 +22,13 @@
    :body "Expected a websocket request."})
 
 (def event-router
-  {:hello #(stream/put! (:stream %) "hey!")})
-
-(defn resolve-route
-  [input-stream router msg]
-  (let [handler (:hello router)]
-    (handler {:stream input-stream :msg msg})))
+  {:hello (fn [x] (str "xxx" x))})
 
 (defn setup-event-router
-  [router-stream router]
-  (stream/consume #(resolve-route router-stream event-router %) router-stream))
+  [output router]
+  (fn [msg]
+    (let [handler (:hello router)]
+      (stream/put! output (handler {:msg msg})))))
 
 (defn create-ws
   [req]
@@ -43,15 +40,16 @@
   (log/info "Accpting WS connection")
   (->
    (deferred/let-flow [socket (http/websocket-connection req)
-                       input-stream @socket
                        router-stream (stream/stream 100)
                        output-stream (stream/stream 100)]
-    (stream/consume #(println %) output-stream)
-    (setup-event-router router-stream)
-    (stream/connect input-stream router-stream)
-    (stream/connect router-stream output-stream))
+
+    (stream/connect-via socket (setup-event-router router-stream event-router) router-stream)
+    (stream/connect router-stream output-stream)
+    (stream/consume #(log/info %) output-stream))
+
    (deferred/catch
-       (fn [_]
+       (fn [err]
+         (log/error err)
          non-websocket-request))))
 
 
