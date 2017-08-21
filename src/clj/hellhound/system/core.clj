@@ -1,5 +1,7 @@
 (ns hellhound.system.core
-  "All the functions for managing system state live in this namespace"
+  "All the functions for managing system state live in this namespace. You
+  won't need to use this namespace directly unless you really know what's
+  your doing."
   (:require
    [clojure.spec.alpha         :as s]
    [hellhound.component        :as comp])
@@ -38,11 +40,15 @@
                           (:component (:args %))]))
 
 (defn ^IPersistentMap components-map
+  "Returns a map of components from the given `system`. Basically
+  the return value of this function would be index of components."
   [^IPersistentMap system-map]
   (into {} (map conform-component
                 (get-components system-map))))
 
 (defn update-system-components
+  "Replace the components vector of an unprocessed `system` with the indexed
+  version of the vector which is map."
   [system-map]
   (merge system-map
          {:components (components-map system-map)}))
@@ -53,6 +59,8 @@
   (reset! system (update-system-components system-map)))
 
 (defn get-dependencies-of
+  "Returns a vector of dependencies for the given `component` ins the given
+  `system`."
   [system-map component]
   (let [dependencies (comp/dependencies component)]
     (filter #(some #{(comp/get-name %)} dependencies)
@@ -70,6 +78,7 @@
 
 
 (defn stop-component!
+  "Stops the given `component` of the given `system`."
   [system-map component]
   (if-not (comp/started? component)
     system-map
@@ -92,5 +101,6 @@
     (reduce start-component! system-map (vals (get-components system-map)))))
 
 (defn stop-system!
+  "Stops the given `system-map`."
   [system-map]
   (reduce stop-component! system-map (vals (get-components system-map))))
