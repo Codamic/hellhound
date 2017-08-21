@@ -16,6 +16,11 @@
    :headers []
    :body "Yeah"})
 
+(def non-websocket-request
+  {:status 400
+   :headers {"content-type" "application/text"}
+   :body "Expected a websocket request."})
+
 (def event-router
   {:hello #(stream/put! (:stream %) "hey!")})
 
@@ -36,14 +41,20 @@
 (defn ws
   [req]
   (log/info "Accpting WS connection")
-  (let [input-stream  (create-ws req)
-        router-stream (stream/stream 100)
-        output-stream (stream/stream 100)]
-
+  (->
+   (deferred/let-flow [socket (http/websocket-connection req)
+                       input-stream @socket
+                       router-stream (stream/stream 100)
+                       output-stream (stream/stream 100)]
     (stream/consume #(println %) output-stream)
     (setup-event-router router-stream)
     (stream/connect input-stream router-stream)
-    (stream/connect router-stream output-stream)))
+    (stream/connect router-stream output-stream))
+   (deferred/catch
+       (fn [_]
+         non-websocket-request))))
+
+
 
 
 (def routes
