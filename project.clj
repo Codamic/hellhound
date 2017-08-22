@@ -26,6 +26,8 @@
                  ;; Time calculation
                  [clj-time                   "0.13.0"]
 
+                 ;; Used for websocket client
+                 [jarohen/chord              "0.8.1"]
                  ;; UI
                  [reagent                    "0.6.2"]
                  [re-frame                   "0.9.4"]
