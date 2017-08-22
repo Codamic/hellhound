@@ -7,8 +7,12 @@
    [manifold.stream    :as stream]
    [manifold.deferred  :as deferred]
    [aleph.http         :as http]
+   [hellhound.http.websocket.json :as jpack]
+   [hellhound.http.websocket.core :as packer]
    [hellhound.logger   :as log]
    [hellhound.core     :as hellhound]))
+
+
 
 (defn hello
   [req]
@@ -28,7 +32,7 @@
   [output router]
   (fn [msg]
     (let [handler (:hello router)]
-      (stream/put! output (handler {:msg msg})))))
+      (stream/put! output (handler {:msg (jpack/unpack msg {})})))))
 
 (defn create-ws
   [req]

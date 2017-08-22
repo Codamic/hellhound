@@ -86,12 +86,13 @@
   `(taoensso.timbre/log! :report :f ~args
                          ~{:?line (fline &form)}))
 
+
 (defn init!
-  []
+  [config]
   (timbre/set-config!
    {:level :trace
     :enabled? true
-    :output-fn formatter/default-dev-formatter
+    :output-fn (formatter/default-dev-formatter config)
     :middleware [middlewares/exceptions]
     :ns-blacklist []
     :appenders
@@ -100,5 +101,3 @@
                             (let [{:keys [output_]} data
                                   formatted-output-str (force output_)]
                               (println formatted-output-str)))}}}))
-
-(init!)

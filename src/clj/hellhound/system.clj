@@ -4,6 +4,7 @@
   ^{:author "Sameer Rahmani (@lxsameer)"}
   (:require [hellhound.config              :as config]
             [hellhound.system.core         :as core]
+            [hellhound.logger              :as logger]
             [hellhound.config.defaults     :as default]))
 
 (defn set-system!
@@ -22,6 +23,7 @@
   ;; Read the configuration for the current runtime environment which
   ;; specified by `HH_ENV` environment. Default env is `:development`
   (config/load-runtime-configuration)
+  (logger/init! (config/get-config :logger))
   (core/start-system! @core/system))
 
 (defn stop!
