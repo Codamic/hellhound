@@ -11,6 +11,7 @@
 
 (defn connect-to
   [address {:keys [read-buffer write-buffer data-format]}]
+  (js/console.log "XXX" data-format)
   (ws-ch address
          {:read-ch (async/chan read-buffer)
           :write-ch (async/chan write-buffer)
@@ -22,4 +23,8 @@
   ([address options]
    (let [config (merge default-ws-config options)]
      (go
-       (let [{:keys [ws-channel connection-error]} (<! (connect-to address))])))))
+       (let [{:keys [ws-channel connection-error]} (<! (connect-to address config))]
+         (if connection-error
+           (js/console.log "Can't connect to the server.")
+           (>! ws-channel {:a 1})
+           (js/console.log "Got message from server" (pr-str (<! ws-channel)))))))))
