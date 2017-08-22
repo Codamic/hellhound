@@ -6,18 +6,18 @@
 
 (defrecord JsonPacker []
   core/IPacker
-  (pack   [this data & options]
+  (pack   [this data options]
     (json/generate-string data))
-  (unpack [this data & options]
+  (unpack [this data options]
     (json/parse-string data)))
 
 
 (def json-packer (->JsonPacker))
 
 (defn pack
-  [data & options]
-  (apply core/pack json-packer data options))
+  [data]
+  (apply core/pack json-packer data {}))
 
 (defn unpack
-  [data & options]
-  (apply core/unpack json-packer data options))
+  [data]
+  (core/unpack json-packer data nil))

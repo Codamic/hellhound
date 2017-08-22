@@ -26,13 +26,13 @@
    :body "Expected a websocket request."})
 
 (def event-router
-  {:hello (fn [x] (str "xxx" x))})
+  {:hello (fn [x] (str "something" x))})
 
 (defn setup-event-router
   [output router]
   (fn [msg]
     (let [handler (:hello router)]
-      (stream/put! output (handler {:msg (jpack/unpack msg {})})))))
+      (stream/put! output (handler {:msg (jpack/unpack msg)})))))
 
 (defn create-ws
   [req]

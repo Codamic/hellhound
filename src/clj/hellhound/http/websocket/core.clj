@@ -4,5 +4,9 @@
 
 (defprotocol IPacker
   "The abstraction aroud packing and unpacking data on the websocket."
-  (pack   [this data & options] "Encodes data to string or binary data.")
-  (unpack [this data & options] "Decodes data from string or binary data."))
+  (pack
+    [this data options]
+    "Encodes data to string or binary data.")
+  (unpack
+    [this data options]
+    "Decodes data from string or binary data."))
