@@ -34,6 +34,10 @@
   [& rest]
   (apply js/console :info rest))
 
+(defn warn
+  [& rest]
+  (apply js/console :warn rest))
+
 (defn error
   [& rest]
   (apply js/console :error rest))

@@ -5,17 +5,6 @@
    [cljs.core.async        :as async]
    [hellhound.logger       :as log]))
 
-(defonce connection (atom nil))
-
-(defprotocol IPacker
-  (pack   [this data])
-  (unpack [this data]))
-
-(deftype JsonPacker []
-  IPacker
-  (pack   [this data] (js/JSON.stringify data))
-  (unpack [this data] (js/JSON.parse     data)))
-
 (defn handle-connection-error
   []
   (log/error "Couldn't connect to remote server."))
