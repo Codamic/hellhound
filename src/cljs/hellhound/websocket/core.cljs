@@ -1,12 +1,14 @@
 (ns hellhound.websocket.core
   (:require [chord.client  :as chord]
-            [re-frame.core :as re-freme]
-            [cljs.core.async :as async :refer [<! >! put! close!]]
-            [hellhound.logger :as log])
+            [re-frame.core :as re-frame]
+            [hellhound.logger :as log]
+            [cljs.core.async :as async :refer [<! >! put! close!]])
+
 
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(def ws-connection (atom))
+
+(def ws-connection (atom nil))
 
 ;; TODO: We need to make buffer size of channels configurable
 (def default-ws-config
@@ -19,7 +21,7 @@
   (let [socket @ws-connection]
     (if socket
       (go (>! socket data))
-      (throw (Error. "WebSocket connection is not present.")))))
+      (throw (js/Error. "WebSocket connection is not present.")))))
 
 (defn connect-to
   [address {:keys [read-buffer write-buffer data-format]}]
@@ -30,22 +32,24 @@
 
 (defn set-global-connection!
   [channel]
+  (js/console.log js/console)
   (log/debug "Resetting global ws connection...")
   (reset! ws-connection channel))
 
-(defn handle-connecton
+(defn handle-connection
   [ws-channel]
   (set-global-connection! ws-channel)
-  (let [{:keys [message error]} (<! ws-channel)]
-    (if error
-      (do
-        (log/error "Error in receiving message. Error:")
-        (log/error error)
-        (re-frame/dispatch [:message-error error]))
-      (do
-        (log/debug "Message Received. Message:")
-        (log/debug message)
-        (re-frame/dispatch [:message-received message])))))
+  (go
+    (let [{:keys [message error]} (<! ws-channel)]
+      (if error
+        (do
+          (log/error "Error in receiving message. Error:")
+          (log/error error)
+          (re-frame/dispatch [:message-error error]))
+        (do
+          (log/debug "Message Received. Message:")
+          (log/debug message)
+          (re-frame/dispatch [:message-received message]))))))
 
 (defn handle-connection-error
   [error]

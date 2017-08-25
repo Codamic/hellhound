@@ -24,20 +24,31 @@
 
 ;; TODO: Remove these functions and implement the set-level
 ;;       instead
+;; (defn log
+;;   [& rest]
+;;   (let [log (.bind (.-log js/console) js/console)]
+;;     (mapv log rest)))
+
+
 (defn log
   [& rest]
-  (apply js/console :log rest))
+  (let [log (.bind (.-info js/window.console) js/window.console)]
+    (mapv log rest)))
 
 (def debug log)
 
 (defn info
   [& rest]
-  (apply js/console :info rest))
+  (let [log (.bind (.-info js/console) js/console)]
+    (mapv log rest)))
 
 (defn warn
   [& rest]
-  (apply js/console :warn rest))
+  (let [log (.bind (.-warn js/console) js/console)]
+    (mapv log rest)))
+
 
 (defn error
   [& rest]
-  (apply js/console :error rest))
+  (let [log (.bind (.-error js/console) js/console)]
+    (mapv log rest)))
