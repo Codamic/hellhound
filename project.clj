@@ -29,11 +29,11 @@
                  ;; Used for websocket client
                  [jarohen/chord              "0.8.1"]
                  ;; UI
-                 [reagent                    "0.6.2"]
-                 [re-frame                   "0.9.4"]
+                 [reagent                    "0.7.0"]
+                 [re-frame                   "0.10.1"]
                  ;; Client Side routeing
                  [secretary                  "1.2.3"]
-                 [re-frisk                   "0.4.5"]
+                 [re-frisk                   "0.5.0"]
 
                  ;; I18n
                  [com.taoensso/tempura       "1.1.2"]

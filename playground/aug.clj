@@ -8,9 +8,12 @@
   (when-not (= i 0)
     (/ x i)))
 
+(dev 4 5)
+
+
 (s/fdef dev
         :args (s/cat :x int? :i int?)
-        :ref int?
+        :ret int?
         :fn #(= (* (:ret %) (:i (:args %)))
                 (:x (:args %))))
 
