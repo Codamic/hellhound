@@ -4,6 +4,7 @@
   (:import (clojure.lang PersistentArrayMap)))
 
 
+;; Protocols
 (defprotocol IComponent
   "This protocol defines a very basic component for hellhound system."
   (start! [component context]
@@ -41,11 +42,13 @@
      (::depends-on this)))
 
 
+;; SPECS ---------------------------------------------------
 (s/def ::name qualified-keyword?)
-(s/def ::start-fn (s/fspec :args (s/cat :this map? :context map?)
-                           :ret map?
-                           :fn #(= (::name (:ret %))
-                                   (::name (:this (:args %))))))
+(s/def ::start-fn
+  (s/fspec :args (s/cat :this map? :context map?
+                        :ret map?
+                        :fn #(= (::name (:ret %))
+                                (::name (:this (:args %)))))))
 
 (s/def ::stop-fn (s/fspec :args (s/cat :this map? :context map?)
                           :ret map?

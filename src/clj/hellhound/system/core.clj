@@ -4,7 +4,8 @@
   your doing."
   (:require
    [clojure.spec.alpha         :as s]
-   [hellhound.component        :as comp])
+   [hellhound.component        :as comp]
+   [hellhound.system.workflow  :as workflow])
 
   (:import (clojure.lang IPersistentMap
                          PersistentArrayMap
@@ -51,7 +52,8 @@
   version of the vector which is map."
   [system-map]
   (merge system-map
-         {:components (components-map system-map)}))
+         {:components (components-map system-map)
+          :components-workflow (workflow/workflow-map system-map)}))
 
 (defn set-system!
   "Sets the system of HellHound."

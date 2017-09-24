@@ -18,10 +18,9 @@
                (int? (:port %)))))
 
 
-
 (defn aleph-start!
   "Returns a function to start the aleph server from given
-  `routes` and `config` map"
+  `routes` and `config` map."
   [routes config]
   (fn [this context]
     (log/info "Starting aleph server ...")
