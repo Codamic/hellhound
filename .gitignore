@@ -11,3 +11,7 @@ pom.xml.asc
 .hg/
 doc/
 /.nrepl-history
+*~
+build/
+docs/build
+node_modules/
