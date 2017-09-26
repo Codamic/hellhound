@@ -14,6 +14,12 @@
 ;; Main storage for system data.
 (def system (atom {}))
 
+(defn context-for
+  "Returns the context map for the given component in the
+  system."
+  [component]
+  {})
+
 (defn get-system
   "A shortcut function for derefing `system`."
   []
@@ -76,7 +82,11 @@
     (update-in (reduce start-component! system-map
                        (get-dependencies-of system-map component))
                [:components (comp/get-name component)]
-               (fn [_] (comp/start! component {})))))
+               ;; New value for the component name which will be the return
+               ;; value of the `start-fn` function
+               (fn [_]
+                 (comp/start! component
+                              (context-for component))))))
 
 
 (defn stop-component!
