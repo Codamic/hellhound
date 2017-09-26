@@ -1,34 +1,12 @@
 * Feature plans
-** Add dynamic workflow support for system
-** Dynamic component creation
+** TODO Add dynamic workflow support for system
+** TODO Dynamic component creation
+** TODO Add suport for hellhound version in docs
+** TODO Add support for fetching envrionments from zookeeper
 
 * Left off
 ** Extract websocket event router configuration to system level
 
 * Guides
-** [TODO] Getting started
-** [TODO] why we chose table routing syntax
-
-* Spec
-** 1.0.0-SNAPSHOT
-*** System
-**** Component
-Each component is a map of following keys:
-***** :hellhound.component/name
-The name of the component.
-***** :hellhound.component/start-fn
-A *function* which is responsible to start the component. This function should accept two parameters.
-The first one simply is the *component map itself* and the second one is *context map* which contains
-some data to be used inside the component. For example *input* stream.
-
-The *start-fn* basically *should return* the component map and attach any state necessary to it. Also
-if the component has any *output* stream is should associate the ~:output~ with the *output* stream value.
-***** :hellhound.component/stop-fn
-This function is responsible for stopping the component and it gets only one argument which is the *component map*
-again and should return the stopped component map as the return value.
-***** :hellhound.component/depends-on
-An array of component names which the current component is depends on.
-**** Workflow
-Each component shoud have one *INPUT* and *OUTPUT* which should be stream of values. Input should be passed
-to the component `start-fn` using `context` map and oputput should be return as the value of `:output` key
-in the component map.
+** TODO Getting started
+** TODO why we chose table routing syntax
