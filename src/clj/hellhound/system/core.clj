@@ -35,7 +35,7 @@
   name and the component structure."
   [component]
   (if (satisfies? comp/IComponent component)
-    [(comp/get-name component) component]
+    [(comp/get-name component) (comp/initialize component)]
     ;; Throw if component didn't satisfy the protocol.
     (throw (ex-info "Provided component does not satisfies `IComponent` protocol."
                     {:cause component}))))

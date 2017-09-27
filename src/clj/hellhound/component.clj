@@ -39,8 +39,8 @@
                                  :output-stream-fn
                                  default-stream-fn)]
       (assoc component
-             :input (input-stram-fn)
-             :outpu (output-stream-fn))))
+             ::input (input-stram-fn)
+             ::outpu (output-stream-fn))))
 
 
   (start! [this context]
