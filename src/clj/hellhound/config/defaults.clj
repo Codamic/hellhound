@@ -17,6 +17,8 @@ check out key values of `:keys-doc` meta key."}
 
   {:http {:host "localhost" :port 3000}
    :public-files-path "public"
+   :components {:io-buffer-size 100}
+
    :logger {:level :trace
             :important-namespaces ["hellhound.*"]
             :filter-stracktrace true}})

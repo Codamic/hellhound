@@ -34,11 +34,18 @@
   "Checks for a valid compnoent structure and returns a pair of component
   name and the component structure."
   [component]
-  (if (satisfies? comp/IComponent component)
-    [(comp/get-name component) (comp/initialize component)]
+  (when (not (satisfies? comp/IComponent component))
     ;; Throw if component didn't satisfy the protocol.
     (throw (ex-info "Provided component does not satisfies `IComponent` protocol."
-                    {:cause component}))))
+                    {:cause component})))
+
+  (if (s/valid? :hellhound.component/component component)
+    [(comp/get-name component) (comp/initialize component)]
+    ;; If component did not satisfies component spec
+    (throw (ex-info "Component does not satisfies ':hellhound.component/component' spec."
+                    {:cause component
+                     :explain (s/explain :hellhound.component/component component)}))))
+
 
 (s/fdef hellhound.system.core/conform-component
         :args (s/cat :component :hellhound.component/component)

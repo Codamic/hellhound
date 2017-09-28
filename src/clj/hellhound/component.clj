@@ -38,8 +38,9 @@
           output-stream-fn  (get component
                                  :output-stream-fn
                                  default-stream-fn)]
+      (assert default-io-buffer-size)
       (assoc component
-             ::input (input-stram-fn)
+             ::input (input-stream-fn)
              ::outpu (output-stream-fn))))
 
 
