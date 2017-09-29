@@ -43,8 +43,8 @@
     [(comp/get-name component) (comp/initialize component)]
     ;; If component did not satisfies component spec
     (throw (ex-info "Component does not satisfies ':hellhound.component/component' spec."
-                    {:cause (:hellhound.component/name component)
-                     :explain (s/explain-data :hellhound.component/component component)}))))
+                    {:cause (:hellhound.component/name component)}))))
+                     ;;:explain (s/explain-data :hellhound.component/component component)}))))
 
 
 (s/fdef hellhound.system.core/conform-component

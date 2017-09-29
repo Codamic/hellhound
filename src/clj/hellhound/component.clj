@@ -63,22 +63,33 @@
 
 ;; SPECS ---------------------------------------------------
 (s/def ::name qualified-keyword?)
-(s/def ::start-fn
-  (s/with-gen
-    (s/fspec :args (s/cat :_ map? :context map?)
-             :ret map?
-             :fn #(s/valid? ::component (:ret %)))
-    #(s/gen #{(fn [component context] component)})))
+;; (s/def ::start-fn
+;;   (s/with-gen
+;;     (s/fspec :args (s/cat :_ map? :context map?)
+;;              :ret map?
+;;              :fn #(s/valid? ::component (:ret %)))
+;;     #(s/gen #{(fn [component context] component)})))
 
-;; (s/valid? ::start-fn (fn [component context] component))
-;; (s/explain ::start-fn (fn [component context] component))
+;; (s/def ::stop-fn
+;;   (s/with-gen
+;;     (s/fspec :args (s/cat :_ map?)
+;;              :ret map?
+;;              :fn #(s/valid? ::component (:ret %)))
+;;     #(s/gen #{(fn [component] component)})))
 
-(s/def ::stop-fn
-  (s/with-gen
-    (s/fspec :args (s/cat :_ map?)
-             :ret map?
-             :fn #(s/valid? ::component (:ret %)))
-    #(s/gen #{(fn [component] component)})))
+
+;; (s/def ::start-fn
+;;   (s/fspec :args (s/cat :_ map? :context map?)
+;;            :ret map?
+;;            :fn map?))
+
+;; (s/def ::stop-fn
+;;   (s/fspec :args (s/cat :_ map?)
+;;            :ret map?
+;;            :fn map?))
+
+(s/def ::start-fn fn?)
+(s/def ::stop-fn fn?)
 
 (s/def ::stream
   (s/with-gen stream/stream?
