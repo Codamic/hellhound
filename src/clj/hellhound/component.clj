@@ -66,13 +66,18 @@
 (s/def ::start-fn
   (s/with-gen
     (s/fspec :args (s/cat :_ map? :context map?)
-             :ret ::component)
+             :ret map?
+             :fn #(s/valid? ::component (:ret %)))
     #(s/gen #{(fn [component context] component)})))
+
+;; (s/valid? ::start-fn (fn [component context] component))
+;; (s/explain ::start-fn (fn [component context] component))
 
 (s/def ::stop-fn
   (s/with-gen
     (s/fspec :args (s/cat :_ map?)
-             :ret ::component)
+             :ret map?
+             :fn #(s/valid? ::component (:ret %)))
     #(s/gen #{(fn [component] component)})))
 
 (s/def ::stream
