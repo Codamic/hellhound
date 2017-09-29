@@ -6,7 +6,6 @@
   (:require
    [clojure.core.async                   :as async]
    [clj-uuid                             :as uuid]
-   [io.pedestal.http.immutant.websockets :as websocket]
    [hellhound.logger                     :as log]
    [hellhound.http.websocket.json        :as json]))
 
