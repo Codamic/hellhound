@@ -64,22 +64,23 @@
 ;; SPECS ---------------------------------------------------
 (s/def ::name qualified-keyword?)
 (s/def ::start-fn
-  (s/fspec :args (s/cat :this map? :context map?
-                        :ret map?
-                        :fn #(= (::name (:ret %))
-                                (::name (:this (:args %)))))))
+  (s/with-gen
+    (s/fspec :args (s/cat :_ map? :context map?)
+             :ret ::component)
+    #(s/gen #{(fn [component context] component)})))
 
 (s/def ::stop-fn
-  (s/fspec :args (s/cat :this map? :context map?
-                        :ret map?
-                        :fn #(= (::name (:ret %))
-                                (::name (:this (:args %)))))))
+  (s/with-gen
+    (s/fspec :args (s/cat :_ map?)
+             :ret ::component)
+    #(s/gen #{(fn [component] component)})))
 
-(s/def ::stream stream/stream?)
+(s/def ::stream
+  (s/with-gen stream/stream?
+    #(s/gen #{(stream/stream) (stream/stream 100)})))
 
 (s/def ::input-stream-fn
   (s/fspec :args (s/cat) :ret ::stream))
-
 
 (s/def ::output-stream-fn ::input-stream-fn)
 

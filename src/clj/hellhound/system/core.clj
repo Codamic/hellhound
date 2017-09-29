@@ -44,7 +44,7 @@
     ;; If component did not satisfies component spec
     (throw (ex-info "Component does not satisfies ':hellhound.component/component' spec."
                     {:cause component
-                     :explain (s/explain :hellhound.component/component component)}))))
+                     :explain (s/explain-data :hellhound.component/component component)}))))
 
 
 (s/fdef hellhound.system.core/conform-component
