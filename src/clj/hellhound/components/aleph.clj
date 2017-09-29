@@ -29,7 +29,7 @@
 (defn aleph-stop!
   "Stops the running aleph server"
   [this]
-  (log/info "stopping system")
+  (log/info "stopping aleph component")
   (if (:instance this)
     (do
       (.close (:instance this))
@@ -46,4 +46,4 @@
    (spec/validate ::aleph-config config "Aleph configuration is invalid.")
    {:hellhound.component/name ::aleph
     :hellhound.component/start-fn (aleph-start! routes config)
-    :hellhound.component/stop-nf aleph-stop!}))
+    :hellhound.component/stop-fn aleph-stop!}))
