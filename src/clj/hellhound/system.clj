@@ -31,3 +31,13 @@
 (defn stop!
   []
   (core/stop-system! @core/system))
+
+(defn defcomponent
+  "A short cut function to create a component map with the given details."
+  ([component-name start-fn stop-fn]
+   (defcomponent component-name start-fn stop-fn []))
+  ([component-name start-fn stop-fn dependencies]
+   {:hellhound.component/name component-name
+    :hellhound.component/start-fn start-fn
+    :hellhound.component/stop-fn stop-fn
+    :hellhound.component/depends-on dependencies}))
