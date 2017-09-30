@@ -32,6 +32,10 @@
   []
   (core/stop-system! @core/system))
 
+(defn get-component
+  [name]
+  (get (:components (core/system)) name))
+
 (defn defcomponent
   "A short cut function to create a component map with the given details."
   ([component-name start-fn stop-fn]

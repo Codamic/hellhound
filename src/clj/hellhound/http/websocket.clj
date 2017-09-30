@@ -50,7 +50,7 @@
     (when (.isOpen session))))
 `      (async/put! channel message)
 
-(def ws-on-connect (websocket/start-ws-connection new-client-connected!))
+;;(def ws-on-connect (websocket/start-ws-connection new-client-connected!))
 
 (defn ws-on-text
   "Default `on-text` callback for the websocket server"
@@ -72,31 +72,31 @@
   [channel {:keys [code reason]}]
   (log/info :msg "WS Closed:" :reason reason))
 
-(defn ws-routes
-  [req url packer {:keys [on-connect on-text on-binary on-error on-close]
-                   :as   options
-                   :or   {on-connect ws-on-connect
-                          on-text    ws-on-text
-                          on-binary  ws-on-binary
-                          on-error   ws-on-error
-                          on-close   ws-on-close}}]
+;; (defn ws-routes
+;;   [req url packer {:keys [on-connect on-text on-binary on-error on-close]
+;;                    :as   options
+;;                    :or   {on-connect ws-on-connect
+;;                           on-text    ws-on-text
+;;                           on-binary  ws-on-binary
+;;                           on-error   ws-on-error
+;;                           on-close   ws-on-close}}]
 
-  (clojure.pprint/pprint req)
-  {url
-   {:on-connect ws-on-connect
-    :on-message ws-on-text
-    ;;:on-binary  ws-on-binary
-    :on-error   ws-on-error
-    :on-close   ws-on-close}})
+;;   (clojure.pprint/pprint req)
+;;   {url
+;;    {:on-connect ws-on-connect
+;;     :on-message ws-on-text
+;;     ;;:on-binary  ws-on-binary
+;;     :on-error   ws-on-error
+;;     :on-close   ws-on-close}})
 
-(defn add-endpoint
-  [{:keys [url packer]
-    :as   options
-    :or   {url    "/hellhound/ws"
-           packer (json/->JsonPacker)}}]
-  (fn [request]
-    (websocket/add-ws-endpoints request (ws-routes request url packer options))))
+;; (defn add-endpoint
+;;   [{:keys [url packer]
+;;     :as   options
+;;     :or   {url    "/hellhound/ws"
+;;            packer (json/->JsonPacker)}}]
+;;   (fn [request]
+;;     (websocket/add-ws-endpoints request (ws-routes request url packer options))))
 
-(defn add-websocket
-  "Add websocket endpoints to the given `service-map`."
-  [service-map {:keys [packer url] :as options}])
+;; (defn add-websocket
+;;   "Add websocket endpoints to the given `service-map`."
+;;   [service-map {:keys [packer url] :as options}])
