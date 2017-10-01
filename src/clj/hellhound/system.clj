@@ -34,7 +34,7 @@
 
 (defn get-component
   [name]
-  (get (:components (core/system)) name))
+  (get (:components (core/get-system)) name))
 
 (defn defcomponent
   "A short cut function to create a component map with the given details."

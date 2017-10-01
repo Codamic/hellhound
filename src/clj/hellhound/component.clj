@@ -2,7 +2,8 @@
   (:require [clojure.spec.alpha     :as s]
             [clojure.spec.gen.alpha :as gen]
             [manifold.stream        :as stream]
-            [hellhound.core :as core])
+            [hellhound.core :as core]
+            [hellhound.logger :as log])
   (:import (clojure.lang PersistentArrayMap)))
 
 
@@ -46,8 +47,11 @@
 
   (start! [this context]
     (let [start-fn (::start-fn this)]
-      (assoc (start-fn this context)
-             ::started? true)))
+      (log/debug "Starting '" (::name this) "' component...")
+      (let [new-this (start-fn this context)]
+        (log/debug "Component Started:" new-this)
+        (assoc new-this
+               ::started? true))))
   (stop! [this]
     (let [stop-fn (::stop-fn this)]
       (assoc (stop-fn this) ::started? false)))

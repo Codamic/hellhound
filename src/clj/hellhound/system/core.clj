@@ -5,7 +5,8 @@
   (:require
    [clojure.spec.alpha         :as s]
    [hellhound.component        :as comp]
-   [hellhound.system.workflow  :as workflow])
+   [hellhound.system.workflow  :as workflow]
+   [hellhound.logger :as log])
 
   (:import (clojure.lang IPersistentMap
                          PersistentArrayMap
@@ -85,7 +86,11 @@
   "Starts the given `component` of the given `system`."
   [system-map component]
   (if (comp/started? component)
-    system-map
+    (do
+      (log/debug "Component '"
+                 (:hellhound.component/name component)
+                 "' already started. Skipping it.")
+      system-map)
     (update-in (reduce start-component! system-map
                        (get-dependencies-of system-map component))
                [:components (comp/get-name component)]
@@ -117,9 +122,16 @@
   [system-map]
   (if-not (s/valid? ::system-map system-map)
     (throw (ex-info "Provided system is not valid" {:cause (s/explain ::system-map system-map)}))
-    (reduce start-component! system-map (vals (get-components system-map)))))
 
-(defn stop-system!
-  "Stops the given `system-map`."
-  [system-map]
-  (reduce stop-component! system-map (vals (get-components system-map))))
+    (reset! system
+            (reduce start-component!
+                    system-map
+                    (vals (get-components system-map)))))
+
+  (defn stop-system!
+    "Stops the given `system-map`."
+    [system-map]
+    (reset! system
+            (reduce stop-component!
+                    system-map
+                    (vals (get-components system-map))))))

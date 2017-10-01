@@ -37,7 +37,8 @@
     (system/set-system! sample-system)
     (system/start!)
     (let [subject     (system/system)
-          component   (:sample/component (:components subject))]
+          component   (system/get-component :sample/component)]
+      (println "<<<<" component)
       (is (not (nil? component)))
       (is (= :value1 (:key1 component))))))
 
