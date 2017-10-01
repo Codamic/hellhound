@@ -15,9 +15,9 @@
       (:hellhound.component/output component))))
 
 (defn wire-io
-  ([system workflow]
+  ([^IPersistentMap system ^IPersistentMap workflow]
    (wire-io system (rest workflow) (first workflow)))
-  ([system workflow component-pair]
+  ([^IPersistentMap system ^IPersistentMap workflow component-pair]
    (when component-pair
      (let [component-name (first component-pair)
            targets        (second component-pair)
@@ -29,8 +29,10 @@
               (stream/connect output input)) inputs)
        (recur system (rest workflow) (first workflow))))))
 
-(defn setup
-  [system]
+(defn ^IPersistentMap setup
+  "Sets up the workflow of the system by wiring the io of each component
+  in the order provided by the user in `:workflow` key."
+  [^IPersistentMap system]
   (log/info "Setting up workflow...")
   (wire-io (:components system) (vec (:components-workflow system))))
 

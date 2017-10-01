@@ -4,7 +4,7 @@
   your doing."
   (:require
    [clojure.spec.alpha         :as s]
-   [hellhound.component        :as comp]
+   [hellhound.component        :as comp :refer [IComponent]]
    [hellhound.system.workflow  :as workflow]
    [hellhound.logger :as log])
 
@@ -82,9 +82,9 @@
     (filter #(some #{(comp/get-name %)} dependencies)
             (vals (get-components system-map)))))
 
-(defn start-component!
+(defn ^IPersistentMap start-component!
   "Starts the given `component` of the given `system`."
-  [system-map component]
+  [^IPersistentMap system-map ^IComponent component]
   (if (comp/started? component)
     (do
       (log/debug "Component '"
@@ -103,7 +103,7 @@
 
 (defn stop-component!
   "Stops the given `component` of the given `system`."
-  [system-map component]
+  [^IPersistentMap system-map ^IComponent component]
   (if-not (comp/started? component)
     system-map
     (reduce stop-component!
@@ -118,7 +118,11 @@
 
 
 (defn start-system!
-  "Starts the given `system-map`."
+  "Starts the given `system-map`.
+
+  TODO: More explaination."
+  {:public-api true
+   :added      1.0}
   [system-map]
   (if-not (s/valid? ::system-map system-map)
     (throw (ex-info "Provided system is not valid" {:cause (s/explain ::system-map system-map)}))
@@ -126,12 +130,16 @@
     (reset! system
             (reduce start-component!
                     system-map
-                    (vals (get-components system-map)))))
-
-  (defn stop-system!
-    "Stops the given `system-map`."
-    [system-map]
-    (reset! system
-            (reduce stop-component!
-                    system-map
                     (vals (get-components system-map))))))
+
+(defn stop-system!
+  "Stops the given `system-map`.
+
+  TODO: More explaination"
+  {:public-api true
+   :added      1.0}
+  [system-map]
+  (reset! system
+          (reduce stop-component!
+                  system-map
+                  (vals (get-components system-map)))))
