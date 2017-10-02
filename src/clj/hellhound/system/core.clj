@@ -4,13 +4,16 @@
   your doing."
   (:require
    [clojure.spec.alpha         :as s]
-   [hellhound.component        :as comp :refer [IComponent]]
+   [hellhound.component        :as comp]
    [hellhound.system.workflow  :as workflow]
+   [hellhound.system.utils     :as utils]
    [hellhound.logger :as log])
 
-  (:import (clojure.lang IPersistentMap
-                         PersistentArrayMap
-                         PersistentVector)))
+  (:import
+   (hellhound.component IComponent)
+   (clojure.lang IPersistentMap
+                 PersistentArrayMap
+                 PersistentVector)))
 
 ;; Main storage for system data.
 (def system (atom {}))
@@ -26,10 +29,6 @@
   []
   @system)
 
-(defn ^PersistentVector get-components
-  "Returns the components catalog of the given `system`."
-  [^IPersistentMap system]
-  (:components system))
 
 (defn conform-component
   "Checks for a valid compnoent structure and returns a pair of component
@@ -59,7 +58,7 @@
   the return value of this function would be index of components."
   [^IPersistentMap system-map]
   (into {} (map conform-component
-                (get-components system-map))))
+                (utils/get-components system-map))))
 
 (defn update-system-components
   "Replace the components vector of an unprocessed `system` with the indexed
@@ -80,7 +79,7 @@
   [system-map component]
   (let [dependencies (comp/dependencies component)]
     (filter #(some #{(comp/get-name %)} dependencies)
-            (vals (get-components system-map)))))
+            (vals (utils/get-components system-map)))))
 
 (defn ^IPersistentMap start-component!
   "Starts the given `component` of the given `system`."
@@ -123,14 +122,14 @@
   TODO: More explaination."
   {:public-api true
    :added      1.0}
-  [system-map]
+  [^IPersistentMap system-map]
   (if-not (s/valid? ::system-map system-map)
     (throw (ex-info "Provided system is not valid" {:cause (s/explain ::system-map system-map)}))
 
     (reset! system
             (reduce start-component!
                     system-map
-                    (vals (get-components system-map))))))
+                    (vals (utils/get-components system-map))))))
 
 (defn stop-system!
   "Stops the given `system-map`.
@@ -138,8 +137,8 @@
   TODO: More explaination"
   {:public-api true
    :added      1.0}
-  [system-map]
+  [^IPersistentMap system-map]
   (reset! system
           (reduce stop-component!
                   system-map
-                  (vals (get-components system-map)))))
+                  (vals (utils/get-components system-map)))))

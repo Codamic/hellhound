@@ -1,9 +1,7 @@
 (ns hellhound.system-test
   (:require [clojure.spec.alpha :as s]
-            [clojure.test :as t :refer [deftest testing is are]]
-            [clj-time.core :as time]
-            [clj-time.coerce :as time-coerce]
-            [hellhound.system :as system :refer [defcomponent]]
+            [clojure.test :as t :refer [deftest testing is are]
+             [hellhound.system :as system :refer [defcomponent]]]
             [manifold.stream :as stream]))
 
 
@@ -19,12 +17,15 @@
     (is (= simple-map (defcomponent :component/name inc inc [])))))
 
 ;; System tests --------------------------------------------
+(def component-counter (atom 0))
+
 (defn sample-start-fn
   [key value]
   (fn [component context]
+    (reset! component-counter (inc @component-counter))
     (assoc component
            key value
-           :time (time-coerce/to-long (time/now)))))
+           :counter @component-counter)))
 
 
 (defn sample-stop-fn
@@ -40,7 +41,9 @@
       [:sample/component2])
     (defcomponent :sample/component2
       (sample-start-fn :key2 :value2)
-      (sample-stop-fn :key2))]})
+      (sample-stop-fn :key2))]
+   ;; The order is intentionally reverse just for testing
+   :workflow [[:sample/component1 :sample/component2]]})
 
 
 (deftest system-test
@@ -57,13 +60,13 @@
         (is (:hellhound.component/started? component1))
         (is (:hellhound.component/started? component2)))
       (testing "Testing dependency of components"
-        (is (< (:time component1) (:time component2))))
+        (is (< (:counter component1) (:counter component2))))
       (testing "Workflow"
         (let [input1 (:hellhound.component/input component1)
-              input2 (:hellhound.component/input component1)])
-        (is (not (nil? input1)))
-        (is (stream/stream? input1))))))
-
+              input2 (:hellhound.component/input component2)]
+          (is (not (nil? input1)))
+          (is (stream/stream? input1))
+          (is (stream/stream? input2)))))))
 
 
 (t/run-tests)

@@ -1,11 +1,16 @@
 (ns hellhound.system.workflow
   "TODO"
-  (:require [clojure.pprint   :as pp]
-            [manifold.stream  :as stream]
-            [hellhound.logger :as log])
+  (:require [clojure.pprint         :as pp]
+            [manifold.stream        :as stream]
+            [hellhound.logger       :as log]
+            [hellhound.system.utils :as utils])
 
   (:import (clojure.lang IPersistentMap
                          PersistentVector)))
+
+(defn ^PersistentVector get-workflow
+  [^IPersistentMap system]
+  (vec (:components-workflow system)))
 
 (defn input-of
   [system component-name]
@@ -34,7 +39,7 @@
   in the order provided by the user in `:workflow` key."
   [^IPersistentMap system]
   (log/info "Setting up workflow...")
-  (wire-io (:components system) (vec (:components-workflow system))))
+  (wire-io (utils/get-components system) (get-workflow system)))
 
 (defn ^PersistentVector walk-graph
   [^IPersistentMap parsed-map ^PersistentVector pair]
