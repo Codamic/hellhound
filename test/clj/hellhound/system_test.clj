@@ -1,7 +1,8 @@
 (ns hellhound.system-test
   (:require [clojure.spec.alpha :as s]
-            [clojure.test :as t :refer [deftest testing is are]
-             [hellhound.system :as system :refer [defcomponent]]]
+            [clojure.test :as t :refer [deftest testing is are]]
+            [hellhound.component :as hcomp]
+            [hellhound.system :as system :refer [defcomponent]]
             [manifold.stream :as stream]))
 
 
@@ -23,9 +24,12 @@
   [key value]
   (fn [component context]
     (reset! component-counter (inc @component-counter))
-    (assoc component
-           key value
-           :counter @component-counter)))
+    (let [input  (hcomp/input component)
+          output (hcomp/output component)]
+
+      (assoc component
+             key value
+             :counter @component-counter))))
 
 
 (defn sample-stop-fn
@@ -50,23 +54,47 @@
   (testing "Simple working system"
     (system/set-system! sample-system)
     (system/start!)
+
     (let [subject     (system/system)
           component1  (system/get-component :sample/component1)
           component2  (system/get-component :sample/component2)]
+
       (testing "Testimg system/get-component"
         (is (not (nil? component1))))
+
       (testing "Testing start-fn of component"
         (is (= :value1 (:key1 component1)))
         (is (:hellhound.component/started? component1))
         (is (:hellhound.component/started? component2)))
+
       (testing "Testing dependency of components"
         (is (< (:counter component1) (:counter component2))))
+
       (testing "Workflow"
-        (let [input1 (:hellhound.component/input component1)
-              input2 (:hellhound.component/input component2)]
+        (let [input1  (hcomp/input component1)
+              input2  (hcomp/input component2)
+              output1 (hcomp/output component2)
+              output2 (hcomp/output component2)]
+
           (is (not (nil? input1)))
-          (is (stream/stream? input1))
-          (is (stream/stream? input2)))))))
+          (is (not (nil? input2)))
+          (is (not (nil? output1)))
+          (is (not (nil? output2)))
+
+          (when (and input1 input2 output1 output2)
+            (is (stream/stream? input1))
+            (is (stream/stream? input2))
+            (is (stream/stream? output1))
+            (is (stream/stream? output2))
+
+            (is (true? @(stream/put! input1 :something)))
+            (is (= :something @(stream/try-take! output1
+                                                 :nothing
+                                                 1000
+                                                 :timeout)))))))
 
 
-(t/run-tests)
+    (system/stop!)))
+
+
+;;(t/run-tests)

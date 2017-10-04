@@ -26,7 +26,14 @@
     "Returns the name of the component.")
 
   (dependencies [component]
-    "Returns a vector of dependency names."))
+    "Returns a vector of dependency names.")
+
+  (input [component]
+    "Returns the input stream of the component.")
+
+  (output [component]
+    "Returns the output stream of the component."))
+
 
 (extend-type PersistentArrayMap
   IComponent
@@ -41,29 +48,37 @@
                                  default-stream-fn)]
       (assert default-io-buffer-size)
       (assoc component
-             ::input (input-stream-fn)
-             ::outpu (output-stream-fn))))
+             ::input  (input-stream-fn)
+             ::output (output-stream-fn))))
 
 
-  (start! [this context]
-    (let [start-fn (::start-fn this)]
-      (log/debug "Starting '" (::name this) "' component...")
-      (let [new-this (start-fn this context)]
-        (log/debug "Component Started:" new-this)
-        (assoc new-this
+  (start! [component context]
+    (let [start-fn (::start-fn component)]
+      (log/debug "Starting '" (::name component) "' component...")
+      (let [new-component (start-fn component context)]
+        (log/debug "Component Started:" new-component)
+        (assoc new-component
                ::started? true))))
-  (stop! [this]
-    (let [stop-fn (::stop-fn this)]
-      (assoc (stop-fn this) ::started? false)))
 
-  (started? [this]
-    (or (::started? this) false))
+  (stop! [component]
+    (let [stop-fn (::stop-fn component)]
+      (assoc (stop-fn component) ::started? false)))
 
-  (get-name [this]
-    (::name this))
+  (started? [component]
+    (or (::started? component) false))
 
-  (dependencies [this]
-     (::depends-on this)))
+  (get-name [component]
+    (::name component))
+
+  (dependencies [component]
+    (::depends-on component))
+
+  (input [component]
+    ;; TODO: Do we need to return a new stream if input was nil ?
+    (::input component))
+
+  (output [component]
+    (::output component)))
 
 ;; SPECS ---------------------------------------------------
 (s/def ::name qualified-keyword?)

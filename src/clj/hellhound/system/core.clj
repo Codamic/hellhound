@@ -7,7 +7,8 @@
    [hellhound.component        :as comp]
    [hellhound.system.workflow  :as workflow]
    [hellhound.system.utils     :as utils]
-   [hellhound.logger :as log])
+   [hellhound.logger :as log]
+   [hellhound.component :as hcomp])
 
   (:import
    (hellhound.component IComponent)
@@ -34,16 +35,16 @@
   "Checks for a valid compnoent structure and returns a pair of component
   name and the component structure."
   [component]
-  (when (not (satisfies? comp/IComponent component))
+  (when (not (satisfies? hcomp/IComponent component))
     ;; Throw if component didn't satisfy the protocol.
     (throw (ex-info "Provided component does not satisfies `IComponent` protocol."
                     {:cause component})))
 
   (if (s/valid? :hellhound.component/component component)
-    [(comp/get-name component) (comp/initialize component)]
+    [(hcomp/get-name component) (hcomp/initialize component)]
     ;; If component did not satisfies component spec
     (throw (ex-info "Component does not satisfies ':hellhound.component/component' spec."
-                    {:cause (:hellhound.component/name component)
+                    {:cause (hcomp/get-name component)
                      :explain (s/explain-data :hellhound.component/component component)}))))
 
 
@@ -77,38 +78,39 @@
   "Returns a vector of dependencies for the given `component` ins the given
   `system`."
   [system-map component]
-  (let [dependencies (comp/dependencies component)]
-    (filter #(some #{(comp/get-name %)} dependencies)
+  (let [dependencies (hcomp/dependencies component)]
+    (filter #(some #{(hcomp/get-name %)} dependencies)
             (vals (utils/get-components system-map)))))
 
 (defn ^IPersistentMap start-component!
   "Starts the given `component` of the given `system`."
   [^IPersistentMap system-map ^IComponent component]
-  (if (comp/started? component)
+  (log/debug "Starting '" (hcomp/get-name component) "'...")
+  (if (hcomp/started? component)
     (do
       (log/debug "Component '"
-                 (:hellhound.component/name component)
+                 (hcomp/get-name component)
                  "' already started. Skipping it.")
       system-map)
     (update-in (reduce start-component! system-map
                        (get-dependencies-of system-map component))
-               [:components (comp/get-name component)]
+               [:components (hcomp/get-name component)]
                ;; New value for the component name which will be the return
                ;; value of the `start-fn` function
-               (fn [_]
-                 (comp/start! component
-                              (context-for component))))))
+               (fn [new-component]
+                 (if (= (hcomp/get-name new-component) (hcomp/get-name component))
+                   (hcomp/start! component (context-for component)))))))
 
 
 (defn stop-component!
   "Stops the given `component` of the given `system`."
   [^IPersistentMap system-map ^IComponent component]
-  (if-not (comp/started? component)
+  (if-not (hcomp/started? component)
     system-map
     (reduce stop-component!
             (update-in system-map
-                       [:components (comp/get-name component)]
-                       (fn [_] (comp/stop! component)))
+                       [:components (hcomp/get-name component)]
+                       (fn [_] (hcomp/stop! component)))
             (get-dependencies-of system-map component))))
 
 (s/def ::system-map (s/and map?
@@ -124,7 +126,8 @@
    :added      1.0}
   [^IPersistentMap system-map]
   (if-not (s/valid? ::system-map system-map)
-    (throw (ex-info "Provided system is not valid" {:cause (s/explain ::system-map system-map)}))
+    (throw (ex-info "Provided system is not valid"
+                    {:cause (s/explain-data ::system-map system-map)}))
 
     (reset! system
             (reduce start-component!
