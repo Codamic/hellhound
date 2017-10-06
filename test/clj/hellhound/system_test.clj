@@ -26,7 +26,6 @@
     (reset! component-counter (inc @component-counter))
     (let [input  (hcomp/input component)
           output (hcomp/output component)]
-
       (assoc component
              key value
              :counter @component-counter))))

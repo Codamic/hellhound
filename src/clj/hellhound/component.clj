@@ -48,17 +48,21 @@
                                  default-stream-fn)]
       (assert default-io-buffer-size)
       (assoc component
-             ::input  (input-stream-fn)
-             ::output (output-stream-fn))))
+             ::started? false
+             ::input    (input-stream-fn)
+             ::output   (output-stream-fn))))
 
 
   (start! [component context]
     (let [start-fn (::start-fn component)]
-      (log/debug "Starting '" (::name component) "' component...")
-      (let [new-component (start-fn component context)]
-        (log/debug "Component Started:" new-component)
-        (assoc new-component
-               ::started? true))))
+      (if (not (started? component))
+        (do
+          (log/debug "Starting '" (::name component) "' component...")
+          (assoc (start-fn component context) ::started? true))
+
+        (do
+          (log/debug "Component '" (::name component) "' already started. Skipping...")
+          component))))
 
   (stop! [component]
     (let [stop-fn (::stop-fn component)]

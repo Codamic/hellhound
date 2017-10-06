@@ -85,22 +85,13 @@
 (defn ^IPersistentMap start-component!
   "Starts the given `component` of the given `system`."
   [^IPersistentMap system-map ^IComponent component]
-  (log/debug "Starting '" (hcomp/get-name component) "'...")
-  (if (hcomp/started? component)
-    (do
-      (log/debug "Component '"
-                 (hcomp/get-name component)
-                 "' already started. Skipping it.")
-      system-map)
-    (update-in (reduce start-component! system-map
-                       (get-dependencies-of system-map component))
-               [:components (hcomp/get-name component)]
-               ;; New value for the component name which will be the return
-               ;; value of the `start-fn` function
-               (fn [new-component]
-                 (if (= (hcomp/get-name new-component) (hcomp/get-name component))
-                   (hcomp/start! component (context-for component)))))))
-
+  (update-in (reduce start-component! system-map
+                     (get-dependencies-of system-map component))
+             [:components (hcomp/get-name component)]
+             ;; New value for the component name which will be the return
+             ;; value of the `start-fn` function
+             (fn [new-component]
+               (hcomp/start! new-component (context-for new-component)))))
 
 (defn stop-component!
   "Stops the given `component` of the given `system`."
