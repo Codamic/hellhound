@@ -13,12 +13,20 @@
   [^IPersistentMap system]
   (vec (:components-workflow system)))
 
-(defn input-of
-  [components component-name]
-  (let [component (get components component-name)]
-    (if (not component)
-      (throw (Exception. (str "Invalid compponent '" component-name "' in workflow.")))
-      (hcomp/output component))))
+(defn invalid-workflow
+  [component]
+  (throw (Exception. (format "Invalid compponent '%s' in workflow."
+                              (hcomp/get-name component)))))
+
+(defn connect
+  [sink source]
+  (let [output (hcomp/output sink)
+        input  (hcomp/input  source)]
+    (log/debug
+     (format "Connecting output of '%s' to input of '%s'..."
+             (hcomp/get-name sink)
+             (hcomp/get-name source)))
+    (stream/connect sink source)))
 
 (defn wire-io!
   ([^IPersistentMap components ^IPersistentMap workflow]
@@ -26,15 +34,15 @@
 
   ([^IPersistentMap components ^IPersistentMap workflow component-pair]
    (when component-pair
-     (let [component-name (first component-pair)
-           targets        (second component-pair)
-           component      (get components component-name)
-           output         (hcomp/output component)
-           inputs         (map #(input-of components %) targets)]
+     (let [sink    (get components (first component-pair))
+           sources (map #(get components %) (second component-pair))]
 
-       (map (fn [input]
-              (log/info "Wiring output of '" component-name "'...")
-              (stream/connect output input)) inputs)
+       (when (nil? sink) (invalid-workflow (first component-pair)))
+
+       (doseq [source sources]
+         (when (nil? source) (invalid-workflow source))
+         (connect sink source))
+
        (recur components (rest workflow) (first workflow))))))
 
 (defn ^IPersistentMap setup

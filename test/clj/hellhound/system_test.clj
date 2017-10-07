@@ -26,6 +26,7 @@
     (reset! component-counter (inc @component-counter))
     (let [input  (hcomp/input component)
           output (hcomp/output component)]
+      (stream/connect input output)
       (assoc component
              key value
              :counter @component-counter))))
@@ -63,8 +64,8 @@
 
       (testing "Testing start-fn of component"
         (is (= :value1 (:key1 component1)))
-        (is (:hellhound.component/started? component1))
-        (is (:hellhound.component/started? component2)))
+        (is (hcomp/started? component1))
+        (is (hcomp/started? component2)))
 
       (testing "Testing dependency of components"
         (is (> (:counter component1) (:counter component2))))
@@ -86,10 +87,11 @@
             (is (stream/stream? output1))
             (is (stream/stream? output2))
 
+            (is (= (second (first (stream/downstream input1))) output1))
             (is (true? @(stream/put! input1 :something)))
             (is (= :something @(stream/try-take! output1
                                                  :nothing
-                                                 1000
+                                                 2000
                                                  :timeout)))))))
 
 

@@ -47,10 +47,12 @@
                                  :output-stream-fn
                                  default-stream-fn)]
       (assert default-io-buffer-size)
-      (assoc component
-             ::started? false
-             ::input    (input-stream-fn)
-             ::output   (output-stream-fn))))
+      (let [input (input-stream-fn)
+            output (output-stream-fn)]
+        (assoc component
+               ::started? false
+               ::input    input
+               ::output   output))))
 
 
   (start! [component context]
@@ -66,7 +68,9 @@
 
   (stop! [component]
     (let [stop-fn (::stop-fn component)]
-      (assoc (stop-fn component) ::started? false)))
+      (if (started? component)
+        (assoc (stop-fn component) ::started? false)
+        component)))
 
   (started? [component]
     (or (::started? component) false))

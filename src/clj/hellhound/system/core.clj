@@ -90,19 +90,17 @@
              [:components (hcomp/get-name component)]
              ;; New value for the component name which will be the return
              ;; value of the `start-fn` function
-             (fn [new-component]
-               (hcomp/start! new-component (context-for new-component)))))
+             (fn [old-component]
+               (hcomp/start! old-component (context-for old-component)))))
 
 (defn stop-component!
   "Stops the given `component` of the given `system`."
   [^IPersistentMap system-map ^IComponent component]
-  (if-not (hcomp/started? component)
-    system-map
-    (reduce stop-component!
-            (update-in system-map
-                       [:components (hcomp/get-name component)]
-                       (fn [_] (hcomp/stop! component)))
-            (get-dependencies-of system-map component))))
+  (reduce stop-component!
+          (update-in system-map
+                     [:components (hcomp/get-name component)]
+                     (fn [old-component] (hcomp/stop! old-component)))
+          (get-dependencies-of system-map component)))
 
 (s/def ::system-map (s/and map?
                            #(contains? % :components)
