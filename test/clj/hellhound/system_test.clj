@@ -67,7 +67,7 @@
         (is (:hellhound.component/started? component2)))
 
       (testing "Testing dependency of components"
-        (is (< (:counter component1) (:counter component2))))
+        (is (> (:counter component1) (:counter component2))))
 
       (testing "Workflow"
         (let [input1  (hcomp/input component1)
