@@ -26,7 +26,7 @@
      (format "Connecting output of '%s' to input of '%s'..."
              (hcomp/get-name sink)
              (hcomp/get-name source)))
-    (stream/connect sink source)))
+    (stream/connect output input)))
 
 (defn wire-io!
   ([^IPersistentMap components ^IPersistentMap workflow]

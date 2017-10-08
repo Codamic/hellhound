@@ -26,6 +26,9 @@
     (reset! component-counter (inc @component-counter))
     (let [input  (hcomp/input component)
           output (hcomp/output component)]
+      (println "INPUT: " (str input))
+      (println "OUTPUT: " (str output))
+      (println "........." (:hellhound.component/name component))
       (stream/connect input output)
       (assoc component
              key value
@@ -39,25 +42,50 @@
 
 (def sample-system
   {:components
-   [(defcomponent :sample/component1
-      (sample-start-fn :key1 :value1)
-      (sample-stop-fn :key1)
-      [:sample/component2])
-    (defcomponent :sample/component2
+   [(defcomponent :sample/component2
       (sample-start-fn :key2 :value2)
-      (sample-stop-fn :key2))]
+      (sample-stop-fn :key2)
+      [:sample/component1])
+    (defcomponent :sample/component1
+      (sample-start-fn :key1 :value1)
+      (sample-stop-fn :key1))
+    (defcomponent :sample/component3
+      (sample-start-fn :key3 :value3)
+      (sample-stop-fn :key3)
+      [:sample/component1])]
    ;; The order is intentionally reverse just for testing
-   :workflow [[:sample/component1 :sample/component2]]})
+   :workflow [[:sample/component1 :sample/component2]
+              [:sample/component2 :sample/component3]]})
 
 
 (deftest system-test
   (testing "Simple working system"
     (system/set-system! sample-system)
+
+    (let [component1  (system/get-component :sample/component1)
+          component2  (system/get-component :sample/component2)
+          component3  (system/get-component :sample/component3)
+
+          input1  (hcomp/input component1)
+          input2  (hcomp/input component2)
+          input3  (hcomp/input component3)
+          output1 (hcomp/output component1)
+          output2 (hcomp/output component2)
+          output3 (hcomp/output component3)]
+      (println "INPUT1: " (str input1))
+      (println "OUTPUT1:" (str output1))
+      (println "INPUT2: " (str input2))
+      (println "OUTPUT2:" (str output2))
+      (println "INPUT3: " (str input3))
+      (println "OUTPUT3:" (str output3))
+      (println "------------------"))
+
     (system/start!)
 
     (let [subject     (system/system)
           component1  (system/get-component :sample/component1)
-          component2  (system/get-component :sample/component2)]
+          component2  (system/get-component :sample/component2)
+          component3  (system/get-component :sample/component3)]
 
       (testing "Testimg system/get-component"
         (is (not (nil? component1))))
@@ -65,16 +93,19 @@
       (testing "Testing start-fn of component"
         (is (= :value1 (:key1 component1)))
         (is (hcomp/started? component1))
-        (is (hcomp/started? component2)))
+        (is (hcomp/started? component2))
+        (is (hcomp/started? component3)))
 
       (testing "Testing dependency of components"
-        (is (> (:counter component1) (:counter component2))))
+        (is (< (:counter component1) (:counter component2))))
 
       (testing "Workflow"
         (let [input1  (hcomp/input component1)
               input2  (hcomp/input component2)
-              output1 (hcomp/output component2)
-              output2 (hcomp/output component2)]
+              input3  (hcomp/input component3)
+              output1 (hcomp/output component1)
+              output2 (hcomp/output component2)
+              output3 (hcomp/output component3)]
 
           (is (not (nil? input1)))
           (is (not (nil? input2)))
@@ -87,12 +118,25 @@
             (is (stream/stream? output1))
             (is (stream/stream? output2))
 
-            (is (= (second (first (stream/downstream input1))) output1))
-            (is (true? @(stream/put! input1 :something)))
-            (is (= :something @(stream/try-take! output1
-                                                 :nothing
-                                                 2000
-                                                 :timeout)))))))
+            (println "INPUT1: " (str input1))
+            (println "OUTPUT1:" (str output1))
+            (println "INPUT2: " (str input2))
+            (println "OUTPUT2:" (str output2))
+            (println "INPUT3: " (str input3))
+            (println "OUTPUT3:" (str output3))
+
+            ;; (is (= (second (first (stream/downstream input1))) output1))
+            ;; (is (= (second (first (stream/downstream input2))) output2))
+            ;; (is (= (second (first (stream/downstream input3))) output3))
+            ;; (is (= (second (first (stream/downstream output1))) input2))
+            ;; (is (= (second (first (stream/downstream output2))) input3))
+
+            (is (true? @(stream/put! output1 10)))
+            (is (= 10 @(stream/try-take! input2 20 1000 30)))))))
+            ;; (is (= :something @(stream/try-take! output1
+            ;;                                      :nothing
+            ;;                                      5000
+            ;;                                      :timeout)))))))
 
 
     (system/stop!)))
