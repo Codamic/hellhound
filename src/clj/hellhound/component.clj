@@ -47,16 +47,10 @@
                                  :output-stream-fn
                                  default-stream-fn)]
       (assert default-io-buffer-size)
-      (let [i (input-stream-fn)
-            o (output-stream-fn)]
-        (println "CREATING :" (get-name component))
-        (println "INPUT:" (str i))
-        (println "OUTPUT:" (str o))
-        (println "-------------------99999XS ")
-        (assoc component
-               ::started? false
-               ::input    i
-               ::output   o))))
+      (assoc component
+             ::started? false
+             ::input    (input-stream-fn)
+             ::output   (output-stream-fn))))
 
 
   (start! [component context]

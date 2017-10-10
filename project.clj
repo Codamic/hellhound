@@ -18,7 +18,6 @@
                  [org.slf4j/log4j-over-slf4j       "1.7.25"]
                  [org.slf4j/jul-to-slf4j           "1.7.25"]
                  [org.slf4j/jcl-over-slf4j         "1.7.25"]
-
                  [aleph                            "0.4.4-alpha4"]
                  [bidi                             "2.1.2"]
                  [danlentz/clj-uuid                "0.1.7"]

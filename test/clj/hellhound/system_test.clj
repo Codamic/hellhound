@@ -26,14 +26,10 @@
     (reset! component-counter (inc @component-counter))
     (let [input  (hcomp/input component)
           output (hcomp/output component)]
-      (println "INPUT: " (str input))
-      (println "OUTPUT: " (str output))
-      (println "........." (:hellhound.component/name component))
       (stream/connect input output)
       (assoc component
              key value
              :counter @component-counter))))
-
 
 (defn sample-stop-fn
   [key]
@@ -61,25 +57,6 @@
 (deftest system-test
   (testing "Simple working system"
     (system/set-system! sample-system)
-
-    (let [component1  (system/get-component :sample/component1)
-          component2  (system/get-component :sample/component2)
-          component3  (system/get-component :sample/component3)
-
-          input1  (hcomp/input component1)
-          input2  (hcomp/input component2)
-          input3  (hcomp/input component3)
-          output1 (hcomp/output component1)
-          output2 (hcomp/output component2)
-          output3 (hcomp/output component3)]
-      (println "INPUT1: " (str input1))
-      (println "OUTPUT1:" (str output1))
-      (println "INPUT2: " (str input2))
-      (println "OUTPUT2:" (str output2))
-      (println "INPUT3: " (str input3))
-      (println "OUTPUT3:" (str output3))
-      (println "------------------"))
-
     (system/start!)
 
     (let [subject     (system/system)
@@ -118,25 +95,13 @@
             (is (stream/stream? output1))
             (is (stream/stream? output2))
 
-            (println "INPUT1: " (str input1))
-            (println "OUTPUT1:" (str output1))
-            (println "INPUT2: " (str input2))
-            (println "OUTPUT2:" (str output2))
-            (println "INPUT3: " (str input3))
-            (println "OUTPUT3:" (str output3))
-
-            ;; (is (= (second (first (stream/downstream input1))) output1))
-            ;; (is (= (second (first (stream/downstream input2))) output2))
-            ;; (is (= (second (first (stream/downstream input3))) output3))
-            ;; (is (= (second (first (stream/downstream output1))) input2))
-            ;; (is (= (second (first (stream/downstream output2))) input3))
-
-            (is (true? @(stream/put! output1 10)))
-            (is (= 10 @(stream/try-take! input2 20 1000 30)))))))
-            ;; (is (= :something @(stream/try-take! output1
-            ;;                                      :nothing
-            ;;                                      5000
-            ;;                                      :timeout)))))))
+            (is (= (second (first (stream/downstream input1))) output1))
+            (is (= (second (first (stream/downstream input2))) output2))
+            (is (= (second (first (stream/downstream input3))) output3))
+            (is (= (second (first (stream/downstream output1))) input2))
+            (is (= (second (first (stream/downstream output2))) input3))
+            (is (true? @(stream/try-put! input1 10 1000 20)))
+            (is (= 10 @(stream/try-take! output3 20 1000 30)))))))
 
 
     (system/stop!)))
