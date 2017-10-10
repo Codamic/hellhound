@@ -67,8 +67,14 @@
   (stop! [component]
     (let [stop-fn (::stop-fn component)]
       (if (started? component)
-        (assoc (stop-fn component) ::started? false)
-        component)))
+        (do
+          (log/debug (format "Stopping '%s' component ..."
+                             (get-name component)))
+          (assoc (stop-fn component) ::started? false))
+        (do
+          (log/debug (format "Skipping '%s' already stopped..."
+                             (get-name component)))
+          component))))
 
   (started? [component]
     (or (::started? component) false))
