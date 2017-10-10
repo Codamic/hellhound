@@ -4,10 +4,11 @@
             [manifold.stream        :as stream]
             [hellhound.core :as core]
             [hellhound.logger :as log])
-  (:import (clojure.lang PersistentArrayMap)))
+  (:import (clojure.lang PersistentArrayMap
+                         PersistentHashMap)))
 
 
-;; Protocols
+;; Protocols -----------------------------------------------
 (defprotocol IComponent
   "This protocol defines a very basic component for hellhound system."
   (initialize [component]
@@ -34,11 +35,12 @@
   (output [component]
     "Returns the output stream of the component."))
 
-
-(extend-type PersistentArrayMap
-  IComponent
-  (initialize [component]
-    (let [default-io-buffer-size (core/get-config :components :io-buffer-size)
+;; Private Functions ---------------------------------------
+;; These functions are the actual implementation of IComponent
+;; Protocol for IPersistentMap.
+(defn- initialize-component
+  [component]
+  (let [default-io-buffer-size (core/get-config :components :io-buffer-size)
           default-stream-fn #(stream/stream default-io-buffer-size)
           input-stream-fn   (get component
                                  :input-stream-fn
@@ -52,9 +54,9 @@
              ::input    (input-stream-fn)
              ::output   (output-stream-fn))))
 
-
-  (start! [component context]
-    (let [start-fn (::start-fn component)]
+(defn- start-component!
+  [component context]
+  (let [start-fn (::start-fn component)]
       (if (not (started? component))
         (do
           (log/debug "Starting '" (::name component) "' component...")
@@ -64,8 +66,9 @@
           (log/debug "Component '" (::name component) "' already started. Skipping...")
           component))))
 
-  (stop! [component]
-    (let [stop-fn (::stop-fn component)]
+(defn- stop-component!
+  [component]
+  (let [stop-fn (::stop-fn component)]
       (if (started? component)
         (do
           (log/debug (format "Stopping '%s' component ..."
@@ -76,21 +79,56 @@
                              (get-name component)))
           component))))
 
+(defn- component-started?
+  [component]
+  (or (::started? component) false))
+
+(defn- name-of
+  [component]
+  (::name component))
+
+(defn- dependencies-of
+  [component]
+  (::depends-on component))
+
+(defn- input-of
+  [component]
+  (assert (::input component) "::input should not be empty. Please file a bug")
+  (::input component))
+
+(defn- output-of
+  [component]
+  (assert (::output component)
+          "::input should not be empty. Please file a bug")
+  (::output component))
+
+
+;; IComponent Implementations ------------------------------
+(extend-protocol IComponent
+  clojure.lang.IPersistentMap
+  (initialize [component]
+    (initialize-component component))
+
+  (start! [component context]
+    (start-component! component context))
+
+  (stop! [component]
+    (stop-component! component))
+
   (started? [component]
-    (or (::started? component) false))
+    (component-started? component))
 
   (get-name [component]
-    (::name component))
+    (name-of component))
 
   (dependencies [component]
-    (::depends-on component))
+    (dependencies-of component))
 
   (input [component]
-    ;; TODO: Do we need to return a new stream if input was nil ?
-    (::input component))
+    (input-of component))
 
   (output [component]
-    (::output component)))
+    (output-of component)))
 
 ;; SPECS ---------------------------------------------------
 (s/def ::name qualified-keyword?)
@@ -110,7 +148,7 @@
 
 
 ;; (s/def ::start-fn
-;;   (s/fspec :args (s/cat :_ map? :context map?)
+;;   (s/fspec :args (s/cat :_ map? :_ map?)
 ;;            :ret map?
 ;;            :fn map?))
 
@@ -118,6 +156,8 @@
 ;;   (s/fspec :args (s/cat :_ map?)
 ;;            :ret map?
 ;;            :fn map?))
+
+
 
 (s/def ::start-fn fn?)
 (s/def ::stop-fn fn?)

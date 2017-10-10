@@ -116,12 +116,13 @@
   [^IPersistentMap system-map]
   (if-not (s/valid? ::system-map system-map)
     (throw (ex-info "Provided system is not valid"
-                    {:cause (s/explain-data ::system-map system-map)}))
+                    {:cause (s/explain-data ::system-map system-map)})))
 
-    (reset! system
-            (reduce start-component!
-                    system-map
-                    (vals (utils/get-components system-map))))))
+  (reset! system
+          (reduce start-component!
+                  system-map
+                  (vals (utils/get-components system-map))))
+  (log/info "System started successfully."))
 
 (defn stop-system!
   "Stops the given `system-map`.
@@ -133,4 +134,5 @@
   (reset! system
           (reduce stop-component!
                   system-map
-                  (vals (utils/get-components system-map)))))
+                  (vals (utils/get-components system-map))))
+  (log/info "System stopped successfully."))
