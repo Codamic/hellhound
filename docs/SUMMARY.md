@@ -5,5 +5,6 @@
   * [Installation](./getting_started/README.md#installation)
 * [Systems](./systems/README.md)
   * [Overview](./systems/README.md#overview)
+  * [Components](./systems/Components.md)
 
 ## Part 2
