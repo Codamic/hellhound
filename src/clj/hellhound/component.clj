@@ -84,15 +84,18 @@
 ;; These functions are the actual implementation of IComponent
 ;; Protocol for IPersistentMap.
 (defn- initialize-component
+  "This function is responsible to initialize the given `component` by
+  initializing the input and ouput manifolds of the component."
   [component]
   (let [default-io-buffer-size (core/get-config :components :io-buffer-size)
-          default-stream-fn #(stream/stream default-io-buffer-size)
-          input-stream-fn   (get component
-                                 :input-stream-fn
-                                 default-stream-fn)
-          output-stream-fn  (get component
-                                 :output-stream-fn
-                                 default-stream-fn)]
+          default-stream-fn    #(stream/stream default-io-buffer-size)
+          input-stream-fn      (get component
+                                    :input-stream-fn
+                                    default-stream-fn)
+          output-stream-fn     (get component
+                                    :output-stream-fn
+                                    default-stream-fn)]
+
       (assert default-io-buffer-size)
       (assoc component
              ::started? false
@@ -100,18 +103,30 @@
              ::output   (output-stream-fn))))
 
 (defn- start-component!
-  [component context]
+  "Fetches and calls the `start-fn` of the given `component`.
+
+  This function assigns the `started?` key to `true` on the return
+  value of `start-fn` which should be a valid component. `started?`
+  key basically demonstrates that the component in question is running."
+  [component]
   (let [start-fn (::start-fn component)]
       (if (not (started? component))
         (do
-          (log/debug "Starting '" (::name component) "' component...")
-          (assoc (start-fn component context) ::started? true))
+          (log/debug (format "Starting component '%s'..."
+                             (::name component)))
+          (assoc (start-fn component) ::started? true))
 
         (do
-          (log/debug "Component '" (::name component) "' already started. Skipping...")
+          (log/debug (format "Component '%s' already started. Skipping..."
+                             (::name component)))
           component))))
 
 (defn- stop-component!
+  "Fetches and calls the `stop-fn` of the given `component`.
+
+  This function assigns the `started?` key to `false` on the return
+  value of `start-fn` which should be a valid component. Falsy value for
+  `started?` demonstrates that the component in question is not running."
   [component]
   (let [stop-fn (::stop-fn component)]
       (if (started? component)
@@ -125,23 +140,35 @@
           component))))
 
 (defn- component-started?
+  "Returns `true` if the given component is `started?`."
   [component]
   (or (::started? component) false))
 
 (defn- name-of
+  "Returns the `name` of the given `component`."
   [component]
   (::name component))
 
 (defn- dependencies-of
+  "Returns a collection of dependencies of the given `component`."
   [component]
   (::depends-on component))
 
 (defn- input-of
+  "Returns the input manifold of the given `component`.
+
+  The input of the component is a manifold whichis going to receive
+  the incoming dataflow from the output of the component upstream."
   [component]
   (assert (::input component) "::input should not be empty. Please file a bug")
   (::input component))
 
 (defn- output-of
+  "Returns the output manifold of the given `component`.
+
+  The output of the component is a manifold which should
+  flow the output data of the component to the downstream
+  component."
   [component]
   (assert (::output component)
           "::input should not be empty. Please file a bug")
