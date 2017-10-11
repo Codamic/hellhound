@@ -1,6 +1,9 @@
 # Systems
 
 ## Overview
+At heart, **HellHound** created around the idea of systems. The basic idea is to describe the execution model and
+dataflow of a program using data and let **HellHound** handles the rest.
+
 A **HellHound** system is basically a `hashmap` describing different aspects of a system.
 For example any should should have `:components` key with a vector as its value. All the `components`
 of the system should be defined under this key. Each component is a `hashmap` describing the behaviours of

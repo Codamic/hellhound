@@ -1,6 +1,6 @@
 # HellHound Components
-A **Component** is a tiny framework for managing the lifecycle, dependencies
-and dataflow of software components which have runtime state.
+A **Component** is a datastructure to managing the lifecycle, dependencies
+and dataflow of a program.
 
 A component is similar in spirit to the definition of an object in Object-Oriented Programming.
 This does not alter the primacy of pure functions and immutable data structures in Clojure as
@@ -53,7 +53,7 @@ usually indicate architectural flaws and can be eliminated by restructuring the 
 where a cyclic dependency cannot be avoided, you can use mutable references to manage it, but this is outside
 the scope of components.
 
-## Implementaion
+## Usage
 Components are the main parts of HellHound systems. Basically each components is an implementation of `IComponent`
 protocol. The protocol which defines a component functionality. By default HellHound implements `IComponent`
 protocols for hashmaps only. So we can define components in form of maps.
