@@ -35,17 +35,17 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="960"
-     inkscape:window-height="1061"
+     inkscape:window-width="1920"
+     inkscape:window-height="1045"
      id="namedview88"
      showgrid="false"
-     inkscape:zoom="0.38132296"
-     inkscape:cx="-0.43263712"
-     inkscape:cy="177"
-     inkscape:window-x="960"
-     inkscape:window-y="19"
+     inkscape:zoom="1.5252918"
+     inkscape:cx="192.41048"
+     inkscape:cy="170.79858"
+     inkscape:window-x="0"
+     inkscape:window-y="35"
      inkscape:window-maximized="0"
-     inkscape:current-layer="switch48" />
+     inkscape:current-layer="g84" />
   <defs
      id="defs2" />
   <g
@@ -167,11 +167,9 @@
         <text
            x="58"
            y="12"
-           fill="#000000"
-           text-anchor="middle"
            font-size="12px"
-           font-family="Helvetica"
-           id="text28">Database Component</text>
+           id="text28"
+           style="font-size:12px;font-family:Helvetica;text-anchor:middle;fill:#000000">Database Client</text>
       </switch>
     </g>
     <path
@@ -298,11 +296,9 @@
         <text
            x="15"
            y="12"
-           fill="#000000"
-           text-anchor="middle"
            font-size="12px"
-           font-family="Helvetica"
-           id="text58">Redis</text>
+           id="text58"
+           style="font-size:12px;font-family:Helvetica;text-anchor:middle;fill:#000000">Redis Client</text>
       </switch>
     </g>
     <path
