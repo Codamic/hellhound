@@ -2,5 +2,8 @@
   "title": "HellHound",
   "description": "HellHound Guides",
   "language": "en",
-  "root": "./docs"
+  "root": "./docs",
+  "plugins": [
+    "image-captions"
+  ]
 }

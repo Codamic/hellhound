@@ -9,6 +9,9 @@ which you need to learn about.
 Systems composed by [**Components**](./Components.md). A system knows how to start and stop components. It is also
 responsible for managing dependencies between theme. Components are the smallest parts of a system whic are reusable.
 
+![A very basic schema of a System](./system.svg)
+
+
 A **HellHound** system is basically a `map` describing different aspects of a program. Each program might have several
 systems. For example a development system and a production system. But there would be just a system running at a given
 time.
@@ -42,6 +45,7 @@ apparoach components knows too much about the environment around them, so it red
 
 NOTE: In near future we're going to add the support for dependency injection to **HellHound** systems.
 
+![A schema of components of a system and how they might depends on each other](./system-deps.svg)
 
 ### Workflow
 Each component shoud have one *INPUT* and *OUTPUT* which should be stream of values. Input should be passed
