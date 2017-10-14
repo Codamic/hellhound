@@ -108,13 +108,13 @@
   This function assigns the `started?` key to `true` on the return
   value of `start-fn` which should be a valid component. `started?`
   key basically demonstrates that the component in question is running."
-  [component]
+  [component context]
   (let [start-fn (::start-fn component)]
       (if (not (started? component))
         (do
           (log/debug (format "Starting component '%s'..."
                              (::name component)))
-          (assoc (start-fn component) ::started? true))
+          (assoc (start-fn component context) ::started? true))
 
         (do
           (log/debug (format "Component '%s' already started. Skipping..."
