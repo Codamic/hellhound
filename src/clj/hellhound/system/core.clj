@@ -66,8 +66,7 @@
   version of the vector which is map."
   [system-map]
   (merge system-map
-         {:components (components-map system-map)
-          :components-workflow (workflow/workflow-map system-map)}))
+         {:components (components-map system-map)}))
 
 (defn set-system!
   "Sets the system of HellHound."

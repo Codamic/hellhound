@@ -44,23 +44,6 @@
   ([^IPersistentMap components ^IPersistentMap workflow]
    (wire-io! components (rest workflow) (first workflow)))
 
-  ([^IPersistentMap components ^IPersistentMap workflow component-pair]
-   (when component-pair
-     (let [sink    (get components (first component-pair))
-           sources (map #(get components %) (second component-pair))]
-
-       (when (nil? sink) (invalid-workflow (first component-pair)))
-
-       (doseq [source sources]
-         (when (nil? source) (invalid-workflow source))
-         (connect sink source))
-
-       (recur components (rest workflow) (first workflow))))))
-
-(defn wire-io2!
-  ([^IPersistentMap components ^IPersistentMap workflow]
-   (wire-io2! components (rest workflow) (first workflow)))
-
   ([^IPersistentMap components ^IPersistentMap workflow workflow-triple]
    (when workflow-triple
      (let [component-tuple (apply parse-triple components workflow-triple)]
@@ -72,18 +55,6 @@
   in the order provided by the user in `:workflow` key."
   [^IPersistentMap system]
   (log/debug "Setting up workflow...")
-  (wire-io2! (utils/get-components system)
+  (wire-io! (utils/get-components system)
              (get-workflow system))
   (log/info "Workflow setup done."))
-
-(defn ^PersistentVector walk-graph
-  [^IPersistentMap parsed-map ^PersistentVector pair]
-  (assoc parsed-map
-         (first pair)
-         (conj (get parsed-map (first pair)) (second pair))))
-
-(defn ^IPersistentMap workflow-map
-  "Parse the workflow graph and returns a hashmap which keys
-  are the components name and the values are inputs for that component."
-  [^IPersistentMap system-map]
-  (reduce walk-graph {} (:workflow system-map)))
