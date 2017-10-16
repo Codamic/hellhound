@@ -2,7 +2,6 @@
 
 ## Part 0 - prerequisite
 * [Overview](./prerequisite/README.md)
-  * [Stream Processing](./prerequisite/README.md#stream-processing)
   * [Commander Pattern](./prerequisite/README.md#commander-pattern)
   * [Manifold](./prerequisite/README.md#manifold)
     * [Deferred](./prerequisite/README.md#deferred)
