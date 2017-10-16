@@ -1,4 +1,5 @@
 # HellHound Components
+---
 A **Component** is a datastructure to managing the lifecycle, dependencies
 and dataflow of a program.
 
