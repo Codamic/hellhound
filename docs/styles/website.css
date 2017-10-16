@@ -95,3 +95,8 @@
 figure {
   text-align: center;
 }
+
+code {
+  background: #fdf6e3;
+  background-color: #fdf6e3 !important;
+}

@@ -9,6 +9,32 @@
   "plugins": [
     "image-captions",
     "youtubex",
+    "anchorjs",
+    "toc",
+    "edit-link",
+    "github",
+    "theme-debuggap",
+
     "advanced-emoji"
-  ]
+  ],
+  "pluginsConfig": {
+    "edit-link": {
+      "base": "https://github.com/Codamic/hellhound/tree/master/docs/",
+      "label": "Edit"
+    },
+    "github": {
+      "url": "https://github.com/Codamic/hellhound/"
+    },
+    "theme-default": {
+      "showLevel": false
+    },
+    "anchorjs": {
+      "placement": "left",
+      "visible": "always"
+    },
+    "toc": {
+      "addClass": true,
+      "className": "toc"
+    }
+  }
 }

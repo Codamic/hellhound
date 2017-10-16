@@ -1,4 +1,14 @@
+---
+description: HellHound introduction
+---
+
 # Prerequisite
+---
+
+**In this chapter you'll read about:**
+
+<!-- toc -->
+
 Before learning about **HellHound** and how to use it. You need to know about several concepts and libraries
 which are heavily used in **HellHound**. If you already know about the following topics, you can safely skip
 this chapter and jump to [Getting Started](../getting_started/README.md) guide.
@@ -12,8 +22,6 @@ Commander pattern is an application architecture design which is the main idea b
 to watch this video:
 
 {% youtube %}B1-gS0oEtYc{% endyoutube %}
-
-
 ## Manifold
 This library provides basic building blocks for asynchronous programming, and can be used as a translation layer
 between libraries which use similar but incompatible abstractions. Manifold provides two core abstractions:
@@ -479,3 +487,4 @@ Calls to `publish!` will return a deferred that won't be realized until all stre
 all streams returned by `subscribe` are unbuffered, but we can change this by providing a `stream-generator` to `event-bus`,
 such as `(event-bus #(stream 1e3))`.  A short example of how `event-bus` can be used in concert with the buffering and flow control
 mechanisms [can be found here](https://youtu.be/1bNOO3xxMc0?t=1887).
+n

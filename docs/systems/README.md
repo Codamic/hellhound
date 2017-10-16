@@ -1,11 +1,9 @@
-# Systems
-
-## Overview
+# System Overview
 At heart, **HellHound** created around the idea of systems. The basic idea is to describe the execution model and
 dataflow of a program using data and let **HellHound** handles the rest. Systems are the first of **HellHound**
 which you need to learn about.
 
-### Execution model
+## Execution model
 Systems composed by [**Components**](./Components.md). A system knows how to start and stop components. It is also
 responsible for managing dependencies between theme. Components are the smallest parts of a system whic are reusable.
 
@@ -47,7 +45,7 @@ apparoach components knows too much about the environment around them, so it red
 
 ![A schema of components of a system and how they might depends on each other](./system-deps.svg)
 
-### Workflow
+## Workflow
 System's workflow describes the dataflow of the system. It describes where data comes in and where information goes out of
 the system. By "where" I mean which component of the system. As mentioned before each **HellHound** [Component](./Components.md)
 has an **input stream** and an **output stream** assigned to them. You can think of each component as a pipe, the whole
@@ -64,23 +62,12 @@ system which **NOT** all of the **inputs** and **outputs** of components connect
 
 > :warning: **Important NOTE**: Don't confuse Input and Output of each component which components dependencies.
 
-System's workflow a vector describing the dataflow of the system. Components have an input and an output stream. Each
-stream is a`manifold.stream`. HellHound connects io of each component to another component based on the desciption given
-by the `:workflow` of the system.
+Components of a system should consum from their `INPUT` and produce their `OUTPUT` in non-blocking fashion in order to avoid
+blocking in a system.
 
-System's workflow is a vector of vectors. Each vector contains two mandatory element which are:
-  * The name of the output component
-  * The name of the input component
-and an optional predicate function. This function connects the output stream of output component to input stream of
-input component, and in case of existance of a predicate function, it only sends those messages which pass the predicate.
+Check out the [workflow](./Workflow.md) section for more information.
 
-Predicate function should be a pure function obviousely.
-
-Each component shoud have one *INPUT* and *OUTPUT* which should be stream of values. Input should be passed
-to the component `start-fn` using `context` map and oputput should be return as the value of `:output` key
-in the component map.
-
-## System's Structure
+## Structure
 
 
 * `:hellhound.component/name`
