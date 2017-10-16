@@ -1,14 +1,13 @@
 # SUMMARY
+
 - [Introduction](README.md)
 
 
 - [Prerequisite](prerequisite/README.md)
-  - [Commander Pattern](prerequisite/README.md#commander-pattern)
-  - [Manifold](prerequisite/README.md#manifold)
-    - [Deferred](prerequisite/README.md#deferred)
-    - [Stream](prerequisite/README.md#stream)
-
-
+  - [Commander Pattern](prerequisite/commander_pattern.md)
+  - [Manifold](prerequisite/manifold/README.md)
+    - [Deferred](prerequisite/manifold/deferred.md)
+    - [Stream](prerequisite/manifold/stream.md)
 - [Getting Started](./getting_started/README.md)
   - [Installation](./getting_started/README.md#installation)
 - [Systems](./systems/README.md)
