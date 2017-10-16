@@ -3,10 +3,17 @@ Before learning about **HellHound** and how to use it. You need to know about se
 which are heavily used in **HellHound**. If you already know about the following topics, you can safely skip
 this chapter and jump to [Getting Started](../getting_started/README.md) guide.
 
-## Stream Processing
-TBA
 ## Commander Pattern
-TBA
+> Have you ever hit a wall with REST? Does modeling your problem domain into CRUD-able entities feel like fitting
+> a square peg into a round hole? Perhaps instead of modeling our services like little databases, we should instead
+> model them like reactors over immutable event streams.
+
+Commander pattern is an application architecture design which is the main idea behind **HellHound**. I highly recommend
+to watch this video:
+
+{% youtube %}B1-gS0oEtYc{% endyoutube %}
+
+
 ## Manifold
 This library provides basic building blocks for asynchronous programming, and can be used as a translation layer
 between libraries which use similar but incompatible abstractions. Manifold provides two core abstractions:
