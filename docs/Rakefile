@@ -1,0 +1,9 @@
+require 'webrick'
+
+desc 'Run doc webserver'
+task :serve do
+  root = File.expand_path './_build/'
+  server = WEBrick::HTTPServer.new Port: 3000, DocumentRoot: root
+  trap 'INT' do server.shutdown end
+  server.start
+end

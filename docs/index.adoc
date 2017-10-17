@@ -1,0 +1,29 @@
+= HellHound
+:Author:    Sameer Rahmani
+:Email:     <lxsameer@gnu.org>
+:Revision:  1.0.0-alpha1
+:type: reference
+:toc: macro
+:toc: left
+:toclevels: 2
+:source-highlighter: coderay
+:sectanchors: true
+toc::[]
+
+include::systems/overview.adoc[]
+
+IMPORTANT: This software is not ready to use yet. It's under heavy development
+and reaches the alpha stage pretty soon. If you like to be part of this process please
+leave us a message.
+
+image:https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.png[HellHound]
+
+
+
+== Goals
+
+*HellHound* is a fullstack Clojure/ClojureScript framework for creating async distributed web applications suitbale for stream processing.
+Basically *HellHound* is a set of smaller tools to create such systems.
+
+The goal is to create a tool which allows developers to focus on their business logic while it takes care of different aspect of a distributed
+software in an opinionated way.

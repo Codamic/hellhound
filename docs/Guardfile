@@ -1,0 +1,8 @@
+Bundler.require :default
+
+guard 'shell' do
+  watch(/^[^\.].*\.adoc$/) do |m|
+    `mkdir -p ./_build/`
+    Asciidoctor .convert_file m[0], to_dir: '_build/', mkdirs: true, safe: 'unsafe', backend: :html5
+  end
+end

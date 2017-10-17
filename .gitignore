@@ -16,3 +16,5 @@ build/
 docs/build
 node_modules/
 _book/
+docs/Gemfile.lock
+docs/_build
