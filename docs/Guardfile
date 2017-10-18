@@ -2,7 +2,15 @@ Bundler.require :default
 
 guard 'shell' do
   watch(/^[^\.].*\.adoc$/) do |m|
-    `mkdir -p ./_build/`
-    Asciidoctor .convert_file m[0], to_dir: '_build/', mkdirs: true, safe: 'unsafe', backend: :html5
+    Asciidoctor .convert_file(
+      m[0], to_dir: '_build/', mkdirs: true, safe: :server,
+      backend: :html5, header_footer: true, sourcemap: true,
+      stylesdir: 'stylesheets',
+      base_dir: './',
+      attributes: {
+        'stylesdir' => 'styles',
+        'nofooter' => true,
+        'stylesheet' => 'style.css'
+      })
   end
 end
