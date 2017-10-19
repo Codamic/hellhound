@@ -23,6 +23,7 @@ task :deploy do
       'stylesheet' => 'style.css'
     })
 
+  system("cp ./CNAME ./_build/CNAME")
   system("cd ../..")
   system("git branch -D gh-pages")
   system("git checkout --orphan gh-pages")
