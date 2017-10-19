@@ -25,8 +25,10 @@ leave us a message.
 
 image::https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.png[HellHound,align="center"]
 
+:sectnums:
+
 == What is HellHound?
-asdasd
+asd
 
 === Goals
 

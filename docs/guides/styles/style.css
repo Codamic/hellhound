@@ -717,6 +717,8 @@ p { margin-bottom: 1.25rem; }
 
 .exampleblock > .content { background-color: #fffef7; border-color: #e0e0dc; -moz-box-shadow: 0 1px 4px #e0e0dc; -webkit-box-shadow: 0 1px 4px #e0e0dc; box-shadow: 0 1px 4px #e0e0dc; }
 
+.imageblock .title { text-align: center; }
+
 .print-only { display: none !important; }
 
 @media print { @page { margin: 1.25cm 0.75cm; }

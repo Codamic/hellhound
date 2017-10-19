@@ -9,6 +9,7 @@ guard 'shell' do
       base_dir: './',
       attributes: {
         'stylesdir' => 'styles',
+        'imagesdir' => './images',
         'nofooter' => true,
         'stylesheet' => 'style.css'
       })
