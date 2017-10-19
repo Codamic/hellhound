@@ -1,4 +1,0 @@
-# System Overview
-At heart, **HellHound** created around the idea of systems. The basic idea is to describe the execution model and
-dataflow of a program using data and let **HellHound** handles the rest. Systems are the first of **HellHound**
-which you need to learn about.

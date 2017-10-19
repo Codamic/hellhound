@@ -1,0 +1,10 @@
+= Getting Started
+
+== Installation
+
+Add *HellHound* to your dependencies as follow:
+
+[source,clojure]
+----
+[codamic/hellhound "1.0.0-SNAPSHOT"]
+----

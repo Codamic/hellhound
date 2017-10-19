@@ -10,7 +10,7 @@
 :toclevels: 2
 :toc-title: HellHound Documentation
 :doctype: book
-:sectnumlevels: 2
+:sectnumlevels: 3
 :keywords: Clojure, Clojurescript, clj, cljs, framework, stream, web, aleph, stream processing, async, fullstack
 :docinfo: shared
 :type: reference
@@ -40,6 +40,11 @@ Basically *HellHound* is a set of smaller tools to create such systems.
 The goal is to create a tool which allows developers to focus on their business logic while it takes care of different aspect of a distributed
 software in an opinionated way.
 
+// Prerequisite
+include::prerequisite/index.adoc[leveloffset=+1]
+
+// Getting Started
+include::getting_started/index.adoc[leveloffset=+1]
 
 // System
 include::systems/index.adoc[leveloffset=+1]

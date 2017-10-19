@@ -752,3 +752,6 @@ p { margin-bottom: 1.25rem; }
   .print-only { display: block !important; }
   .hide-for-print { display: none !important; }
   .show-for-print { display: inherit !important; } }
+.videoblock { text-align: center; }
+
+.videoblock iframe { border: 1px solid #bfbfbf; }

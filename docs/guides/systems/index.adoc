@@ -7,3 +7,5 @@ which you need to learn about.
 include::overview.adoc[]
 
 include::components.adoc[]
+
+include::workflow.adoc[]
