@@ -10,7 +10,7 @@ task :serve do
 end
 
 desc 'deploy the docs'
-take :deploy do
+task :deploy do
   Asciidoctor .convert_file(
     'index.adoc', to_dir: '_build/', mkdirs: true, safe: :safe,
     backend: :html5, header_footer: true, sourcemap: true,
