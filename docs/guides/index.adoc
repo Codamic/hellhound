@@ -2,11 +2,10 @@
 :Revision:  1.0.0-alpha1
 :Author:    Sameer Rahmani
 :Email:     <lxsameer@gnu.org>
-:type: reference
-:source-highlighter: coderay
+:iconsfont:   font-awesome
 :sectanchors: true
 :description: A fullstack, async framework for creating web applications using Clojure and Clojurescript
-toc::[]
+:toc: macro
 :toc: left
 :toclevels: 2
 :toc-title: HellHound Documentation
@@ -14,6 +13,9 @@ toc::[]
 :sectnumlevels: 2
 :keywords: Clojure, Clojurescript, clj, cljs, framework, stream, web, aleph, stream processing, async, fullstack
 :docinfo: shared
+:type: reference
+:source-highlighter: coderay
+
 
 [IMPORTANT]
 .Under development software
@@ -38,4 +40,6 @@ Basically *HellHound* is a set of smaller tools to create such systems.
 The goal is to create a tool which allows developers to focus on their business logic while it takes care of different aspect of a distributed
 software in an opinionated way.
 
-include::systems/overview.adoc[]
+
+// System
+include::systems/index.adoc[leveloffset=+1]

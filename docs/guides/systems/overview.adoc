@@ -1,7 +1,7 @@
-== System Overview
-At heart, *HellHound* created around the idea of systems. The basic idea is to describe the execution model and
-dataflow of a program using data and let *HellHound* handles the rest. Systems are the first of *HellHound*
-which you need to learn about.
+== Overview
+
+Let's take a quick conceptual look at *HellHound Systems*.
+
 
 === Execution model
 Systems composed by [*Components*]. A system knows how to start and stop components. It is also
@@ -49,3 +49,30 @@ In near future we're going to add the support for dependency injection to *HellH
 
 .A schema of components of a system and how they might depends on each other
 image::system-deps.svg[A schema of components of a system and how they might depends on each other, align="center"]
+
+=== Workflow
+System's workflow describes the dataflow of the system. It describes where data comes in and where information goes out of
+the system. By "where" I mean which component of the system. As mentioned before each *HellHound* [Component](./Components.md)
+has an *input stream* and an *output stream* assigned to them. You can think of each component as a pipe, the whole
+system as a pipeline. Data flows to this pipeline based on your piping (description) from entry points and exits the pipeline
+from exit points. Pipeline might have more than one entry or exit points or none at all.
+
+.Components process the input stream and produce the output put stream
+image::component-io.svg[Components process the input stream and produce the output put stream, align="center"]
+
+Using the system workflow you can design an open or a close dataflow for your system. A Close system is a type of system
+which all of its components have their *input* and *output* connected. In the other hand, an open system is a type of
+system which *NOT* all of the *inputs* and *outputs* of components connected to each other.
+
+.Open system on the left and Close system on the right
+image::workflow-types.svg[Open system on the left and Close system on the right, align="center"]
+
+[IMPORTANT]
+.Don't confuse Input and Output of each component which components dependencies.
+====
+====
+
+Components of a system should consum from their `INPUT` and produce their `OUTPUT` in non-blocking fashion in order to avoid
+blocking in a system.
+
+Check out the [workflow](./Workflow.md) section for more information.

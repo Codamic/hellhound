@@ -1,9 +1,9 @@
 Bundler.require :default
 
 guard 'shell' do
-  watch(/^[^\.].*\.adoc$/) do |m|
+  watch(/[^\.].*\.adoc$/) do |m|
     Asciidoctor .convert_file(
-      m[0], to_dir: '_build/', mkdirs: true, safe: :server,
+      'index.adoc', to_dir: '_build/', mkdirs: true, safe: :safe,
       backend: :html5, header_footer: true, sourcemap: true,
       stylesdir: 'stylesheets',
       base_dir: './',
