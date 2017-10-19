@@ -1,4 +1,5 @@
 require 'webrick'
+require 'asciidoctor'
 
 desc 'Run doc webserver'
 task :serve do
@@ -35,3 +36,5 @@ task :deploy do
   system("git push origin gh-pages -f")
   system("git checkout master")
 end
+
+task default: :serve
