@@ -18,3 +18,4 @@ node_modules/
 _book/
 docs/guides/Gemfile.lock
 docs/guides/_build
+docs/api/

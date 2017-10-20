@@ -47,8 +47,12 @@
                  ;; JSON Parser
                  [cheshire                   "5.7.1"]]
 
-  :plugins [[lein-cljsbuild "1.1.3"]]
+  :plugins [[lein-cljsbuild "1.1.3"]
+            [lein-codox "0.10.3"]]
 
+  :codox {:output-path "docs/api/"
+          :metadata {:doc/format :markdown}
+          :doc-paths ["docs/guides/"]}
 
   :min-lein-version "2.6.1"
 
