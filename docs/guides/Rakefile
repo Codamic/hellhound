@@ -11,7 +11,7 @@ task :serve do
 end
 
 desc 'deploy the docs'
-task :deploy do
+task :rake do
   Asciidoctor .convert_file(
     'index.adoc', to_dir: '_build/', mkdirs: true, safe: :safe,
     backend: :html5, header_footer: true, sourcemap: true,
@@ -23,18 +23,6 @@ task :deploy do
       'nofooter' => true,
       'stylesheet' => 'style.css'
     })
-
-  system("cp ./CNAME ./_build/CNAME")
-  system("cd ../..")
-  system("git branch -D gh-pages")
-  system("git checkout --orphan gh-pages")
-  system("cp -rv docs/guides/_build/ ./build/")
-  system("git rm -rf ./")
-  system("cp -r build/* ./ ")
-  system("git add .")
-  system("git commit -a -m \"Release at #{Time.now.utc}\"")
-  system("git push origin gh-pages -f")
-  system("git checkout master")
 end
 
 task default: :serve
