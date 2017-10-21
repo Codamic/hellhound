@@ -1,15 +1,19 @@
 #! /bin/bash
 
+echo "Cleaning up..."
+rm -rf ./build
 echo "Building API docs..."
 lein codox
 echo "Building the Guides..."
 pushd docs/guides
 bundle install
-rake compile
+bundle exec rake compile
+ls
 popd
 
-mkdir -p ./build/guides
-cp -rv docs/guides/_build ./build/guides
+mkdir -p ./build/
+mv -v docs/guides/_build ./build/
+mv -v ./build/_build ./build/guides
 cp -rv docs/guides/CNAME ./build/
 cp -rv docs/api/ ./build/
 echo "Deploying"
