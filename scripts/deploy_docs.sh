@@ -10,7 +10,7 @@ popd
 mkdir -p ./build/guides
 cp -rv docs/guides/_build ./build/guides
 cp -rv docs/guides/CNAME ./build/
-cp -rv docs/api/ ./build/api
+cp -rv docs/api/ ./build/
 echo "Deploying"
 git branch -D gh-pages
 git checkout --orphan gh-pages
