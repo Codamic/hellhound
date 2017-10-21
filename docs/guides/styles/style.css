@@ -755,3 +755,18 @@ p { margin-bottom: 1.25rem; }
 .videoblock { text-align: center; }
 
 .videoblock iframe { border: 1px solid #bfbfbf; }
+
+code b.conum {
+  display: inline-block;
+  color: #fff!important;
+  background-color: rgba(0,0,0,.8);
+  border-radius: 100px;
+  text-align: center;
+  font-size: .75em;
+  width: 1.67em;
+  height: 1.67em;
+  line-height: 1.67em;
+  font-family: "Open Sans","DejaVu Sans",sans-serif;
+  font-style: normal;
+  font-weight: bold;
+}

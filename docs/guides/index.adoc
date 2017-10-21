@@ -2,6 +2,7 @@
 :Revision:  1.0.0-alpha1
 :Author:    Sameer Rahmani
 :Email:     <lxsameer@gnu.org>
+:icons: font
 :iconsfont:   font-awesome
 :sectanchors: true
 :description: A fullstack, async framework for creating web applications using Clojure and Clojurescript

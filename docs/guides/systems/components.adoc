@@ -95,7 +95,7 @@ This key optional.
 
 So as an example:
 
-[source,clojure]
+[source,clojure,linums]
 ----
 (def sample-component
   {:hellhound.component/name :sample.core/component-A

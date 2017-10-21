@@ -8,6 +8,39 @@ System's workflow is a vector of vectors. Each vector contains two mandatory ele
 * The name of the output component
 * The name of the input component
 
+For example, consider the following system:
+
+[source,clojure,linenums]
+.A HellHound system
+----
+(ns example.system
+  ;; We want to use defcomponenet to define the components instead of defining the maps
+  (:require [hellhound.system :refer [defcomponent]]))
+
+;; We skipped the the start and stop function of each component because it's not
+;; related to this topic.
+(def example-system
+     {:components [(defcomponent :component-1 some-start-fn some-stop-fn)   <1>
+                   (defcomponent :component-2 some-other-start-fn some-other-stop-fn)    <2>
+                   (defcomponent :component-3 yet-another-start-fn yet-another-stop-fn)] <3>
+
+      :workflow [[:component-1 :component-2]    <4>
+                 [:component-2 :component-3]]}) <5>
+----
+<1> Definition of `component-1`
+<2> Definition of `component-2`
+<3> Definition of `component-2`
+<4> Description to connect output of `component-1` to input `component-2`
+<5> Description to connect output of `component-2` to input `component-3`
+
+In the above snippet we defined three different components. For the sake of simplicity I skipped the start and
+stop function defination of each component.
+
+After starting the system defined in the above snippet, *HellHound* wires the input/output of each component
+as we described in the system.
+
+
+
 and an optional predicate function. This function connects the output stream of output component to input stream of
 input component, and in case of existance of a predicate function, it only sends those messages which pass the predicate.
 
