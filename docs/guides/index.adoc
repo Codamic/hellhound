@@ -30,14 +30,14 @@ image::https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.pn
 :sectnums:
 
 == What is HellHound?
-asd
+[PLACEHOLDER TEXT]
 
 === Goals
 
-*HellHound* is a fullstack Clojure/ClojureScript framework for creating async distributed web applications suitbale for stream processing.
-Basically *HellHound* is a set of smaller tools to create such systems.
+*HellHound* is a fullstack Clojure/ClojureScript framework for creating asynchronous distributed web-applications suitable for stream-processing.
+It is basically a set of smaller tools to help build such systems.
 
-The goal is to create a tool which allows developers to focus on their business logic while it takes care of different aspect of a distributed
+The goal of this project is to create a tool which allows developers to focus on their business logic while *HellHound* takes care of different aspects of their distributed
 software in an opinionated way.
 
 // Prerequisite
