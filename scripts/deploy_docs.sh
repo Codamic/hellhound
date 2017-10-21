@@ -15,7 +15,7 @@ mkdir -p ./build/
 mv -v docs/guides/_build ./build/
 mv -v ./build/_build ./build/guides
 cp -rv docs/guides/CNAME ./build/
-cp -rv docs/api/ ./build/
+mv -v docs/api/ ./build/
 echo "Deploying"
 git branch -D gh-pages
 git checkout --orphan gh-pages
