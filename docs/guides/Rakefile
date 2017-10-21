@@ -10,8 +10,8 @@ task :serve do
   server.start
 end
 
-desc 'deploy the docs'
-task :rake do
+desc 'compile the docs'
+task :compile do
   Asciidoctor .convert_file(
     'index.adoc', to_dir: '_build/', mkdirs: true, safe: :safe,
     backend: :html5, header_footer: true, sourcemap: true,

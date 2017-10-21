@@ -7,6 +7,7 @@ pushd docs/guides
 bundle install
 rake compile
 popd
+
 mkdir -p ./build/guides
 cp -rv docs/guides/_build ./build/guides
 cp -rv docs/guides/CNAME ./build/
@@ -20,7 +21,7 @@ rm pom.xml
 rm -rf docs/_build/
 rm -rf target
 rm -rf ./scripts
-cp -r build/* ./
+cp -rv build/* ./
 rm -rf build/
 git add .
 now=`date +%s`
