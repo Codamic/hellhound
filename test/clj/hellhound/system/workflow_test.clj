@@ -3,7 +3,8 @@
             [clojure.test :as t :refer [deftest testing is are]]
             [hellhound.component :as hcomp]
             [hellhound.system :as system :refer [defcomponent]]
-            [manifold.stream :as stream]))
+            [manifold.stream :as stream]
+            [clojure.spec.alpha :as s]))
 
 ;; System tests --------------------------------------------
 (defn sample-start-fn
