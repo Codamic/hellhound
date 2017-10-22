@@ -137,11 +137,11 @@ Base on what we discussed up until now we can test our workflow like this:
       output3 (hcomp/output2 (hh/get-component :component-3))]
 
   (s/consume #(println "Odd: " %) output2) <1>
-  (s/consume #(println "Even: " %) output3)
+  (s/consume #(println "Even: " %) output3) <2>
 
   (-> [1 2 3 4 5]
-      (s/->source) <2>
-      (s/connect input1))) <3>
+      (s/->source) <3>
+      (s/connect input1))) <4>
 ----
 <1> Adds a consumer function for the output stream of `:component-2`
 <2> Adds a consumer function for the output stream of `:component-3`
@@ -164,3 +164,5 @@ Odd: 5
 Predicate functions in each pipe should be pure and free of side effects. These functions should
 be as fast as possible because *HellHound* calls them rapidly for each value in the pipe.
 ====
+
+<PLACEHOLDER TEXT> Explaination about predicate best practices and `hellhound.messaging` ns
