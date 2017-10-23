@@ -1,7 +1,7 @@
 == Components
 A *Component* is a datastructure to managing the lifecycle, dependencies
-and dataflow of a program.
-
+and dataflow of a program. A Component is the smallest unit of execution which is reusable and
+easy to reason about.
 
 A component is similar in spirit to the definition of an object in Object-Oriented Programming.
 This does not alter the primacy of pure functions and immutable data structures in Clojure as
@@ -59,71 +59,50 @@ Components are the main parts of HellHound systems. Basically each components is
 protocol. The protocol which defines a component functionality. By default HellHound implements `IComponent`
 protocols for hashmaps only. So we can define components in form of maps.
 
-In order to define a component a map should should contains following keys (All the keys should be namespaced
+In order to define a component, a map should should contains the following keys (All the keys should be namespaced
 keyword under `hellhound.component`):
 
-==== `name`:
-The name of the component. It should be a namespaced keyword.
-This key is **mandatory**.
+* `*name*`: The name of the component. It should be a namespaced keyword.
+  This key is *mandatory*.
 
-==== `start-fn`:
-A function which takes the component map as the only argument
-and return the component with the necessary keys attached to it. This
-function is responsible for **starting** the component.
-This key is **mandatory**.
+* `*start-fn*`: A function which takes the component map as the only argument
+  and return the component with the necessary keys attached to it. This
+  function is responsible for **starting** the component.
+  This key is *mandatory*.
 
-==== `stop-fn`:
-A function which takes the component map as the only argument
-and return the component with the necessary keys attached to it. This
-function is responsible for **stoping** the component.
-This key is **mandatory**.
+* `*stop-fn*`: A function which takes the component map as the only argument
+  and return the component with the necessary keys attached to it. This
+  function is responsible for **stoping** the component.
+  This key is *mandatory*.
 
-==== `depends-on`:
-This key specifies all the components which are the
- dependencies of the current component. A collection  of components
-name.
-This key is optional.
+* `*depends-on*`: This key specifies all the components which are the
+  dependencies of the current component. A collection  of components
+  name.
+  This key is optional.
 
-==== `input-stream-fn`:
-A function which returns a `manifold` as the input
-of the component. You rarely need to use this key for a component.
-This key optional.
+* `*input-stream-fn*`: A function which returns a `manifold` as the input
+  of the component. You rarely need to use this key for a component.
+  This key optional.
 
-==== `output-stream-fn`:
-A function which returns a `manifold` as the output
-of the component. You rarely need to use this key for a component.
-This key optional.
+* `*output-stream-fn*`: A function which returns a `manifold` as the output
+  of the component. You rarely need to use this key for a component.
+  This key optional.
 
 So as an example:
 
 [source,clojure,linums]
+.A Stupid component which does nothing
 ----
 (def sample-component
-  {:hellhound.component/name :sample.core/component-A
-   :hellhound.component/start-fn (fn [component] component)
-   :hellhound.component/stop-fn (fn [component] component)
-   :hellhound.component/depends-on [:sample.core/component-B]})
+  {:hellhound.component/name :sample.core/component-A <1>
+   :hellhound.component/start-fn (fn [component] component) <2>
+   :hellhound.component/stop-fn (fn [component] component)  <3>
+   :hellhound.component/depends-on [:sample.core/component-B]}) <4>
 ----
+<1> Description of the component name which is `:sample.code/component-A`
+<2> The function which is responsible for starting the component. Which does nothing in this case.
+<3> The function which is responsible for stapping the component. Which does nothing in this case.
+<4> Description of the dependencies of `:sample.code/component-A`. In this case this component
+    depends on another component called `:sample.core/component-B`.
 
-In this example `start-fn` and `stop-fn` don't do anything.
-
-=== Structure
-Here is the a list of component's keys:
-
-==== `:hellhound.component/name`
-The name of the component.
-
-==== `:hellhound.component/start-fn`
-A *function* which is responsible to start the component. This function should accept two parameters.
-The first one simply is the *component map itself* and the second one is *context map* which contains
-some data to be used inside the component. For example *input* stream.
-
-The *start-fn* basically *should return* the component map and attach any state necessary to it. Also
-if the component has any *output* stream is should associate the ~:output~ with the *output* stream value.
-
-==== `:hellhound.component/stop-fn`
-This function is responsible for stopping the component and it gets only one argument which is the *component map*
-again and should return the stopped component map as the return value.
-
-==== `:hellhound.component/depends-on`
-An array of component names which the current component is depends on.
+As you can see creating a component is fairy simple and nothing special.

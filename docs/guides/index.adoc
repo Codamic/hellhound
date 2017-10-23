@@ -9,7 +9,7 @@
 :description: A fullstack, async framework for creating web applications using Clojure and Clojurescript
 :toc: macro
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :toc-title: HellHound Documentation
 :doctype: book
 :sectnumlevels: 3
