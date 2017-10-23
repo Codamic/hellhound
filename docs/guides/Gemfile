@@ -11,3 +11,5 @@ gem 'addressable'
 gem 'prawn-svg'
 gem 'prawn-templates'
 gem 'asciidoctor-pdf'
+
+gem 'asciidoctor-epub3'

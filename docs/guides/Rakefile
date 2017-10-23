@@ -1,6 +1,7 @@
 require 'webrick'
 require 'asciidoctor'
 require 'asciidoctor-pdf'
+require 'asciidoctor-epub3'
 
 desc 'Run doc webserver'
 task :serve do
@@ -36,6 +37,34 @@ task :compile do
       'stylesheet' => 'style.css'
     })
 
+  Asciidoctor .convert_file(
+    'index.adoc', to_dir: '_build/', mkdirs: true, safe: :safe,
+    backend: :epub3, header_footer: true, sourcemap: true, to_file: 'hellhound.epub',
+    stylesdir: 'stylesheets',
+    base_dir: './',
+    attributes: {
+      'stylesdir' => 'styles',
+      'imagesdir' => './images',
+      'nofooter' => true,
+      'stylesheet' => 'style.css'
+    })
+
+  puts "You need to set KINDLEGEN env."
+  Asciidoctor .convert_file(
+    'index.adoc', to_dir: '_build/', mkdirs: true, safe: :safe,
+    backend: :epub3, header_footer: true, sourcemap: true, to_file: 'hellhound.mobi',
+    stylesdir: 'stylesheets',
+    base_dir: './',
+    attributes: {
+      'ebook-format' => 'kf8',
+      'stylesdir' => 'styles',
+      'imagesdir' => './images',
+      'nofooter' => true,
+      'front-cover-image' => 'image:cover.svg[Front Cover,1050,1050]',
+      'stylesheet' => 'style.css'
+    })
+  `cp images ./_build/ -rv`
+  `rm -rf hellhound-kf8.epub`
 end
 
 task default: :serve

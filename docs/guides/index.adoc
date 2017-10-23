@@ -18,6 +18,7 @@
 :type: reference
 :source-highlighter: coderay
 :imagesdir: ./images/
+:front-cover-image: image:cover.svg[Front Cover,1050,1600]
 
 [IMPORTANT]
 .Under development software
@@ -28,21 +29,20 @@ leave us a message.
 ====
 
 ifdef::backend-html5[]
-++++
 image::https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.png[HellHound,align="center"]
-
+++++
 <div class="center-aligned download-btns">
-<a href="/" class="lxbtn btn-success">
+<a href="/guides/hellhound.pdf" class="lxbtn btn-success">
    <i class="fa fa-download"></i>
    PDF
 </a>
 
-<a href="/" class="lxbtn btn-success">
+<a href="/guides/hellhound.epub" class="lxbtn btn-success">
    <i class="fa fa-download"></i>
    EPUB
 </a>
 
-<a href="/" class="lxbtn btn-success">
+<a href="/guides/hellhound.mobi" class="lxbtn btn-success">
    <i class="fa fa-download"></i>
    MOBI
 </a>
