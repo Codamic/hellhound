@@ -30,6 +30,30 @@ image::https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.pn
 
 :sectnums:
 
+
+ifdef::backend-html5[]
+++++
+<div class="center-aligned download-btns">
+<a href="/" class="lxbtn btn-success">
+   <i class="fa fa-download"></i>
+   PDF
+</a>
+
+<a href="/" class="lxbtn btn-success">
+   <i class="fa fa-download"></i>
+   EPUB
+</a>
+
+<a href="/" class="lxbtn btn-success">
+   <i class="fa fa-download"></i>
+   MOBI
+</a>
+</div>
+++++
+endif::[]
+
+---
+
 == What is HellHound?
 <PLACEHOLDER TEXT>
 

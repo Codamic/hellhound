@@ -2,6 +2,7 @@
 A *Component* is a datastructure to managing the lifecycle, dependencies
 and dataflow of a program.
 
+
 A component is similar in spirit to the definition of an object in Object-Oriented Programming.
 This does not alter the primacy of pure functions and immutable data structures in Clojure as
 a language. Most functions are just functions, and most data are just data. Components are intended
