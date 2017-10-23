@@ -64,6 +64,7 @@ It is basically a set of smaller tools to help build such systems.
 The goal of this project is to create a tool which allows developers to focus on their business logic while *HellHound* takes care of different aspects of their distributed
 software in an opinionated way.
 
+
 // Prerequisite
 include::prerequisite/index.adoc[leveloffset=+1]
 
@@ -78,3 +79,13 @@ include::appendix/contribute.adoc[leveloffset=+1]
 
 // Appendix 2
 include::appendix/code_of_conduct.adoc[leveloffset=+1]
+
+
+[colophon]
+= Colophon
+
+The HellHound User Manual
+
+(C) 2017 by Sameer Rahmani <lxsameer@gnu.org>
+
+Created in Asciidoctor, Debian Unstable and FG42 Editor.
