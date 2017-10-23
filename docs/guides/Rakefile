@@ -1,5 +1,6 @@
 require 'webrick'
 require 'asciidoctor'
+require 'asciidoctor-pdf'
 
 desc 'Run doc webserver'
 task :serve do
@@ -23,6 +24,18 @@ task :compile do
       'nofooter' => true,
       'stylesheet' => 'style.css'
     })
+  Asciidoctor .convert_file(
+    'index.adoc', to_dir: '_build/', mkdirs: true, safe: :safe,
+    backend: :pdf, header_footer: true, sourcemap: true, to_file: 'hellhound.pdf',
+    stylesdir: 'stylesheets',
+    base_dir: './',
+    attributes: {
+      'stylesdir' => 'styles',
+      'imagesdir' => './images',
+      'nofooter' => true,
+      'stylesheet' => 'style.css'
+    })
+
 end
 
 task default: :serve

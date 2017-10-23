@@ -2,6 +2,7 @@
 :Revision:  1.0.0-alpha1
 :Author:    Sameer Rahmani
 :Email:     <lxsameer@gnu.org>
+:homepage: http://hellhoud.io
 :icons: font
 :iconsfont:   font-awesome
 :sectanchors: true
@@ -16,7 +17,7 @@
 :docinfo: shared
 :type: reference
 :source-highlighter: coderay
-
+:imagesdir: ./images/
 
 [IMPORTANT]
 .Under development software
@@ -26,13 +27,10 @@ and reaches the alpha stage pretty soon. If you like to be part of this process 
 leave us a message.
 ====
 
-image::https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.png[HellHound,align="center"]
-
-:sectnums:
-
-
 ifdef::backend-html5[]
 ++++
+image::https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.png[HellHound,align="center"]
+
 <div class="center-aligned download-btns">
 <a href="/" class="lxbtn btn-success">
    <i class="fa fa-download"></i>
@@ -53,6 +51,7 @@ ifdef::backend-html5[]
 endif::[]
 
 ---
+:sectnums:
 
 == What is HellHound?
 <PLACEHOLDER TEXT>

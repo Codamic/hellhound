@@ -1,8 +1,24 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    Ascii85 (1.0.2)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
+    afm (0.2.2)
     asciidoctor (1.5.6.1)
+    asciidoctor-pdf (1.5.0.alpha.16)
+      asciidoctor (>= 1.5.0)
+      prawn (>= 1.3.0, < 2.3.0)
+      prawn-icon (= 1.3.0)
+      prawn-svg (>= 0.21.0, < 0.28.0)
+      prawn-table (= 0.2.2)
+      prawn-templates (>= 0.0.3, <= 0.1.1)
+      safe_yaml (~> 1.0.4)
+      thread_safe (~> 0.3.6)
+      treetop (= 1.5.3)
     coderay (1.1.2)
+    css_parser (1.6.0)
+      addressable
     ffi (1.9.18)
     formatador (0.2.5)
     guard (2.14.1)
@@ -18,6 +34,7 @@ GEM
     guard-shell (0.7.1)
       guard (>= 2.0.0)
       guard-compat (~> 1.0)
+    hashery (2.1.2)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -28,26 +45,59 @@ GEM
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
+    pdf-core (0.7.0)
+    pdf-reader (2.0.0)
+      Ascii85 (~> 1.0.0)
+      afm (~> 0.2.1)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
+    polyglot (0.3.5)
+    prawn (2.2.2)
+      pdf-core (~> 0.7.0)
+      ttfunk (~> 1.5)
+    prawn-icon (1.3.0)
+      prawn (>= 1.1.0, < 3.0.0)
+    prawn-svg (0.27.1)
+      css_parser (~> 1.3)
+      prawn (>= 0.11.1, < 3)
+    prawn-table (0.2.2)
+      prawn (>= 1.3.0, < 3.0.0)
+    prawn-templates (0.1.1)
+      pdf-reader (~> 2.0)
+      prawn (~> 2.2)
     pry (0.11.1)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
+    public_suffix (3.0.0)
     rake (12.1.0)
     rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    ruby-rc4 (0.1.5)
     ruby_dep (1.5.0)
+    safe_yaml (1.0.4)
     shellany (0.0.1)
     thor (0.20.0)
+    thread_safe (0.3.6)
+    treetop (1.5.3)
+      polyglot (~> 0.3)
+    ttfunk (1.5.1)
     webrick (1.3.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   asciidoctor
+  asciidoctor-pdf
   coderay
   guard
   guard-shell
+  prawn
+  prawn-svg
+  prawn-templates
   rake
   webrick
 
