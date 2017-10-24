@@ -25,7 +25,7 @@ of asynchronous values.
 by https://github.com/ztellman[@ztellman] and the awesome https://github.com/ztellman/manifold/graphs/contributors[contributors]
 of this library.
 
-Long story short, *Manifold* library provides an awesome asynchronous values by *deferreds* and a super useful abstraction
+Long story short, *Manifold* library provides awesome asynchronous values by *deferreds* and a super useful abstraction
 for **streams**.
 
 [NOTE]
