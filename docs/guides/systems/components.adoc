@@ -1,6 +1,6 @@
 == Components
-A *Component* is a datastructure to managing the lifecycle, dependencies
-and dataflow of a program. A Component is the smallest unit of execution which is reusable and
+A *Component* is a data structure to managing the lifecycle, dependencies
+and data flow of a program. A Component is the smallest unit of execution which is reusable and
 easy to reason about.
 
 A component is similar in spirit to the definition of an object in Object-Oriented Programming.
@@ -17,12 +17,12 @@ of implicit in imperative code.
 Components provide some basic guidance for structuring a *HellHound* application, with boundaries
 between different parts of a system. Components offer some encapsulation, in the sense of grouping
 together related entities. Each component receives references only to the things it needs, avoiding
-unnecessary shared state. Instead of reaching through multiple levels of nested maps, a component
+the unnecessary shared state. Instead of reaching through multiple levels of nested maps, a component
 can have everything it needs at most one map lookup away.
 
 Instead of having mutable state (atoms, refs, etc.) scattered throughout different namespaces, all
 the stateful parts of an application can be gathered together. In some cases, using components may
-eliminate the need for mutable references altogether, for example to store the "current" connection
+eliminate the need for mutable references altogether, for example, to store the "current" connection
 to a resource such as a database. At the same time, having all state reachable via a single
 [*system*](./README.md#overview) map makes it easy to reach in and inspect any part of the application
 from the REPL.
@@ -55,11 +55,11 @@ where a cyclic dependency cannot be avoided, you can use mutable references to m
 the scope of components.
 
 === Usage
-Components are the main parts of HellHound systems. Basically each components is an implementation of `IComponent`
+Components are the main parts of HellHound systems. Basically, each component is an implementation of `IComponent`
 protocol. The protocol which defines a component functionality. By default HellHound implements `IComponent`
 protocols for hashmaps only. So we can define components in form of maps.
 
-In order to define a component, a map should should contains the following keys (All the keys should be namespaced
+In order to define a component, a map should contain the following keys (All the keys should be namespaced
 keyword under `hellhound.component`):
 
 * `*name*`: The name of the component. It should be a namespaced keyword.
@@ -105,4 +105,4 @@ So as an example:
 <4> Description of the dependencies of `:sample.code/component-A`. In this case this component
     depends on another component called `:sample.core/component-B`.
 
-As you can see creating a component is fairy simple and nothing special.
+As you can see creating a component is fairly simple and nothing special.
