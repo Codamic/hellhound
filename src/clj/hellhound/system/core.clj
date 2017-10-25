@@ -20,8 +20,18 @@
 (def system (atom {}))
 
 (defn context-for
-  "Returns the context map for the given component in the
-  system."
+  "Returns the `context map` for the given component in the given
+  `system-map`.
+
+  Basically concext map contains the following keys:
+
+  * `:dependencies`: A vector of running components which the current component
+    is depends on.
+
+  * `:dependencies-map`: A map of component names as keys and running components
+    as values. All the components are the dependencies of the given `component`.
+
+  NOTE: for more info checkout the guides for `Context Map`."
   [system-map component]
 
   (let [components   (:components system-map)
