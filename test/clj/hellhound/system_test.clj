@@ -29,6 +29,7 @@
       (stream/connect input output)
       (assoc component
              key value
+             :context context
              :counter @component-counter))))
 
 (defn sample-stop-fn
@@ -68,6 +69,7 @@
       (testing "Testimg system/get-component"
         (is (not (nil? component1))))
 
+
       (testing "Testing start-fn of component"
         (is (= :value1 (:key1 component1)))
         (is (hcomp/started? component1))
@@ -75,7 +77,13 @@
         (is (hcomp/started? component3)))
 
       (testing "Testing dependency of components"
-        (is (< (:counter component1) (:counter component2))))
+        (is (< (:counter component1) (:counter component2)))
+        (let [ctx2 (:context component2)
+              deps2 (:dependencies ctx2)
+              deps-map2 (:dependencies-map ctx2)]
+          (is (hcomp/started? (first deps2)))
+          (is (= component1 (first deps2)))
+          (is (= component1 (:sample/component1 deps-map2)))))
 
       (testing "Workflow"
         (let [input1  (hcomp/input component1)
@@ -105,3 +113,5 @@
             (is (= 10 @(stream/try-take! output3 20 1000 30)))))))
 
     (system/stop!)))
+
+(t/run-tests)

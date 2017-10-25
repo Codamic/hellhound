@@ -22,8 +22,14 @@
 (defn context-for
   "Returns the context map for the given component in the
   system."
-  [component]
-  {})
+  [system-map component]
+
+  (let [components   (:components system-map)
+        dependencies (hcomp/dependencies component)
+        deps         (map #(get components %) dependencies)]
+    {:dependencies deps
+     :dependencies-map (into {} (map (fn [x] [(hcomp/get-name x) x]) deps))}))
+
 
 (defn get-system
   "A shortcut function for derefing `system`."
@@ -84,13 +90,15 @@
 (defn ^IPersistentMap start-component!
   "Starts the given `component` of the given `system`."
   [^IPersistentMap system-map ^IComponent component]
-  (update-in (reduce start-component! system-map
-                     (get-dependencies-of system-map component))
-             [:components (hcomp/get-name component)]
-             ;; New value for the component name which will be the return
-             ;; value of the `start-fn` function
-             (fn [old-component]
-               (hcomp/start! old-component (context-for old-component)))))
+  (let [dependencies (get-dependencies-of system-map component)
+        new-system   (reduce start-component! system-map dependencies)]
+    (update-in new-system
+               [:components (hcomp/get-name component)]
+               ;; New value for the component name which will be the return
+               ;; value of the `start-fn` function
+               (fn [old-component]
+                 (hcomp/start! old-component
+                               (context-for new-system old-component))))))
 
 (defn stop-component!
   "Stops the given `component` of the given `system`."
