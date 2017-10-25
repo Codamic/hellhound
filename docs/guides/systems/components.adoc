@@ -62,28 +62,35 @@ protocols for hashmaps only. So we can define components in form of maps.
 In order to define a component, a map should contain the following keys (All the keys should be namespaced
 keyword under `hellhound.component`):
 
+[#_component_name]
 * `*name*`: The name of the component. It should be a namespaced keyword.
   This key is *mandatory*.
 
-* `*start-fn*`: A function which takes the component map as the only argument
-  and return the component with the necessary keys attached to it. This
-  function is responsible for **starting** the component.
-  This key is *mandatory*.
-
-* `*stop-fn*`: A function which takes the component map as the only argument
-  and return the component with the necessary keys attached to it. This
-  function is responsible for **stoping** the component.
-  This key is *mandatory*.
-
+[#_component_depends_on]
 * `*depends-on*`: This key specifies all the components which are the
   dependencies of the current component. A collection  of components
   name.
   This key is optional.
 
+[#_component_start_fn]
+* `*start-fn*`: A function which takes which takes two arguments. The component map
+  and a <<_context_map, context map>>. Returns the component with the necessary keys
+  attached to it. This function is responsible for **starting** the component.
+  Practically your component code goes into this function.
+  This key is *mandatory*.
+
+[#_component_stop_fn]
+* `*stop-fn*`: A function which takes the component map as the only argument
+  and return the component with the necessary keys attached to it. This
+  function is responsible for **stoping** the component.
+  This key is *mandatory*.
+
+[#_component_input_stream_fn]
 * `*input-stream-fn*`: A function which returns a `manifold` as the input
   of the component. You rarely need to use this key for a component.
   This key optional.
 
+[#_component_output_stream_fn]
 * `*output-stream-fn*`: A function which returns a `manifold` as the output
   of the component. You rarely need to use this key for a component.
   This key optional.
@@ -106,3 +113,27 @@ So as an example:
     depends on another component called `:sample.core/component-B`.
 
 As you can see creating a component is fairly simple and nothing special.
+
+=== Context Map
+As you already know, <<_component_start_fn,start-fn>> of a component takes two arguments.
+The first one it the component map itself and second one is a hashmap called *context map*.
+
+// TODO: is co-effect is a good term here ? refers to re-frame co-effects
+// TODO: create a section for co-effects
+The purpose of a context map is to provides co-effects for the component, Such as dependency
+components. For example *HellHound* inject a key called `:dependencies` to the context map which
+is a vector containing those components that this component is depends on. The order of this
+vector would be exactly the same as <<_component_depends_on, :depends-on>> value in component
+description map. So you can get all you need from the context map. You can think of it as some
+sort of dependency injection for you component.
+
+But context map contains more data that you might need them in action. Here is the list of keys
+of a context map:
+
+* *`:dependencies`*: A vector of running components which the current component is depends on.
+  All the components in this vector already started and the order is the same as the vector
+  provided to <<_component_depends_on, :depends-on>> in component map.
+
+* *`:dependencies-map`*: A hashmap containing all the components of the current component dependencies.
+  keys of this map are the components names and the values are the running components. The purpose
+  of this map is to access dependency components by name.
