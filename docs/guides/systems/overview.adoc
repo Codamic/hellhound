@@ -2,6 +2,8 @@
 
 Let's take a quick conceptual look at *HellHound Systems*.
 
+=== Unix Pipelines
+<PLACEHOLDER TEXT>
 
 === Execution model
 Systems composed by [*Components*]. A system knows how to start and stop components. It is also

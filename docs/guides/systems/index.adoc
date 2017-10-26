@@ -9,3 +9,6 @@ include::overview.adoc[]
 include::components.adoc[]
 
 include::workflow.adoc[]
+
+== Examples
+<PLACEHOLDER TEXT>
