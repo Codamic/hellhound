@@ -9,9 +9,9 @@ a square peg into a round hole? Perhaps, instead of modeling our services like l
 model them like reactors over immutable event streams.
 
 Commander pattern is an application architecture design pattern which is used to build *HellHound*. In order to know more about the concept, it is highly recommend
-to watch this video:
+to watch this https://www.youtube.com/watch?v=B1-gS0oEtYc[video].
 
-video::B1-gS0oEtYc[youtube,width=800,height=600]
+
 
 
 == Manifold
