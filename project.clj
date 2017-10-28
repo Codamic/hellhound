@@ -2,7 +2,7 @@
   :description "A simple full-stack web framework for clojure on top of Pnedestal"
   :license     {"mit"
                 "https://opensource.org/licenses/MIT"}
-  :url         "http://github.com/Codamic/hellhound"
+  :url         "http://hellhound.io"
   :scm         {:url "https://github.com/Codamic/hellhound"}
 
   :exclusions [ch.qos.logback/logback-classic]
