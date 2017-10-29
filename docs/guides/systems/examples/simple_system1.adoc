@@ -1,0 +1,73 @@
+=== Very Simple System
+First of all let's create a very simple component with just one dependency to have
+a minimum working environment.
+
+In order to execute the following example from the https://github.com/Codamic/hellhound_examples[hellhound_examples]
+repository. Just issue the following command in the repository root directory.
+
+[source,bash]
+----
+$ lein run -m systems.simple-system1/main
+----
+
+Ok let's jump into the code.
+
+[source,clojure,linums]
+----
+include::simple_system1.clj[]
+----
+<1> The start function of the component 1 which will assign
+    to the component later in the component map.
+    The first argument is the componet map itself and the argument
+    is the context map which contains extra info about the context
+    which this component is running on.
+    As you already know start function of a component should return
+    a component map.
+<2> Assinged a simple value to a key in component map. So the running
+    component would have this value attached to it and other components
+    can use the value by getting it from the component map.
+<3> Stop function of the `component1`. It should returns a component map.
+<4> Start function of `component-2`.
+<5> Gets the first dependency component. In the order which defined in the
+    component map `:depends-on`
+<6> Gets the same component by it's name instead.
+<7> Gets a value from another component.
+<8> A component map which defines the `:simple-system/component-1` component
+    Intentionally we defined this component by defining a map directly.
+    But you can use `defcomponent` function as a shortcut.
+<9> We used `defcomponent` to define a component called `:simple-system/component-2`.
+    It basically returns a map like we had in component-1 with the given details.
+<10> A very simple `system` defination which does not have any workflow.
+     Please not that the order of components in `:components` vector is
+     *NOT* important at all.
+<11> Setting the `simple-system` as the default system of the application.
+<12> Start the default system.
+
+[NOTE]
+The last argument is the dependency vector of the component that exactly is
+going to be the `:depends-on` key in the component map.
+
+
+We you execute the above code the output would be something like:
+
+[source]
+.The output of the above namespace
+----
+[17-10-29 12:27:37] [DEBUG] <hellhound.component:115> - Starting component ':simple-system/component-1'... <1>
+Starting Component 1... <2>
+[17-10-29 12:27:37] [DEBUG] <hellhound.component:115> - Starting component ':simple-system/component-2'...
+Starting Component 2... <3>
+Hello World <4>
+Hello World <5>
+[17-10-29 12:27:37] [DEBUG] <hellhound.component:120> - Component ':simple-system/component-1' already started. Skipping... <6>
+[17-10-29 12:27:37] [INFO] <hellhound.system.core:142> - System started successfully. <7>
+[17-10-29 12:27:37] [DEBUG] <hellhound.system.workflow:104> - Setting up workflow...
+[17-10-29 12:27:37] [INFO] <hellhound.system.workflow:107> - Workflow setup done.
+----
+<1> A log entry with `DEBUG` level states that HellHound is going to start `:simple-system/component-1`
+<2> The output of the `println` in line of [6] of the above code.
+<3> The output of the `println` in line of [18] of the above code.
+<4> The output of the `println` function in the start function of th `:simple-system/component-2`
+<5> Same as number 4.
+<6> A log entry which states that `:simple-system/component-1` is already running and HellHound is going to skipp it.
+<7> System started at this point completely.
