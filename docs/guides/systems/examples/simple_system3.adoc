@@ -1,0 +1,64 @@
+=== Conditional Workflow
+This example is dedicated to conditional workflow. A quick demonstration of how you can
+setup a conditional workflow in your system.
+
+In order to execute the following example from the https://github.com/Codamic/hellhound_examples[hellhound_examples]
+repository. Just issue the following command in the repository root directory.
+
+[source,bash]
+----
+$ lein run -m systems.simple-system3/main
+----
+
+Ok let's jump into the code.
+
+[source,clojure,linums]
+----
+include::simple_system3.clj[]
+----
+<1> Connects the input of the component to its output with no transformation.
+<2> Consumes values from the input and print them out.
+<3> Consumes values from the input and print them out.
+<4> Connects the output of `:simple-system/component-1` to `:simple-system/component-2`,
+    But only delivers odd (hence the `odd?` predicate function) numbers to downstream
+    component.
+<5> Connects the output of `:simple-system/component-1` to `:simple-system/component-3`,
+    But only delivers even (hence the `even?` predicate function) numbers to downstream
+    component.
+
+
+[NOTE]
+====
+In the system of this example, the workflow is like:
+
+----
+                 odd? | ---> component-2
+DATA ---> component-1 |
+                even? | ---> component-3
+----
+====
+
+When we execute the above code the output would be something like:
+
+[source]
+.The output of the above namespace
+----
+[17-10-29 22:39:48] [DEBUG] <hellhound.component:115> - Starting component ':simple-system/component-2'...
+[17-10-29 22:39:48] [DEBUG] <hellhound.component:115> - Starting component ':simple-system/component-1'...
+[17-10-29 22:39:48] [DEBUG] <hellhound.component:115> - Starting component ':simple-system/component-3'...
+[17-10-29 22:39:48] [INFO] <hellhound.system.core:142> - System started successfully.
+[17-10-29 22:39:48] [DEBUG] <hellhound.system.workflow:107> - Setting up workflow...
+[17-10-29 22:39:48] [INFO] <hellhound.system.workflow:110> - Workflow setup done.
+Odd:  1
+Even:  2
+Odd:  3
+Even:  4
+Odd:  5
+Even:  6
+Done.
+----
+
+The above output is clear enough. Component 2 got only odd values and component 3 got the even values.
+The predicate functions of a workflow catalog can be any function. But you need to bear in mind that
+*HellHound* is going to run these predicates for each value so for the sake of performance we need to
+keep the fast and pure.

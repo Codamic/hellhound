@@ -18,3 +18,5 @@ repository on github.
 include::examples/simple_system1.adoc[]
 
 include::examples/simple_system2.adoc[]
+
+include::examples/simple_system3.adoc[]
