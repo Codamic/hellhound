@@ -16,3 +16,5 @@ into an action. All the examples are available at the https://github.com/Codamic
 repository on github.
 
 include::examples/simple_system1.adoc[]
+
+include::examples/simple_system2.adoc[]

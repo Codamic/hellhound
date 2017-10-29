@@ -1,0 +1,94 @@
+=== Simple workflow
+In this example we're going to create a really simple system with a simple
+linear workflow. The workflow is really simple, data will flow from `component-1`
+to `component-2` and then `component-3`. Each component transoform the value and put
+it to the output.
+
+In order to execute the following example from the https://github.com/Codamic/hellhound_examples[hellhound_examples]
+repository. Just issue the following command in the repository root directory.
+
+[source,bash]
+----
+$ lein run -m systems.simple-system2/main
+----
+
+Ok let's jump into the code.
+
+[source,clojure,linums]
+----
+include::simple_system2.clj[]
+----
+<1> The start function of the component 1 which will assign
+    to the component later in the component map.
+    The first argument is the componet map itself and the argument
+    is the context map which contains extra info about the context
+    which this component is running on.
+    As you already know start function of a component should return
+    a component map.
+    This component basically applies function `inc` on any incoming
+    value from its input and put it to its output.
+<2> Gets the input of the current component
+<3> Gets the output of the current component
+<4> Connects input to output via an anonymous function which
+    applies `inc` function to incoming values and dispatches them
+    to the output
+<5> Simply consumes any incoming value and applies a function to that value
+<6> Defining all three components needed for this system to work. Please notice
+    that we didn't defined any dependencies for these components. Pluging them
+    to each other using a workflow catalog is a different story from component
+    dependencies. We only need to define a component as a dependency if the second
+    component use the first one directly in its start or stop function.
+<7> Defines a system with a linear workflow. In this case **HellHound** starts all
+    the components in the system and then wires up components IO based on the
+    desciption given by the `:workflow` key of the system.
+<8> Gets a component with the name from the default system.
+<9> Converts the vector to a stream source
+<10> Connects the stream source to the input of component1
+
+[NOTE]
+====
+In the system of this example, the workflow is like:
+
+----
+DATA ---> component-1 ---> component-2 ---> component-3
+----
+Component 3 don't have any output stream. But it can have one.
+====
+
+When we execute the above code the output would be something like:
+
+[source]
+.The output of the above namespace
+----
+[17-10-29 21:52:37] [DEBUG] <hellhound.component:115> - Starting component ':simple-system/component-2'...
+[17-10-29 21:52:37] [DEBUG] <hellhound.component:115> - Starting component ':simple-system/component-1'...
+[17-10-29 21:52:37] [DEBUG] <hellhound.component:115> - Starting component ':simple-system/component-3'...
+[17-10-29 21:52:37] [INFO] <hellhound.system.core:142> - System started successfully.
+[17-10-29 21:52:37] [DEBUG] <hellhound.system.workflow:107> - Setting up workflow...
+[17-10-29 21:52:37] [INFO] <hellhound.system.workflow:110> - Workflow setup done.
+Message Component 1:  1
+Message Component 2:  2
+Message Component 3:  3
+Message Component 1:  2
+Message Component 2:  3
+Message Component 3:  4
+Message Component 1:  3
+Message Component 2:  4
+Message Component 3:  5
+Message Component 1:  4
+Message Component 2:  5
+Message Component 3:  6
+Message Component 1:  5
+Message Component 2:  6
+Message Component 3:  7
+Message Component 1:  6
+Message Component 2:  7
+Message Component 3:  8
+Done.
+----
+
+As you can see the output above data flows to the pipeline and each component transoforms
+the value it gets from its input to a new value and put it into the output.
+
+In the above example we used a simple vector and converted it to a <<_stream,stream>> source,
+but in practice the data flows to our system from an external source like a web server.

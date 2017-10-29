@@ -48,7 +48,7 @@ The last argument is the dependency vector of the component that exactly is
 going to be the `:depends-on` key in the component map.
 
 
-We you execute the above code the output would be something like:
+When we execute the above code the output would be something like:
 
 [source]
 .The output of the above namespace
