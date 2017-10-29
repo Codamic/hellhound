@@ -11,4 +11,8 @@ include::components.adoc[]
 include::workflow.adoc[]
 
 == Examples
-<PLACEHOLDER TEXT>
+Now, let's take a look at some examples about how systems works and let's take what we learned up until now
+into an action. All the examples are available at the https://github.com/Codamic/hellhound_examples[hellhound_examples]
+repository on github.
+
+include::examples/simple_system1.adoc[]
