@@ -1,4 +1,5 @@
 #! /bin/bash
+export KINDLEGEN=/usr/local/bin/kindlegen
 
 echo "Cleaning up..."
 rm -rf ./build
