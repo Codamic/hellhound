@@ -3,11 +3,10 @@
   DOCTODO"
   (:require
    [clojure.spec.alpha :as s]
-   [bidi.bidi          :as bidi]
-   [bidi.ring          :as bring]
    [manifold.stream    :as stream]
    [manifold.deferred  :as deferred]
    [aleph.http         :as http]
+   [pedestal.routes    :as routes]
    [hellhound.http.websocket.json :as jpack]
    [hellhound.http.websocket.core :as packer]
    [hellhound.logger   :as log]
@@ -57,14 +56,13 @@
 
 
 (def routes
-  (bring/make-handler
-   ["/"
-    {:get {"/" hello
-           "ws/" ws}}]))
+  (route/expand-routes
+   #{{:host "localhost" :port 3000 :scheme :http}
+     ["/" :get hello]}))
 
-(defmacro defroutes
-  [routes-name routes]
-  `(def ~routes-name (bidi.ring/make-handler ~routes)))
+;; (defmacro defroutes
+;;   [routes-name routes]
+;;   `(def ~routes-name (bidi.ring/make-handler ~routes)))
 
 (defn create-routes
   [routes input-stream output-stream])
