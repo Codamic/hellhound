@@ -3,6 +3,7 @@
   DOCTODO"
   (:require
    [clojure.spec.alpha :as s]
+   [bidi.bidi          :as bidi]
    [bidi.ring          :as bring]
    [manifold.stream    :as stream]
    [manifold.deferred  :as deferred]
@@ -11,8 +12,6 @@
    [hellhound.http.websocket.core :as packer]
    [hellhound.logger   :as log]
    [hellhound.core     :as hellhound]))
-
-
 
 (defn hello
   [req]
@@ -40,21 +39,19 @@
       (deferred/catch Exception #(throw %))))
 
 (defn ws
-  [req]
-  (log/info "Accpting WS connection")
-  (->
-   (deferred/let-flow [socket (http/websocket-connection req)
-                       router-stream (stream/stream 100)
-                       output-stream (stream/stream 100)]
-
-    (stream/connect-via socket (setup-event-router router-stream event-router) router-stream)
-    (stream/connect router-stream output-stream)
-    (stream/consume #(log/info %) output-stream))
-
-   (deferred/catch
-       (fn [err]
-         (log/error err)
-         non-websocket-request))))
+  [input output]
+  (fn
+    [req]
+    (log/info "Accpting WS connection")
+    (->
+     (deferred/let-flow [socket (http/websocket-connection req)
+                         router-stream (stream/stream 100)
+                         output-stream (stream/stream 100)]
+       (stream/connect socket output))
+     (deferred/catch
+         (fn [err]
+           (log/error err)
+           non-websocket-request)))))
 
 
 
@@ -65,7 +62,9 @@
     {:get {"/" hello
            "ws/" ws}}]))
 
+(defmacro defroutes
+  [routes-name routes]
+  `(def ~routes-name (bidi.ring/make-handler ~routes)))
 
-
-;; (bidi/match-route hellhound-routes "/")
-;; (bidi/path-for hellhound-routes :something)
+(defn create-routes
+  [routes input-stream output-stream])

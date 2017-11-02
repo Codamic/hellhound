@@ -11,7 +11,8 @@
    [aleph.http         :as http]
    [hellhound.logger   :as log]
    [hellhound.spec     :as spec]
-   [hellhound.core     :as hellhound]))
+   [hellhound.core     :as hellhound]
+   [hellhound.component :as hcomp]))
 
 ;; TODO: Extract the spec check into a predicate function called map-with
 (s/def ::aleph-config
@@ -29,9 +30,13 @@
   and `config` map.
 
   NOTE: This function RETURNS a start function."
-  [routes config]
+  [route-fn config]
   (fn [this context]
-    (assoc this :instance (http/start-server routes config))))
+    (let [routes (route-fn (assoc context
+                                        :input  (hcomp/input this)
+                                        :output (hcomp/output this)))]
+      (assoc this :instance (http/start-server routes config)))))
+
 
 (defn stop!
   "Stops the running webserver server."
@@ -55,6 +60,6 @@
    (factory routes (hellhound/get-config :http)))
   ([routes config]
    (spec/validate ::aleph-config config "Aleph configuration is invalid.")
-   {:hellhound.component/name ::aleph
+   {:hellhound.component/name ::webserver
     :hellhound.component/start-fn (start! routes config)
     :hellhound.component/stop-fn stop!}))
