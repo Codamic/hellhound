@@ -100,3 +100,35 @@
 ;; (defn add-websocket
 ;;   "Add websocket endpoints to the given `service-map`."
 ;;   [service-map {:keys [packer url] :as options}])
+
+(def non-websocket-request
+  {:status 400
+   :headers {"content-type" "application/text"}
+   :body "Expected a websocket request."})
+
+
+(defn setup-event-router
+  [output router]
+  (fn [msg]
+    (let [handler (:hello router)]
+      (stream/put! output (handler {:msg (jpack/unpack msg)})))))
+
+(defn create-ws
+  [req]
+  (-> (http/websocket-connection req)
+      (deferred/catch Exception #(throw %))))
+
+(defn ws
+  [input output]
+  (fn
+    [req]
+    (log/info "Accpting WS connection")
+    (->
+     (deferred/let-flow [socket (http/websocket-connection req)
+                         router-stream (stream/stream 100)
+                         output-stream (stream/stream 100)]
+       (stream/connect socket output))
+     (deferred/catch
+         (fn [err]
+           (log/error err)
+           non-websocket-request)))))
