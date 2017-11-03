@@ -12,7 +12,8 @@
    [hellhound.logger   :as log]
    [hellhound.spec     :as spec]
    [hellhound.core     :as hellhound]
-   [hellhound.component :as hcomp]))
+   [hellhound.component :as hcomp]
+   [hellhound.http.route :as router]))
 
 ;; TODO: Extract the spec check into a predicate function called map-with
 (s/def ::aleph-config
@@ -30,12 +31,15 @@
   and `config` map.
 
   NOTE: This function RETURNS a start function."
-  [route-fn config]
+  [routes config]
   (fn [this context]
-    (let [routes (route-fn (assoc context
-                                        :input  (hcomp/input this)
-                                        :output (hcomp/output this)))]
-      (assoc this :instance (http/start-server routes config)))))
+    (let [new-context (assoc context
+                             :input  (hcomp/input this)
+                             :output (hcomp/output this))
+          http-routes (router/route-handler context routes)]
+      (assoc this
+             :instance
+             (http/start-server http-routes config)))))
 
 
 (defn stop!
