@@ -16,6 +16,8 @@
    [hellhound.core     :as hellhound]))
 
 
+(def expand-routes pedestal-route/expand-routes)
+
 (defrecord MapRouter [routes tree-map]
   router/Router
   (find-route [this req]
@@ -71,6 +73,12 @@
 
 
 (defn route-handler
+  "The default ring handler to be used with a ring webserver (webserver
+  component) which is responsible for resolving routes.
+
+  This handler is responsible for resolving routes with the incomming
+  request and executing the chain of interceptors. It creates a context map
+  and pass it to each interceptor."
   [hellhound-context routes]
   (fn [req]
     (let [matched      (io.pedestal.http.route.router/find-route routes req)
@@ -79,8 +87,3 @@
       (if matched
         (execute-interceptors hellhound-context interceptors req)
         (not-found req)))))
-
-
-
-(defn create-routes
-  [routes input-stream output-stream])
