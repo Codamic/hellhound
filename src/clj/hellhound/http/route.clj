@@ -6,20 +6,18 @@
    [io.pedestal.http.route.prefix-tree :as prefix-tree]
    [io.pedestal.http.route.router :as pedestal-router]
    [io.pedestal.http.route        :as pedestal-route]
-   [manifold.stream    :as stream]
-   [manifold.deferred  :as deferred]
-   [aleph.http         :as http]
-   [hellhound.http.websocket.json :as jpack]
-   [hellhound.http.websocket.core :as packer]
    [hellhound.logger   :as log]
    [hellhound.component :as hcomp]
-   [hellhound.core     :as hellhound]))
+   [hellhound.core     :as hellhound]
+   [hellhound.http.websocket.json :as jpack]
+   [hellhound.http.websocket.core :as packer]
+   [hellhound.http.handlers :as handlers]))
 
 
 (def expand-routes pedestal-route/expand-routes)
 
 (defrecord MapRouter [routes tree-map]
-  router/Router
+  pedestal-router/Router
   (find-route [this req]
     ;; find a result in the prefix-tree - payload could contains mutiple routes
     (when-let [match-fn (tree-map (:uri req))]
@@ -86,4 +84,4 @@
 
       (if matched
         (execute-interceptors hellhound-context interceptors req)
-        (not-found req)))))
+        (handlers/not-found req)))))
