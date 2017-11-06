@@ -4,10 +4,13 @@
   the event coming from clients to `event-router` and send
   back the result"
   (:require
-   [clojure.core.async                   :as async]
-   [clj-uuid                             :as uuid]
-   [hellhound.logger                     :as log]
-   [hellhound.http.websocket.json        :as json]))
+   [clojure.core.async            :as async]
+   [aleph.http                    :as http]
+   [clj-uuid                      :as uuid]
+   [manifold.stream               :as stream]
+   [manifold.deferred             :as deferred]
+   [hellhound.logger              :as log]
+   [hellhound.http.websocket.json :as json]))
 
 ;; An atom containing all the connected clients
 (def clients (atom {}))
@@ -107,28 +110,25 @@
    :body "Expected a websocket request."})
 
 
-(defn setup-event-router
-  [output router]
-  (fn [msg]
-    (let [handler (:hello router)]
-      (stream/put! output (handler {:msg (jpack/unpack msg)})))))
+;; (defn setup-event-router
+;;   [output router]
+;;   (fn [msg]
+;;     (let [handler (:hello router)]
+;;       (stream/put! output (handler {:msg (jpack/unpack msg)})))))
 
-(defn create-ws
-  [req]
-  (-> (http/websocket-connection req)
+(defn accept-ws
+  [request input output]
+  (-> (deferred/let-flow [socket (http/websocket-connection req)]
+        (stream/connect socket output))
       (deferred/catch Exception #(throw %))))
 
 (defn ws
-  [input output]
-  (fn
-    [req]
-    (log/info "Accpting WS connection")
-    (->
-     (deferred/let-flow [socket (http/websocket-connection req)
-                         router-stream (stream/stream 100)
-                         output-stream (stream/stream 100)]
-       (stream/connect socket output))
-     (deferred/catch
-         (fn [err]
-           (log/error err)
-           non-websocket-request)))))
+  [{:keys [input output request] :as context}]
+  (log/info "Accpting WS connection")
+  ;; TODO return the Ring response using a deferred value
+  non-websocket-request)
+
+
+(def interceptor
+  {:name ::interceptor
+   :enter ws})

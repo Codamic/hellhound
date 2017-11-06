@@ -64,9 +64,7 @@
   map for each interceptor. The `context` contains `input` and `output` of the
   webserver component along side with the incoming reqeust map."
   [hellhound-context interceptors req]
-  (let [context {:input  (:input hellhound-context)
-                 :output (:output hellhound-context)
-                 :request req}]
+  (let [context (assoc hellhound-context :request req)]
     (:response (io.pedestal.interceptor.chain/execute context interceptors))))
 
 

@@ -36,7 +36,7 @@
     (let [new-context (assoc context
                              :input  (hcomp/input this)
                              :output (hcomp/output this))
-          http-routes (router/route-handler context routes)]
+          http-routes (router/route-handler new-context routes)]
       (assoc this
              :instance
              (http/start-server http-routes config)))))
