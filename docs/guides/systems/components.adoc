@@ -137,3 +137,6 @@ of a context map:
 * *`:dependencies-map`*: A hashmap containing all the components of the current component dependencies.
   keys of this map are the components names and the values are the running components. The purpose
   of this map is to access dependency components by name.
+
+
+=== Web Component

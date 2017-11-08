@@ -27,3 +27,16 @@
 
 (async/<!! b)
 (async/<!! d)
+
+(defn f1
+  [a b]
+  (* a b))
+
+(s/fdef f1
+        :args (s/cat :a int? :b int?)
+        :ret int?
+        :fn #(= (/ (:ret %) (:a (:args %)))
+                (:b (:args %))))
+
+
+(s/exercise `f1)

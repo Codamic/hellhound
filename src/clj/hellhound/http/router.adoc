@@ -1,0 +1,12 @@
+== HTTP Router
+HellHound uses `Pedestal Router` for HTTP routing
+
+===Routes vs. Routers
+
+HellHound distinguishes between routes and routers.
+
+"Routes" are data that describe a structure of decisions to be made in handling requests.
+
+"Routers" are the functions (supplied as Interceptors) that analyze incoming requests against the routes.
+
+Pedestal uses protocols to connect routes to routers. Either can be varied independently.
