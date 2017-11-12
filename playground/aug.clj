@@ -40,3 +40,8 @@
 
 
 (s/exercise `f1)
+
+
+(s/def ::integer (s/and int? pos?))
+(s/def ::yechi (s/coll-of ::integer :kind vector?))
+(s/exercise ::yechi)
