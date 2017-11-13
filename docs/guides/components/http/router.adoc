@@ -1,4 +1,7 @@
 == HTTP Router
+[NOTE]
+This section contains Pedestal's router reference which modified a little bit based on *HellHound* requirements.
+
 HellHound uses `Pedestal Router` for HTTP routing
 
 === Routes vs. Routers
