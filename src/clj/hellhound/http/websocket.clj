@@ -118,7 +118,7 @@
 
 (defn accept-ws
   [request input output]
-  (-> (deferred/let-flow [socket (http/websocket-connection req)]
+  (-> (deferred/let-flow [socket (http/websocket-connection request)]
         (stream/connect socket output))
       (deferred/catch Exception #(throw %))))
 
