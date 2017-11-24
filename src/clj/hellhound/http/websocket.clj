@@ -128,7 +128,8 @@
   ;; TODO return the Ring response using a deferred value
   non-websocket-request)
 
-
+;; TODO: we need to return a correct response in this
+;; interceptor
 (def interceptor
   {:name ::interceptor
    :enter ws})
