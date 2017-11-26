@@ -125,8 +125,9 @@
 (defn ws
   [{:keys [input output request] :as context}]
   (log/info "Accpting WS connection")
-  ;; TODO return the Ring response using a deferred value
-  non-websocket-request)
+  (accept-ws request input output)
+  (assoc context :response {:status 101}))
+  ;;non-websocket-request)
 
 ;; TODO: we need to return a correct response in this
 ;; interceptor
