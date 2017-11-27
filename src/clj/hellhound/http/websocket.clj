@@ -120,13 +120,15 @@
   [request input output]
   (-> (deferred/let-flow [socket (http/websocket-connection request)]
         (stream/connect socket output))
+
       (deferred/catch Exception #(throw %))))
 
 (defn ws
   [{:keys [input output request] :as context}]
   (log/info "Accpting WS connection")
-  (accept-ws request input output)
-  (assoc context :response {:status 101}))
+  (let [connection-status @(accept-ws request input output)]
+    connection-status))
+  ;;(assoc context :response {:status 101}))
   ;;non-websocket-request)
 
 ;; TODO: we need to return a correct response in this
