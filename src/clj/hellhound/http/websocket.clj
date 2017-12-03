@@ -126,9 +126,13 @@
 (defn ws
   [{:keys [input output request] :as context}]
   (log/info "Accpting WS connection")
-  (let [connection-status @(accept-ws request input output)]
-    connection-status))
-  ;;(assoc context :response {:status 101}))
+  (let [connection-status (accept-ws request input output)]
+    ;; TODO: Introduce hooks for authentication and authorization of
+    ;; Websocket connection.
+    ;;
+    ;; By default we would need a token base authentication.
+    (log/info @connection-status)
+    (assoc context :response {:status 101})))
   ;;non-websocket-request)
 
 ;; TODO: we need to return a correct response in this
