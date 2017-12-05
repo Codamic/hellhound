@@ -16,6 +16,9 @@
 
 (def expand-routes pedestal-route/expand-routes)
 
+;; TODO: Add a shortcut function for the most basic routes
+;; which should only serves the index page and the ws connection.
+
 (defrecord MapRouter [routes tree-map]
   pedestal-router/Router
   (find-route [this req]

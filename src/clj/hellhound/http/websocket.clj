@@ -104,10 +104,11 @@
 ;;   "Add websocket endpoints to the given `service-map`."
 ;;   [service-map {:keys [packer url] :as options}])
 
-(def non-websocket-request
+(defn non-websocket-request
+  [msg]
   {:status 400
    :headers {"content-type" "application/text"}
-   :body "Expected a websocket request."})
+   :body (str "Expected a websocket request. Error: " msg)})
 
 
 ;; (defn setup-event-router
@@ -118,22 +119,25 @@
 
 (defn accept-ws
   [request input output]
-  (-> (deferred/let-flow [socket (http/websocket-connection request)]
-        (stream/connect socket output))
-
-      (deferred/catch Exception #(throw %))))
+  (-> (deferred/chain (http/websocket-connection request)
+        #(stream/connect % output)
+        (fn [_] {:status 101}))
+      (deferred/catch
+          Exception
+          ;; TODO: We need to return the exception message
+          ;; instead of its instance.
+          #(non-websocket-request))))
 
 (defn ws
   [{:keys [input output request] :as context}]
   (log/info "Accpting WS connection")
-  (let [connection-status (accept-ws request input output)]
-    ;; TODO: Introduce hooks for authentication and authorization of
-    ;; Websocket connection.
-    ;;
-    ;; By default we would need a token base authentication.
-    (log/info @connection-status)
-    (assoc context :response {:status 101})))
-  ;;non-websocket-request)
+  ;; TODO: Introduce hooks for authentication and authorization of
+  ;; Websocket connection.
+  ;;
+  ;; By default we would need a token base authentication.
+  (assoc context
+         :response
+         @(accept-ws request input output)))
 
 ;; TODO: we need to return a correct response in this
 ;; interceptor
