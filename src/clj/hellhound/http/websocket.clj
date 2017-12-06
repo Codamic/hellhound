@@ -10,7 +10,8 @@
    [manifold.stream               :as stream]
    [manifold.deferred             :as deferred]
    [hellhound.logger              :as log]
-   [hellhound.http.websocket.json :as json]))
+   [hellhound.http.websocket.json :as json]
+   [manifold.deferred :as d]))
 
 ;; An atom containing all the connected clients
 (def clients (atom {}))
@@ -119,14 +120,16 @@
 
 (defn accept-ws
   [request input output]
-  (-> (deferred/chain (http/websocket-connection request)
-        #(stream/connect % output)
-        (fn [_] {:status 101}))
-      (deferred/catch
-          Exception
-          ;; TODO: We need to return the exception message
-          ;; instead of its instance.
-          #(non-websocket-request))))
+  (->
+   (deferred/chain
+     (http/websocket-connection request)
+     #(stream/connect % output)
+     (fn [_] {:status 101}))
+   (deferred/catch
+       Exception
+       ;; TODO: We need to return the exception message
+       ;; instead of its instance.
+       (fn [e] (non-websocket-request (.getMessage e))))))
 
 (defn ws
   [{:keys [input output request] :as context}]
