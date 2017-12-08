@@ -123,6 +123,7 @@
   (->
    (deferred/chain
      (http/websocket-connection request)
+     #(stream/connect input %)
      #(stream/connect % output)
      (fn [_] {:status 101}))
    (deferred/catch
