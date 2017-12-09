@@ -31,9 +31,10 @@
   and `config` map.
 
   NOTE: This function RETURNS a start function."
-  [routes config]
+  [routes hooks config]
   (fn [this context]
     (let [new-context (assoc context
+                             :hooks  hooks
                              :input  (hcomp/input this)
                              :output (hcomp/output this))
           http-routes (router/route-handler new-context routes)]
@@ -52,6 +53,10 @@
     this))
 
 
+(def default-hooks
+  {:send->user? (fn [x] true)})
+
+
 (defn factory
   "Returns a new webserver component by the given `routes` and an
   optional `config` map.
@@ -61,9 +66,17 @@
   provides a helper namespace for dealing with routes. Checkout
   [[hellhound.http]] and [[hellhound.http.route]] namespaces for more info."
   ([routes]
-   (factory routes (hellhound/get-config :http)))
-  ([routes config]
+   (factory routes default-hooks (hellhound/get-config :http)))
+
+  ([routes hooks]
+   (factory routes
+            (merge default-hooks hooks)
+            (hellhound/get-config :http)))
+
+  ([routes hooks config]
    (spec/validate ::aleph-config config "Aleph configuration is invalid.")
-   {:hellhound.component/name ::webserver
-    :hellhound.component/start-fn (start! routes config)
-    :hellhound.component/stop-fn stop!}))
+   (let [web-hooks (merge default-hooks
+                          hooks)]
+     {:hellhound.component/name ::webserver
+      :hellhound.component/start-fn (start! routes web-hooks config)
+      :hellhound.component/stop-fn stop!})))
