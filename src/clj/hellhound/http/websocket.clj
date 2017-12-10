@@ -105,11 +105,11 @@
 ;;   "Add websocket endpoints to the given `service-map`."
 ;;   [service-map {:keys [packer url] :as options}])
 
-(defn non-websocket-request
-  [msg]
+(defn bad-request
+  [{:keys [request]}]
   {:status 400
    :headers {"content-type" "application/text"}
-   :body (str "Expected a websocket request. Error: " msg)})
+   :body (str "Expected a websocket request.")})
 
 
 ;; (defn setup-event-router
@@ -128,42 +128,35 @@
   (stream/connect-via input
                       #(send->user #(pred uid %) % output)
                       output))
+
 (defn accept-ws
-  [request input output send->user?]
-  (let [uid (generate-uuid request)]
-    (->
-     (deferred/chain
-       (http/websocket-connection request)
-       (setup-user-connection uid input output send->user?)
-       #(stream/connect % output)
-       (fn [_] {:status 101}))
-     (deferred/catch
-         Exception
-         ;; TODO: We need to return the exception message
-         ;; instead of its instance.
-         (fn [e] (non-websocket-request (.getMessage e)))))))
+  [{:keys [request input output uid send->user?] :as context}]
+  (->
+   (deferred/chain
+     (http/websocket-connection request)
+     (setup-user-connection uid input output send->user?)
+     #(stream/connect % output)
+     (fn [_] {:status 101}))
+   (deferred/catch
+       Exception
+       ;; TODO: We need to return the exception message
+       ;; instead of its instance.
+       (fn [e] (non-websocket-request (.getMessage e))))))
 
 (defn ws
-  [{:keys [hooks input output request] :as context}]
-  (log/info "Accpting WS connection")
-  ;; TODO: Introduce hooks for authentication and authorization of
-  ;; Websocket connection.
-  ;;
-  ;; By default we would need a token base authentication.
-  (let [{:keys [before-ws-hook
-                user-id-hook
-                after-ws-hook]} hooks
-        uid     (user-id-hook context)]
+  [{:keys [uid] :as context}]
+  (if-not uid
+    (assoc context
+           :response
+           (bad-request context))
+    (assoc context
+           :response
+           @(accept-ws context))))
 
-    (before-ws-connect context uid)
-    (after-ws-connect context uid))
+(defn interceptor-factory
+  []
+  [{:name ::websocket-user-id-interceptor
+    :enter (get-or-create-user-id)}
 
-  (assoc context
-         :response
-         @(accept-ws context send->user?)))
-
-;; TODO: we need to return a correct response in this
-;; interceptor
-(def interceptor
-  {:name ::interceptor
-   :enter ws})
+   {:name ::websocket-interceptor
+    :enter ws}])
