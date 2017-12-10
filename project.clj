@@ -7,7 +7,7 @@
 
   :exclusions [ch.qos.logback/logback-classic]
 
-  :dependencies [[org.clojure/clojure        "1.9.0-alpha20"]
+  :dependencies [[org.clojure/clojure        "1.9.0"]
                  [org.clojure/clojurescript  "1.9.562"]
                  [org.clojure/core.async     "0.3.443"]
                  [org.clojure/test.check     "0.10.0-alpha2"]

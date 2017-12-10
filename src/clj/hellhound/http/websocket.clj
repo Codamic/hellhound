@@ -118,30 +118,49 @@
 ;;     (let [handler (:hello router)]
 ;;       (stream/put! output (handler {:msg (jpack/unpack msg)})))))
 
+(defn send->user
+  [pred msg output]
+  (when pred
+    (stream/put! output msg)))
+
+(defn setup-user-connection
+  [socket uid input output pred]
+  (stream/connect-via input
+                      #(send->user #(pred uid %) % output)
+                      output))
 (defn accept-ws
-  [request input output]
-  (->
-   (deferred/chain
-     (http/websocket-connection request)
-     #(stream/connect input %)
-     #(stream/connect % output)
-     (fn [_] {:status 101}))
-   (deferred/catch
-       Exception
-       ;; TODO: We need to return the exception message
-       ;; instead of its instance.
-       (fn [e] (non-websocket-request (.getMessage e))))))
+  [request input output send->user?]
+  (let [uid (generate-uuid request)]
+    (->
+     (deferred/chain
+       (http/websocket-connection request)
+       (setup-user-connection uid input output send->user?)
+       #(stream/connect % output)
+       (fn [_] {:status 101}))
+     (deferred/catch
+         Exception
+         ;; TODO: We need to return the exception message
+         ;; instead of its instance.
+         (fn [e] (non-websocket-request (.getMessage e)))))))
 
 (defn ws
-  [{:keys [input output request] :as context}]
+  [{:keys [hooks input output request] :as context}]
   (log/info "Accpting WS connection")
   ;; TODO: Introduce hooks for authentication and authorization of
   ;; Websocket connection.
   ;;
   ;; By default we would need a token base authentication.
+  (let [{:keys [before-ws-hook
+                user-id-hook
+                after-ws-hook]} hooks
+        uid     (user-id-hook context)]
+
+    (before-ws-connect context uid)
+    (after-ws-connect context uid))
+
   (assoc context
          :response
-         @(accept-ws request input output)))
+         @(accept-ws context send->user?)))
 
 ;; TODO: we need to return a correct response in this
 ;; interceptor
