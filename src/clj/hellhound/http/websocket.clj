@@ -153,10 +153,15 @@
            :response
            @(accept-ws context))))
 
+(defn get-or-create-user-id
+  [context]
+  ;; A dummy uid generator
+  "somestting")
+
 (defn interceptor-factory
   []
   [{:name ::websocket-user-id-interceptor
-    :enter (get-or-create-user-id)}
+    :enter get-or-create-user-id}
 
    {:name ::websocket-interceptor
     :enter ws}])
