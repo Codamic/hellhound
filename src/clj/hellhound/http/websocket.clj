@@ -155,8 +155,9 @@
 
 (defn get-or-create-user-id
   [context]
-  ;; A dummy uid generator
-  "somestting")
+  ;; TODO: check the cookies for the presence of uid
+  ;; otherwise create a new one.
+  (str (java.util.UUID/randomUUID)))
 
 (defn interceptor-factory
   []
