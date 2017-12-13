@@ -118,6 +118,10 @@
 ;;     (let [handler (:hello router)]
 ;;       (stream/put! output (handler {:msg (jpack/unpack msg)})))))
 
+(defn upgraded
+  [context]
+  {:status 101})
+
 (defn send->user
   [pred msg output]
   (when pred
@@ -127,7 +131,8 @@
   [socket uid input output pred]
   (stream/connect-via input
                       #(send->user #(pred uid %) % output)
-                      output))
+                      output)
+  socket)
 
 (defn accept-ws
   [{:keys [request input output uid send->user?] :as context}]
@@ -135,8 +140,7 @@
    (deferred/chain
      (http/websocket-connection request)
      (setup-user-connection uid input output send->user?)
-     #(stream/connect % output)
-     (fn [_] {:status 101}))
+     (fn [socket] (stream/connect socket output) socket))
    (deferred/catch
        Exception
        ;; TODO: We need to return the exception message
@@ -149,15 +153,18 @@
     (assoc context
            :response
            (bad-request context))
+
     (assoc context
-           :response
-           @(accept-ws context))))
+           :response      (upgraded context)
+           :ws-stream     @(accept-ws context))))
+
 
 (defn get-or-create-user-id
   [context]
   ;; TODO: check the cookies for the presence of uid
   ;; otherwise create a new one.
-  (str (java.util.UUID/randomUUID)))
+  (assoc context
+         :uid (str (java.util.UUID/randomUUID))))
 
 (defn interceptor-factory
   []
