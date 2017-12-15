@@ -124,18 +124,6 @@
   [context]
   {:status 101})
 
-(defn send->user
-  [pred msg output]
-  (when pred
-    (stream/put! output msg)))
-
-(defn setup-user-connection
-  [socket uid input output pred]
-  (stream/connect-via input
-                      #(send->user #(pred uid %) % output)
-                      output)
-  socket)
-
 (defn accept-ws
   [{:keys [request input output uid send->user?] :as context}]
   (->
@@ -179,7 +167,7 @@
   [{:keys [uid input socket send->user?] :as context}]
   (when uid
     (stream/connect-via input
-                        #(when (send->user? context) (stream/put! socket %))
+                        #(when (send->user? context %) (stream/put! socket %))
                         socket))
   context)
 
