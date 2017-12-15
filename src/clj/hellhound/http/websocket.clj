@@ -106,10 +106,12 @@
 ;;   [service-map {:keys [packer url] :as options}])
 
 (defn bad-request
-  [{:keys [request]}]
-  {:status 400
-   :headers {"content-type" "application/text"}
-   :body (str "Expected a websocket request.")})
+  ([context]
+   (bad-request context ""))
+  ([{:keys [request]} msg]
+   {:status 400
+    :headers {"content-type" "application/text"}
+    :body (str "Expected a websocket request." msg)}))
 
 
 ;; (defn setup-event-router
@@ -138,14 +140,12 @@
   [{:keys [request input output uid send->user?] :as context}]
   (->
    (deferred/chain
-     (http/websocket-connection request)
-     (setup-user-connection uid input output send->user?)
-     (fn [socket] (stream/connect socket output) socket))
+     (http/websocket-connection request))
    (deferred/catch
        Exception
        ;; TODO: We need to return the exception message
        ;; instead of its instance.
-       (fn [e] (non-websocket-request (.getMessage e))))))
+       (fn [e] (bad-request context (.getMessage e))))))
 
 (defn ws
   [{:keys [uid] :as context}]
@@ -166,10 +166,33 @@
   (assoc context
          :uid (str (java.util.UUID/randomUUID))))
 
+(defn setup-ws-output
+  [{:keys [uid output socket] :as context}]
+  (when uid
+    ;; TODO: inject the uid or even the context to the
+    ;; outgoing message.
+    (stream/connect socket output))
+  ;; TODO: If uid was nil, should we kill the connection ?
+  context)
+
+(defn setup-ws-input
+  [{:keys [uid input socket send->user?] :as context}]
+  (when uid
+    (stream/connect-via input
+                        #(when (send->user? context) (stream/put! socket %))
+                        socket))
+  context)
+
 (defn interceptor-factory
   []
-  [{:name ::websocket-user-id-interceptor
+  [{:name  ::ws-user-id-interceptor
     :enter get-or-create-user-id}
 
-   {:name ::websocket-interceptor
-    :enter ws}])
+   {:name  ::ws-connection-interceptor
+    :enter ws}
+
+   {:name  ::ws-output-interceptor
+    :enter setup-ws-output}
+
+   {:name  ::ws-input-interceptor
+    :enter setup-ws-input}])
