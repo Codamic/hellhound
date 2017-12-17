@@ -113,22 +113,14 @@
     :headers {"content-type" "application/text"}
     :body (str "Expected a websocket request." msg)}))
 
-
-;; (defn setup-event-router
-;;   [output router]
-;;   (fn [msg]
-;;     (let [handler (:hello router)]
-;;       (stream/put! output (handler {:msg (jpack/unpack msg)})))))
-
 (defn upgraded
   [context]
   {:status 101})
 
 (defn accept-ws
-  [{:keys [request input output uid send->user?] :as context}]
+  [{:keys [request] :as context}]
   (->
-   (deferred/chain
-     (http/websocket-connection request))
+   (http/websocket-connection request)
    (deferred/catch
        Exception
        ;; TODO: We need to return the exception message
@@ -155,20 +147,26 @@
          :uid (str (java.util.UUID/randomUUID))))
 
 (defn setup-ws-output
-  [{:keys [uid output socket] :as context}]
+  [{:keys [uid output ws-stream] :as context}]
   (when uid
     ;; TODO: inject the uid or even the context to the
     ;; outgoing message.
-    (stream/connect socket output))
+    (stream/connect ws-stream output))
+
   ;; TODO: If uid was nil, should we kill the connection ?
   context)
 
 (defn setup-ws-input
-  [{:keys [uid input socket send->user?] :as context}]
+  [{:keys [uid input ws-stream hooks] :as context}]
   (when uid
-    (stream/connect-via input
-                        #(when (send->user? context %) (stream/put! socket %))
-                        socket))
+    (let [pred (:send->user? hooks)]
+      (assert pred)
+      (stream/connect-via input
+                          #(when (pred context %)
+                            (stream/put! ws-stream %))
+                          ws-stream)))
+
+
   context)
 
 (defn interceptor-factory

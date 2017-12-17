@@ -54,7 +54,7 @@
 
 
 (def default-hooks
-  {:send->user? (fn [x] true)})
+  {:send->user? (fn [context msg] true)})
 
 
 (defn factory
