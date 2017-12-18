@@ -9,6 +9,7 @@
    [clj-uuid                      :as uuid]
    [manifold.stream               :as stream]
    [manifold.deferred             :as deferred]
+   [hellhound.http.handlers       :as handlers]
    [hellhound.logger              :as log]
    [hellhound.http.websocket.json :as json]
    [manifold.deferred :as d]))
@@ -113,18 +114,20 @@
        Exception
        ;; TODO: We need to return the exception message
        ;; instead of its instance.
-       (fn [e] (bad-request context
-                            (str "Expected a websocket request." (.getMessage e)))))))
+       (fn [e]
+         (handlers/bad-request context
+                               (str "Expected a websocket request."
+                                    (.getMessage e)))))))
 
 (defn ws
   [{:keys [uid] :as context}]
   (if-not uid
     (assoc context
            :response
-           (bad-request context))
+           (handlers/bad-request context))
 
     (assoc context
-           :response  (upgraded (:request context))
+           :response  (handlers/upgraded (:request context))
            :ws-stream @(accept-ws context))))
 
 
