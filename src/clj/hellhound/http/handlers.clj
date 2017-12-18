@@ -9,3 +9,8 @@
   {:status 200
    :headers []
    :body "Welcome to HellHound"})
+
+(defn default-handler
+  [req]
+  {:status 200
+   :headers []})
