@@ -105,18 +105,6 @@
 ;;   "Add websocket endpoints to the given `service-map`."
 ;;   [service-map {:keys [packer url] :as options}])
 
-(defn bad-request
-  ([context]
-   (bad-request context ""))
-  ([{:keys [request]} msg]
-   {:status 400
-    :headers {"content-type" "application/text"}
-    :body (str "Expected a websocket request." msg)}))
-
-(defn upgraded
-  [context]
-  {:status 101})
-
 (defn accept-ws
   [{:keys [request] :as context}]
   (->
@@ -125,7 +113,8 @@
        Exception
        ;; TODO: We need to return the exception message
        ;; instead of its instance.
-       (fn [e] (bad-request context (.getMessage e))))))
+       (fn [e] (bad-request context
+                            (str "Expected a websocket request." (.getMessage e)))))))
 
 (defn ws
   [{:keys [uid] :as context}]
@@ -135,8 +124,8 @@
            (bad-request context))
 
     (assoc context
-           :response      (upgraded context)
-           :ws-stream     @(accept-ws context))))
+           :response  (upgraded (:request context))
+           :ws-stream @(accept-ws context))))
 
 
 (defn get-or-create-user-id
