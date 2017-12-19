@@ -8,6 +8,11 @@
    [hellhound.http.websocket :as ws]
    [hellhound.http.handlers  :as handlers]))
 
+;; hellhound.http.route shortcuts --------------------------
+(def router route/router)
+(def expand-routes route/expand-routes)
+
+;; The default routes for a hellhound application.
 (def default-routes
   (route/router
    (route/expand-routes
@@ -18,3 +23,6 @@
       [(hh/get-config :http :websocket-endpoint)
        :get
        (ws/interceptor-factory)]})))
+
+;; hellhound.http.websocket shortcuts ----------------------
+(def ws-interceptors (ws/interceptor-factory))
