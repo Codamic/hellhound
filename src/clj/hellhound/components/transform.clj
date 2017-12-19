@@ -9,17 +9,19 @@
 
 (defn- transform-fn
   [f]
-  (fn [{:keys [input output] :as component} context]
-    (s/connect-via input
-                   #(s/put! output (f context %))
-                   output)
+  (fn [component context]
+    (let [input  (hcomp/input component)
+          output (hcomp/output component)]
+      (s/connect-via input
+                     #(s/put! output (f context %))
+                     output))
     component))
 
 
 (defn factory
   "Creates a component with the given `component-name` which transforms
   the input value by applying `f` to it and sending it to the output stream."
-  [component-name f
-   {::hcomp/name     component-name
-    ::hcomp/start-fn (transform-fn f)
-    ::hcomp/stop-fn  (fn [component] this)}])
+  [component-name f]
+  {::hcomp/name     component-name
+   ::hcomp/start-fn (transform-fn f)
+   ::hcomp/stop-fn  (fn [component] component)})
