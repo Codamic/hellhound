@@ -74,8 +74,11 @@ include::getting_started/index.adoc[leveloffset=+1]
 // System
 include::systems/index.adoc[leveloffset=+1]
 
-// System
+// Components
 include::components/index.adoc[leveloffset=+1]
+
+// HTTP
+include::http/index.adoc[leveloffset=+1]
 
 // Appendix 1
 include::appendix/contribute.adoc[leveloffset=+1]
