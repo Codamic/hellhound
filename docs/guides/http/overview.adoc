@@ -1,0 +1,18 @@
+== Overview
+Let's take tour around the HellHound's HTTP to see how it works on top of the HellHound's [[System]] .
+
+=== Installation
+<PLACEHOLDER TEXT>
+
+=== Building blocks
+The HTTP package of *HellHound* is made from several smaller parts which work together. Parts such as
+HTTP router, Websocket server, Event Dispatcher and so on.
+
+In general sense the HellHound's HTTP stack  is just a barbone link:https://github.com/ring-clojure/ring[Ring]
+compatible link://pedestal.io[Pedestal] webserver. The recommended way of using it is through
+`hellhound.components.webserver/factory` function with no parameter which creates a webserver with all
+the default values which in most cases you don't need to chaing. By default HellHound will spin up a
+webserver which only serves assets, root enpoint and a websocket endpoint and the rest of the process
+happens on the client side application (Which handles by HellHound again), So most of the time when
+you need a new route in your application, you have to add it on the client side router. Ofcourse you
+can choose to not follow the same pattern but then you won't get enough benefit of using *HellHound*.

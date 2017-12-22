@@ -1,1 +1,8 @@
 = HTTP
+This chapter is dedicated to those features of *HellHound* which are related to Web. We'll learn all the necessary things to create a web application using *HellHound*.
+
+// Overview
+include::overview.adoc[]
+
+// Pedestal Router
+include::router.adoc[]

@@ -1,4 +1,2 @@
 = Buil-in Components
 <PLACEHOLDER TEXT>
-
-include::./http/router.adoc[]
