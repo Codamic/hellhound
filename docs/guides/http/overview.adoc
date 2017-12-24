@@ -16,3 +16,9 @@ webserver which only serves assets, root enpoint and a websocket endpoint and th
 happens on the client side application (Which handles by HellHound again), So most of the time when
 you need a new route in your application, you have to add it on the client side router. Ofcourse you
 can choose to not follow the same pattern but then you won't get enough benefit of using *HellHound*.
+
+HTTP package of *HellHound* has been composed by several pieces. In its heart it uses the
+link:http://pedestal.io/reference/interceptors[Pedestal's Interceptors] to reply to HTTP requests.
+So almost all of the Pedestal concepts applies to *HellHound* HTTP as well. Another key part of
+HellHound HTTP package is the HTTP router. There are plenty or Clojure routers around but in my
+opinion the best of is the Pdestal Router.
