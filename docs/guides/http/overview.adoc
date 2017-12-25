@@ -19,6 +19,11 @@ can choose to not follow the same pattern but then you won't get enough benefit 
 
 HTTP package of *HellHound* has been composed by several pieces. In its heart it uses the
 link:http://pedestal.io/reference/interceptors[Pedestal's Interceptors] to reply to HTTP requests.
-So almost all of the Pedestal concepts applies to *HellHound* HTTP as well. Another key part of
-HellHound HTTP package is the HTTP router. There are plenty or Clojure routers around but in my
-opinion the best of is the Pdestal Router.
+So almost all of the Pedestal concepts applies to *HellHound* HTTP as well.
+
+Another key part of HellHound HTTP package is the HTTP router. There are plenty or Clojure routers around but in my
+opinion the best of is the Pdestal Router. It's a data driven HTTP router with is simple, and predictable.
+We'll discuss Pedestal router later in this chapter.
+
+The most important part of HTTP package is the webserver component which lives in `hellhound.components.webserver`.
+Under the hood it uses link:http://aleph.io[Aleph] that is an asynchronous network library on top Netty.
