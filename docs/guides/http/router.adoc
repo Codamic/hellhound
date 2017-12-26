@@ -1,4 +1,10 @@
 == HTTP Router
+[IMPORTANT]
+----
+If you're using the default configuration of HellHound HTTP package (`hellhound.components.webserver/default-factory`).
+then you don't need to learn about the router and can safely skip this section.,
+----
+
 [NOTE]
 This section contains Pedestal's router reference which modified a little bit based on *HellHound* requirements.
 
