@@ -9,8 +9,18 @@
    [hellhound.http.handlers  :as handlers]))
 
 ;; hellhound.http.route shortcuts --------------------------
-(def router route/router)
-(def expand-routes route/expand-routes)
+(defn router
+  [routes]
+  (route/router routes))
+
+(defn expand-routes
+ "Produces and returns a sequence of route-maps from the given `route-spec`
+  (the route specification).
+
+  The return value is a verbose form of route-maps which is understandable by
+  Pedestal router."
+  [route-spec]
+  (route/expand-routes route-spec))
 
 ;; The default routes for a hellhound application.
 (def default-routes
