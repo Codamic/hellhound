@@ -2,7 +2,8 @@
 [NOTE]
 This section contains Pedestal's router reference which modified a little bit based on *HellHound* requirements.
 
-HellHound uses `Pedestal Router` for HTTP routing
+HellHound uses `Pedestal Router` for HTTP routing, So everything you read in this section is applicable to
+your HellHound application as well.
 
 === Routes vs. Routers
 
@@ -34,6 +35,9 @@ The built in syntaxes are expanded by expand-routes polymorphically on the argum
 | Map
 | Verbose
 |===
+
+[NOTE]
+`hellhound.http.route/expand-routes` is an alias for `io.pedestal.http.route/expand-routes`
 
 
 === Verbose Syntax
@@ -72,14 +76,12 @@ Users will not generally write routes directly in verbose format.
 
 === Table Syntax
 
-Table syntax was introduced in release 0.5.0.
-
 Table syntax is expanded by
-link:../api/pedestal.route/io.pedestal.http.route.html#var-expand-routes[`expand-routes`]
+link:http://pedestal.io/api/pedestal.route/io.pedestal.http.route.html#var-expand-routes[`expand-routes`]
 into the full (verbose) syntax shown above.
 
 When the argument to
-link:../api/pedestal.route/io.pedestal.http.route.html#var-expand-routes[`expand-routes`]
+link:http://pedestal.io/api/pedestal.route/io.pedestal.http.route.html#var-expand-routes[`expand-routes`]
 is a *set*, it will be expanded using the table syntax.
 
 In table syntax, each route is a vector of:
@@ -142,11 +144,11 @@ route name will be derived from that.
 === Terse Syntax
 
 Terse syntax is expanded by
-link:../api/pedestal.route/io.pedestal.http.route.html#var-expand-routes[`expand-routes`]
+link:http://pedestal.io/api/pedestal.route/io.pedestal.http.route.html#var-expand-routes[`expand-routes`]
 into the full (verbose) syntax shown above.
 
 When the argument to
-link:../api/pedestal.route/io.pedestal.http.route.html#var-expand-routes[`expand-routes`]
+link:http://pedestal.io/api/pedestal.route/io.pedestal.http.route.html#var-expand-routes[`expand-routes`]
 is a *vector*, it will be expanded using the terse syntax.
 
 In the terse format, a route table is a vector of nested vectors. Each
@@ -165,7 +167,6 @@ contain the following elements:
 [[:hello-world :http "example.com"
  ["/hello-world" {:get hello-world}]]]
 ----
-
 
 Route vectors can be nested arbitrarily deep. Each vector adds a path
 segment. The nesting structure of the route vectors maps to the
@@ -261,12 +262,12 @@ one of the built in routers:
 |===
 | Router | Performance | Scaling in # Routes | Limitations
 
-|Map Tree (default after 0.5.2)
+|Map Tree
 | Very fast
 | Constant
 | Applies when all routes are static. Falls back to prefix tree if any routes have path parameters or wildcards.
 
-|Prefix Tree (default prior to 0.5.2)
+|Prefix Tree
 | High performance, space efficient
 | Log32(N)
 | Wildcard routes always win over explicit paths in the same subtree. E.g., `/path/:wild` will always match, even if `/path/user` is defined
@@ -283,5 +284,5 @@ When the value of `:io.pedestal.http/router` is a function, that
 function is used to construct a router. The function must take one
 argument: the collection of fully expanded routes. It must return
 something that satisfies the
-link:../api/pedestal.route/io.pedestal.http.route.router.html#var-Router[`Router`]
+link:http://pedestal.io/api/pedestal.route/io.pedestal.http.route.router.html#var-Router[`Router`]
 protocol.
