@@ -1,0 +1,65 @@
+=== Echo Server
+In this example we're going to create a really simple system which contains
+a hellhound webserver which reponds with what is gets via the ws connection.
+
+[NOTE]
+====
+As you already know, HellHound communications happens over websocket connection which creates by the
+`hellhound.components.webserver` component.
+====
+
+In order to execute the following example from the https://github.com/Codamic/hellhound_examples[hellhound_examples]
+repository. Just issue the following command in the repository root directory.
+
+[source,bash]
+----
+$ lein run -m components.webserver-example1/main
+----
+
+Ok let's jump into the code.
+
+[source,clojure,linums]
+----
+include::simple_webserver1.clj[]
+----
+<1> HellHound's webserver component ns.
+<2> HellHound's transform component ns.
+<3> Webserver component. The name of this component
+    would be `::hellhound.components.webserver/webserver`
+    We used `hellhound.http/default-routes` as the routes
+    definition. But you can provide your own routes as long
+    as it contains the hellhound websocket endpoint.
+    Also as a shortcut you can use `hellhound.components.webserver/default-factory`.
+    It's just a shortcut around `hellhound.components.webserver/factory`.
+
+<4> Transform component is a very simple component which redirects
+    incoming messages from input stream to output stream and applies
+    the given function to each message.
+    In this case we don't do any transformation. We just log the message.
+
+<5> A closed workflow. In this workflow the output of `::output`
+    component would be the input of `::web/webserver` component
+    while the output of `::web/webserver` would be the input
+    of `::output`. The important thing to remember in this example
+    is that basically the output of the webserver component is a
+    stream of data which receives from clients via websocket.
+    other requests to none websocket endpoint handle synchronously
+    by pedestal interceptors. In general we highly recommend to avoid
+    this situation and implement your views in client side which is
+    connected to HellHound server by a websocket
+
+
+Run the example code and then use below code in your browser console to test the echo server.
+
+[source, javascript,linums]
+----
+ws = new WebSocket("ws://localhost:3000/ws")
+ws.onmessage = function(e) { console.log(e.data) }
+ws.send("hello world")
+----
+
+After running the above code you're going to see "hello world" on your js console.
+
+In this example data flow from webserver component to the output component and back
+to webserver component as the input and webserver component send its input to the client
+side application using the ws connection.

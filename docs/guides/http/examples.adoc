@@ -1,0 +1,4 @@
+== Examples
+Now it's time to see HTTP package in action. Let's start from simple to hard.
+
+include::examples/simple_webserver1.adoc[]

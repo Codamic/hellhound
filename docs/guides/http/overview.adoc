@@ -27,3 +27,6 @@ We'll discuss Pedestal router later in this chapter.
 
 The most important part of HTTP package is the webserver component which lives in `hellhound.components.webserver`.
 Under the hood it uses link:http://aleph.io[Aleph] that is an asynchronous network library on top Netty.
+
+=== Recommended solution
+<PLACEHOLDER TEXT>

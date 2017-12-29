@@ -6,3 +6,6 @@ include::overview.adoc[]
 
 // Pedestal Router
 include::router.adoc[]
+
+// Pedestal Router
+include::examples.adoc[]
