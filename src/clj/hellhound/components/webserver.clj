@@ -7,12 +7,13 @@
   returns a component map."
   ^{:author "Sameer Rahmani (@lxsameer)"}
   (:require
-   [clojure.spec.alpha :as s]
-   [aleph.http         :as http]
-   [hellhound.logger   :as log]
-   [hellhound.spec     :as spec]
-   [hellhound.core     :as hellhound]
+   [clojure.spec.alpha  :as s]
+   [aleph.http          :as http]
+   [hellhound.logger    :as log]
+   [hellhound.spec      :as spec]
+   [hellhound.core      :as hellhound]
    [hellhound.component :as hcomp]
+   [hellhound.http      :as http]
    [hellhound.http.route :as router]))
 
 ;; TODO: Extract the spec check into a predicate function called map-with
@@ -80,3 +81,15 @@
      {:hellhound.component/name ::webserver
       :hellhound.component/start-fn (start! routes web-hooks config)
       :hellhound.component/stop-fn stop!})))
+
+(defn default-factory
+  "Returns a new webserver component which uses the default routes and
+  configuration of *HellHound*.
+
+  TODO: more docs"
+  ([]
+   (factory http/default-routes))
+
+  ([hooks]
+   (factory http/default-routes
+            (merge default-hooks hooks))))
