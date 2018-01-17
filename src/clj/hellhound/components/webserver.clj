@@ -7,13 +7,13 @@
   returns a component map."
   ^{:author "Sameer Rahmani (@lxsameer)"}
   (:require
-   [clojure.spec.alpha  :as s]
-   [aleph.http          :as http]
-   [hellhound.logger    :as log]
-   [hellhound.spec      :as spec]
-   [hellhound.core      :as hellhound]
-   [hellhound.component :as hcomp]
-   [hellhound.http      :as http]
+   [clojure.spec.alpha   :as s]
+   [aleph.http           :as aleph]
+   [hellhound.logger     :as log]
+   [hellhound.spec       :as spec]
+   [hellhound.core       :as hellhound]
+   [hellhound.component  :as hcomp]
+   [hellhound.http       :as http]
    [hellhound.http.route :as router]))
 
 ;; TODO: Extract the spec check into a predicate function called map-with
@@ -41,7 +41,7 @@
           http-routes (router/route-handler new-context routes)]
       (assoc this
              :instance
-             (http/start-server http-routes config)))))
+             (aleph/start-server http-routes config)))))
 
 
 (defn stop!
