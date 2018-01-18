@@ -101,17 +101,17 @@
                 :source-paths ["src/cljs" "test/cljs" "src/cljc" "test/cljc"]
                 :compiler {:output-to "resources/public/js/compiled/testable.js"
                            :main hellhound.test-runner
-                           :optimizations :advance}}]}
+                           :optimizations :advance}}
 
-  ;; {:id "min"
-  ;;  :source-paths ["src/cljs" "src/cljc"]
-  ;;  :jar true
-  ;;  :compiler {:main hellhound.core
-  ;;             :output-to "resources/public/js/compiled/hellhound.js"
-  ;;             :output-dir "target"
-  ;;             :source-map-timestamp true
-  ;;             :optimizations :advanced
-  ;;             :pretty-print false}}
+               {:id "min"
+                :source-paths ["src/cljs" "src/cljc"]
+                :jar true
+                :compiler {:main hellhound.core
+                           :output-to "resources/public/js/compiled/hellhound.js"
+                           :output-dir "target"
+                           :source-map-timestamp true
+                           :optimizations :advanced
+                           :pretty-print false}}]}
 
 
   :doo {:build "test"}

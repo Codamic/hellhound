@@ -31,6 +31,5 @@
   [config-name]
   (let [resource (io/resource config-name)]
     (if (nil? resource)
-      (throw (ex-info
-              (format "Can't find the '%s' config file" config-name) {})))
-    (edn/read-string {:readers readers} (slurp resource))))
+      {}
+      (edn/read-string {:readers readers} (slurp resource)))))
