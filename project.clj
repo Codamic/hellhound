@@ -8,7 +8,7 @@
   :exclusions [ch.qos.logback/logback-classic]
 
   :dependencies [[org.clojure/clojure        "1.9.0"]
-                 [org.clojure/clojurescript  "1.9.562"]
+                 [org.clojure/clojurescript  "1.9.946"]
                  [org.clojure/core.async     "0.3.443"]
                  [org.clojure/test.check     "0.10.0-alpha2"]
                  ;; Logging
@@ -54,7 +54,7 @@
                  ;; JSON Parser
                  [cheshire                   "5.7.1"]]
 
-  :plugins [[lein-cljsbuild "1.1.3"]
+  :plugins [[lein-cljsbuild "1.1.7"]
             [lein-codox "0.10.3"]]
 
   :codox {:output-path "docs/api/"
