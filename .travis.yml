@@ -1,5 +1,6 @@
 language: clojure
 sudo: false
+script: lein test && lein uberjar
 notifications:
   irc: "irc.freenode.org#5hit"
 jdk:
