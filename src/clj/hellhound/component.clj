@@ -245,17 +245,3 @@
                            :opt [::depends-on
                                  ::input-stream-fn
                                  ::output-stream-fn]))
-
-
-;; (defn st1
-;;   [component context]
-;;   (output component)
-;;   component)
-
-;; (defn st2
-;;   [component]
-;;   component)
-
-;; (def a (hellhound.system/defcomponent :something/new st1 st2))
-;; (s/valid? ::component a)
-;; (s/explain-data ::component a)
