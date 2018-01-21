@@ -67,8 +67,7 @@
 (s/fdef hellhound.system.core/conform-component
         :args (s/cat :component :hellhound.component/component)
         :ret  vector?
-        :fn #(= (:ret %) [(:hellhound.component/name (:component (:args %)))
-                          (:component (:args %))]))
+        :fn #(= (first (:ret %)) (:hellhound.component/name (:component (:args %)))))
 
 (defn ^IPersistentMap components-map
   "Returns a map of components from the given `system`. Basically

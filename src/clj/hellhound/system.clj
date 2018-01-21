@@ -68,7 +68,7 @@
    (defcomponent component-name start-fn stop-fn []))
 
   ([component-name start-fn stop-fn dependencies]
-   () {:hellhound.component/name component-name
-       :hellhound.component/start-fn start-fn
-       :hellhound.component/stop-fn stop-fn
-       :hellhound.component/depends-on dependencies}))
+   {:hellhound.component/name component-name
+    :hellhound.component/start-fn start-fn
+    :hellhound.component/stop-fn stop-fn
+    :hellhound.component/depends-on dependencies}))

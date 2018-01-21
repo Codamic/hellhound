@@ -87,20 +87,24 @@
   "This function is responsible to initialize the given `component` by
   initializing the input and ouput manifolds of the component."
   [component]
-  (let [default-io-buffer-size (core/get-config :components :io-buffer-size)
-        default-stream-fn      #(stream/stream default-io-buffer-size)
-        input-stream-fn        (get component
-                                    :input-stream-fn
-                                    default-stream-fn)
-        output-stream-fn       (get component
-                                    :output-stream-fn
-                                    default-stream-fn)]
+  (if (true? (::initialized? component))
+    ;; Return the component if it already initialized.
+    component
+    (let [default-io-buffer-size (core/get-config :components :io-buffer-size)
+          default-stream-fn      #(stream/stream default-io-buffer-size)
+          input-stream-fn        (get component
+                                      :input-stream-fn
+                                      default-stream-fn)
+          output-stream-fn       (get component
+                                      :output-stream-fn
+                                      default-stream-fn)]
 
       (assert default-io-buffer-size)
       (assoc component
-             ::started? false
-             ::input    (input-stream-fn)
-             ::output   (output-stream-fn))))
+             ::initialized? true
+             ::started?     false
+             ::input        (input-stream-fn)
+             ::output       (output-stream-fn)))))
 
 (defn- start-component!
   "Fetches and calls the `start-fn` of the given `component`.
@@ -109,17 +113,18 @@
   value of `start-fn` which should be a valid component. `started?`
   key basically demonstrates that the component in question is running."
   [component context]
-  (let [start-fn (::start-fn component)]
-      (if (not (started? component))
-        (do
-          (log/debug (format "Starting component '%s'..."
-                             (::name component)))
-          (assoc (start-fn component context) ::started? true))
+  (let [initialized-component (initialize component)
+        start-fn              (::start-fn initialized-component)]
+    (if (not (started? initialized-component))
+      (do
+        (log/debug (format "Starting component '%s'..."
+                           (::name component)))
+        (assoc (start-fn initialized-component context) ::started? true))
 
-        (do
-          (log/debug (format "Component '%s' already started. Skipping..."
-                             (::name component)))
-          component))))
+      (do
+        (log/debug (format "Component '%s' already started. Skipping..."
+                           (::name initialized-component)))
+        initialized-component))))
 
 (defn- stop-component!
   "Fetches and calls the `stop-fn` of the given `component`.
@@ -160,8 +165,10 @@
   The input of the component is a manifold whichis going to receive
   the incoming dataflow from the output of the component upstream."
   [component]
-  (assert (::input component) "::input should not be empty. Please file a bug")
-  (::input component))
+  (let [new-component (initialize component)]
+    (assert (::input new-component)
+            "::input should not be empty. Please file a bug")
+    (::input new-component)))
 
 (defn- output-of
   "Returns the output manifold of the given `component`.
@@ -170,9 +177,10 @@
   flow the output data of the component to the downstream
   component."
   [component]
-  (assert (::output component)
-          "::output should not be empty. Please file a bug")
-  (::output component))
+  (let [new-component (initialize component)]
+    (assert (::output new-component)
+            "::output should not be empty. Please file a bug")
+    (::output new-component)))
 
 
 ;; IComponent Implementations ------------------------------
@@ -237,3 +245,17 @@
                            :opt [::depends-on
                                  ::input-stream-fn
                                  ::output-stream-fn]))
+
+
+;; (defn st1
+;;   [component context]
+;;   (output component)
+;;   component)
+
+;; (defn st2
+;;   [component]
+;;   component)
+
+;; (def a (hellhound.system/defcomponent :something/new st1 st2))
+;; (s/valid? ::component a)
+;; (s/explain-data ::component a)
