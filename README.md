@@ -5,6 +5,7 @@
 **IMPORTANT NOTE**: This software is not ready to use yet. It's under heavy development
 and reaches the alpha stage pretty soon. If you like to be part of this process please
 leave [me](//github.com/lxsameer) a message.
+
 ---
 [Guides](http://docs.hellhound.io/guides/) | [API Reference](http://docs.hellhound.io/api/) | [Examples](https://github.com/Codamic/hellhound_examples) | [How to contribute?](http://docs.hellhound.io/guides/#_contributing_to_hellhound)
 ----
