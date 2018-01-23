@@ -1,10 +1,4 @@
 == Stream
-
-[NOTE]
-====
- Most of the contents of this section extract from the original docs in http://aleph.io/manifold/streams.html[here]
-====
-
 A Manifold stream can be created using `manifold.stream/stream`:
 
 [source,clojure]

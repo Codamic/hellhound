@@ -1,9 +1,4 @@
 == Deferred
-[NOTE]
-====
-Most of the contents of this section extract from the original docs in http://aleph.io/manifold/deferreds.html[here]
-====
-
 A deferred in Manifold is similar to a Clojure promise:
 
 [source,clojure]
