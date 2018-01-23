@@ -64,7 +64,7 @@ HellHound provides different built-in components for different types of systems.
 a fullstack web application, or a kafka component for a data processing application.
 
 === Goals
-The ultimate goal behind *HellHound* is to create a set of libraries for creating well orginized, simple, easy to test, easy to
+The ultimate goal of *HellHound* is to create a set of libraries for creating well orginized, simple, easy to test, easy to
 to scale and distribute applications using Clojure and Clojurescipt around streams and data pipelines.
 
 Another goal of this project is to create a tool which allows developers to focus on their business logic as much as possible
