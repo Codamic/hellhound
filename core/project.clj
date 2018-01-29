@@ -1,4 +1,4 @@
-(defproject codamic/hellhound "1.0.0-SNAPSHOT"
+(defproject codamic/hellhound.core "1.0.0-SNAPSHOT"
   :description "A simple full-stack web framework for clojure on top of Pnedestal"
   :license     {"mit"
                 "https://opensource.org/licenses/MIT"}
