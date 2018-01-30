@@ -7,7 +7,7 @@
                  [codamic/hellhound.core "1.0.0-SNAPSHOT"]
                  [codamic/hellhound.http "1.0.0-SNAPSHOT"]]
 
-  :plugins [[lein-sub "3.0.0"]
+  :plugins [[lein-sub "0.3.0"]
             [lein-codox "0.10.3"]]
   :sub ["core"
         "http"]
