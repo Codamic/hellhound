@@ -22,6 +22,10 @@ a fullstack web application, or a kafka component for a data processing applicat
 [guides](http://docs.hellhound.io/guides/) and [Examples](https://github.com/Codamic/hellhound_examples).
 
 
+## Branching guide
+The `master` branch of this repo is for development purposes. In order to get the latest stable code please checkout the
+`stable` branch.
+
 ## Where to get help
 * [#hellhound](http://webchat.freenode.net/?channels=hellhound&uio=d4) IRC channel on [freenode](https://freenode.net/
 )
