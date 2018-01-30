@@ -1,6 +1,7 @@
 language: clojure
 sudo: false
-script: lein sub test
+lein: lein
+script: lein sub install; LEIN_CMD=lein lein sub test
 notifications:
   irc: "irc.freenode.org#5hit"
 jdk:
