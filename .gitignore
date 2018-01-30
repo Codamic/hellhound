@@ -20,3 +20,7 @@ docs/guides/Gemfile.lock
 docs/guides/_build
 docs/api/
 resources/
+core/target/
+http/target/
+core/.lein-*
+http/.lein-*
