@@ -2,7 +2,9 @@ language: clojure
 sudo: false
 install: lein sub install
 lein: lein
-script: lein sub test
+script:
+  - lein sub test
+  - lein sub uberjar
 notifications:
   irc: "irc.freenode.org#5hit"
 jdk:
