@@ -2,17 +2,57 @@
 
 Let's take a quick conceptual look at *HellHound Systems*. As you already know *HellHound System* is available under `codamic/hellhound.core` and `codamic/hellhound` artifacts.
 
-=== The Unix Philosophy of Distributed Data
+=== The Unix Philosophy
 Contemporary software engineering still has a lot to learn from the 1970s. As we’re in such a fast-moving field, we often have a tendency of dismissing older ideas as irrelevant—and consequently, we end up having to learn the same lessons over and over again, the hard way. Although computers have become faster, data has grown bigger, and requirements have become more complex, many old ideas are actually still highly relevant today.
 
-In this section, I’d like to highlight one particular set of old ideas that I think deserves more attention today: the Unix philosophy.
+In this section, I’d like to highlight one particular set of old ideas that I think deserves more attention today, the Unix philosophy.
 
+==== Unix pipeline
+The Unix philosophy is a set of principles that emerged gradually during the design and implementation of Unix systems during the late 1960s and 1970s. There are various interpretations of the Unix philosophy, but in the 1978 description by Doug McIlroy, Elliot Pinson, and Berk Tague, two points particularly stand out:
 
+ * Make each program do one thing well. To do a new job, build afresh rather than complicate old programs by adding new “features.”
 
-<PLACEHOLDER TEXT>
+ * Expect the output of every program to become the input to another, as yet unknown, program.
+
+These principles are the foundation for chaining together programs into pipelines that can accomplish complex processing tasks. The key idea here is that a program does not know or care where its input is coming from, or where its output is going: it may be a file, or another program that’s part of the operating system, or another program written by someone else entirely.
+
+==== Pipes and Composability
+
+The tools that come with the operating system are generic, but they are designed such that they can be composed together into larger programs that can perform application-specific tasks.
+
+The benefits that the designers of Unix derived from this design approach sound quite like the ideas of the Agile and DevOps movements that appeared decades later: scripting and automation, rapid prototyping, incremental iteration, being friendly to experimentation, and breaking down large projects into manageable chunks.
+
+When you join two commands by using the pipe character in your shell, the shell starts both programs at the same time, and attaches the output of the first process to the input of the second process. This attachment mechanism uses the pipe syscall provided by the operating system.
+
+Note that this wiring is not done by the programs themselves; it’s done by the shell—this allows the programs to be loosely coupled, and not worry about where their input is coming from or where their output is going.
+
+The pipe had been invented in 1964 by Doug McIlroy, who described it like this in an internal Bell Labs memo, “We should have some ways of coupling programs like [a] garden hose—screw in another segment when it becomes necessary to massage data in another way.”
+
+The Unix team also realized early that the interprocess communication mechanism (pipes) can look very similar to the I/O mechanism for reading and writing files. We now call this input redirection (using the contents of a file as input to a process) and output redirection.
+
+The reason that Unix programs can be composed so flexibly is that they all conform to the same interface. Most programs have one stream for input data (`stdin`) and two output streams (`stdout` for regular output data, and stderr for errors and diagnostic messages to the user).
+
+Programs can also do other things besides reading stdin and writing stdout, such as reading and writing files, communicating over the network, or drawing a graphical user interface. However, the stdin/stdout communication is considered to be the main means for data to flow from one Unix tool to another.
+
+The great thing about the stdin/stdout interface is that anyone can implement it easily, in any programming language. You can develop your own tool that conforms to this interface, and it will play nicely with all the standard tools that ship as part of the operating system.
+
+==== Composability Requires a Uniform Interface
+
+We said that Unix tools are composable because they all implement the same interface of `stdin`, `stdout`, and `stderr`, and each of these is a file descriptor; that is, a stream of bytes that you can read or write like a file. This interface is simple enough that anyone can easily implement it, but it is also powerful enough that you can use it for anything.
+
+Because all Unix tools implement the same interface, we call it a uniform interface. That’s why you can pipe the output of `gunzip` to `wc` without a second thought, even though those two tools appear to have nothing in common. It’s like lego bricks, which all implement the same pattern of knobbly bits and grooves, allowing you to stack any lego brick on any other, regardless of their shape, size, or color.
+
+A few tools (e.g., `gzip`) operate purely on byte streams and don’t care about the structure of the data. But most tools need to parse their input in order to do anything useful with it. For this, most Unix tools use ASCII, with each record on one line, and fields separated by tabs or spaces, or maybe commas.
+
+==== HellHound & Unix Philosophy
+We’ve seen that Unix has developed good design principles for software development. HellHound's systems mostly follow the same design principle. There are several differences though. A Unix pipe is designed to have a single sender process and a single recipient. You can’t use pipes to send output to several processes, or to collect input from several processes. But HellHound Systems are not like this. A Component (process) can pipe its output to more than one component and accept its input from more than one component.
+
+Instead of reading/writing data in text, components communicate via stream abstractions delivering data structures like hashmaps.
+
+Unix processes are generally assumed to be fairly short-running. For example, if a process in the middle of a pipeline crashes, there is no way for it to resume processing from its input pipe—the entire pipeline fails and must be re-run from scratch. That’s no problem if the commands run only for a few seconds, but if an application is expected to run continuously for years, you need better fault tolerance. Systems in the other hand design for long-running tasks. A component assumes to run for a long time and constantly consume from its input and product to its output stream. But still if a component fails it's possible to restart the component and re-pipe it, so it can continue where it left off. But right now there is no support for restarting a component. We plan to add the support for version 1.1.0 (hopefully).
 
 === Execution model
-Systems composed by [*Components*]. A system knows how to start and stop components. It is also
+Systems composed by [Components]. A system knows how to start and stop components. It is also
 responsible for managing dependencies between theme. Components are the smallest parts of a system whic are reusable.
 
 .A very basic schema of a System
