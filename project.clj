@@ -12,9 +12,11 @@
   :sub ["core"
         "i18n"
         "http"]
+
   :codox {:output-path "docs/api/"
           :metadata {:doc/format :markdown}
           :doc-paths ["docs/guides/"]
           :source-uri "http://github.com/Codamic/hellhound/blob/{version}/{filepath}#L{line}"
           :source-paths ["core/src"
+                         "i18n/src"
                          "http/src"]})
