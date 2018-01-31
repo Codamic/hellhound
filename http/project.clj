@@ -21,9 +21,6 @@
 
                  [danlentz/clj-uuid                "0.1.7"]
 
-                 ;; Time calculation
-                 [clj-time                   "0.13.0"]
-
                  ;; Used for websocket client
                  [jarohen/chord              "0.8.1"]
                  ;; UI
@@ -32,9 +29,6 @@
                  ;; Client Side routeing
                  [secretary                  "1.2.3"]
                  [re-frisk                   "0.5.0"]
-
-                 ;; I18n
-                 [com.taoensso/tempura       "1.1.2"]
 
                  ;; Transit support
                  [com.cognitect/transit-clj  "0.8.300"]

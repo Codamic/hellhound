@@ -16,7 +16,10 @@
                  [org.slf4j/log4j-over-slf4j       "1.7.25"]
                  [org.slf4j/jul-to-slf4j           "1.7.25"]
                  [org.slf4j/jcl-over-slf4j         "1.7.25"]
-
+                 ;; Time calculation
+                 [clj-time                         "0.13.0"]
+                 ;; I18n
+                 [com.taoensso/tempura             "1.1.2"]
                  [manifold                         "0.1.6"]]
 
 
