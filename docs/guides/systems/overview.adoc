@@ -1,8 +1,14 @@
 == Overview
 
-Let's take a quick conceptual look at *HellHound Systems*.
+Let's take a quick conceptual look at *HellHound Systems*. As you already know *HellHound System* is available under `codamic/hellhound.core` and `codamic/hellhound` artifacts.
 
-=== Unix Pipelines
+=== The Unix Philosophy of Distributed Data
+Contemporary software engineering still has a lot to learn from the 1970s. As we’re in such a fast-moving field, we often have a tendency of dismissing older ideas as irrelevant—and consequently, we end up having to learn the same lessons over and over again, the hard way. Although computers have become faster, data has grown bigger, and requirements have become more complex, many old ideas are actually still highly relevant today.
+
+In this section, I’d like to highlight one particular set of old ideas that I think deserves more attention today: the Unix philosophy.
+
+
+
 <PLACEHOLDER TEXT>
 
 === Execution model
