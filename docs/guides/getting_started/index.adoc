@@ -1,4 +1,13 @@
 = Getting Started
+In this section we're going to build an example application to cover some the most important concepts
+and features of HellHound.
+
+In order to continue with this section you need to have https://leiningen.org/[Leiningen] setup in your
+box.
+
+The final application is available at https://github.com/lxsameer/getting_started_with_hellhound[this github repository].
+
+== What are we going to make ?
 
 == Installation
 
