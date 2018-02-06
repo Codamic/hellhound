@@ -24,6 +24,18 @@
   (:import (clojure.lang IPersistentMap
                          PersistentVector)))
 
+(defn- invalid-workflow
+  [component]
+  (throw (ex-info (format "Invalid component '%s' in workflow."
+                          (hcomp/get-name component))
+                  {:cause component})))
+
+(defn- invalid-component-name
+  [cname]
+  (throw (ex-info
+          (format "Can't find component '%s' in the system." cname)
+          {:cause cname})))
+
 (defn- parse-triple
   "Returns a vector of workflow by fetch the corresponding manifold stream
   and the given predicate function.
@@ -37,18 +49,19 @@
   If the workflow vector contained any predicate function this the return value
   of this function will contain the predicate too."
   ([components sink-name source-name]
-   (let [sink   (hcomp/output (get components sink-name))
-         source (hcomp/input (get components source-name))]
-     [sink source]))
+   (let [sink-component   (get components sink-name)
+         source-component (get components source-name)]
+
+     (when (nil? sink-component) (invalid-component-name sink-name))
+     (when (nil? sink-component) (invalid-component-name source-name))
+
+     [(hcomp/output sink-component) (hcomp/input source-component)]))
+
 
   ([components sink-name pred source-name]
    (let [[sink source] (parse-triple components sink-name source-name)]
      [sink pred source])))
 
-(defn- invalid-workflow
-  [component]
-  (throw (Exception. (format "Invalid compponent '%s' in workflow."
-                              (hcomp/get-name component)))))
 (defn message-router
   "Applies the given `pred` function on incoming `msg` and sends it to
   downstream if the function returned true."
