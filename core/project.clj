@@ -3,7 +3,8 @@
   :license     {"mit"
                 "https://opensource.org/licenses/MIT"}
   :url         "http://hellhound.io"
-  :scm         {:url "https://github.com/Codamic/hellhound"}
+  :scm         {:name "git"
+                :url "https://github.com/Codamic/hellhound"}
 
   :exclusions [ch.qos.logback/logback-classic]
 
@@ -18,10 +19,6 @@
                  [org.slf4j/jcl-over-slf4j         "1.7.25"]
                  [manifold                         "0.1.6"]]
 
-
-  :lein-release {:deploy-via :clojars
-                 :build-uberjar true}
-
   :plugins [[lein-codox "0.10.3"]]
 
   :min-lein-version "2.6.1"
@@ -31,11 +28,9 @@
   :test-paths ["test/clj" "test/cljc"]
   :clean-targets ^{:protect false} [:target-path]
 
-  :uberjar-name "hellhound.core.jar"
+  :uberjar-name "hellhound.core.standalone.jar"
+  :jar-name "hellhound.core.jar"
 
-  ;; nREPL by default starts in the :main namespace, we want to start in `user`
-  ;; because that's where our development helper functions like (run) and
-  ;; (browser-repl) live.
   :repl-options {:init-ns user}
 
   :profiles {:dev
