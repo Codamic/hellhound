@@ -3,7 +3,8 @@
   :license     {"mit"
                 "https://opensource.org/licenses/MIT"}
   :url         "http://hellhound.io"
-  :scm         {:url "https://github.com/Codamic/hellhound"}
+  :scm         {:name "git"
+                :url "https://github.com/Codamic/hellhound"}
 
   :exclusions [ch.qos.logback/logback-classic]
 

@@ -1,4 +1,4 @@
-(defproject codamic/hellhound "1.0.0-alpha2"
+(defproject codamic/hellhound "1.0.0-SNAPSHOT"
   :description "Build asynchronous, high performance and scalable applications at ease."
   :url "http://hellhound.io"
   :license {:name "The MIT License"
@@ -6,14 +6,13 @@
   :scm         {:name "git"
                 :url "https://github.com/Codamic/hellhound"}
   :dependencies [[org.clojure/clojure    "1.9.0"]
-                 [codamic/hellhound.core "1.0.0-alpha1"]]
-                 ;[codamic/hellhound.http "1.0.0-SNAPSHOT"]]
+                 [codamic/hellhound.core "1.0.0-SNAPSHOT"]
+                 [codamic/hellhound.http "1.0.0-SNAPSHOT"]]
 
   :plugins [[lein-sub "0.3.0"]
             [lein-codox "0.10.3"]]
-  :sub ["core"]
-        ;; "i18n"
-        ;; "http"
+  :sub ["core" "i18n" "http"]
+
 
   :deploy-repositories [["releases" :clojars]
                         ["snapshots" :clojars]]

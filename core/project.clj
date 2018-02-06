@@ -1,4 +1,4 @@
-(defproject codamic/hellhound.core "1.0.0-alpha1"
+(defproject codamic/hellhound.core "1.0.0-SNAPSHOT"
   :description "The HellHound core is a library to create simple and elegant data pipelines."
   :license     {"mit"
                 "https://opensource.org/licenses/MIT"}
