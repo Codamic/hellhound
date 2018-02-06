@@ -1,6 +1,6 @@
-(defproject codamic/hellhound "1.0.0-alpha1"
+(defproject codamic/hellhound "1.0.0-alpha2"
   :description "Build asynchronous, high performance and scalable applications at ease."
-  :url "https://github.com/ring-clojure/ring"
+  :url "http://hellhound.io"
   :license {:name "The MIT License"
             :url "http://opensource.org/licenses/MIT"}
   :scm         {:name "git"
@@ -15,6 +15,11 @@
         ;; "i18n"
         ;; "http"
 
+  :deploy-repositories [["releases" :clojars]
+                        ["snapshots" :clojars]]
+
+  :uberjar-name "hellhound.standalone.jar"
+  :jar-name "hellhound.jar"
 
   :codox {:output-path "docs/api/"
           :metadata {:doc/format :markdown}
