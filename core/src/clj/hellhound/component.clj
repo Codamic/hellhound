@@ -182,6 +182,13 @@
             "::output should not be empty. Please file a bug")
     (::output new-component)))
 
+;; Public Functions ----------------------------------------
+(defn io
+  "Returns a vector containing the IO streams of the given `component`.
+
+  The return vector is in the following format: [input-stream, output-stream]."
+  [component]
+  [(input component) (output component)])
 
 ;; IComponent Implementations ------------------------------
 (extend-protocol IComponent
@@ -230,12 +237,7 @@
 ;;              :fn #(map? (:ret %)))
 ;;     #(s/gen #{(fn [component] component)})))
 (s/def ::start-fn fn?)
-
-
-
 (s/def ::stop-fn fn?)
-
-
 
 (s/def ::stream
   (s/with-gen stream/stream?
