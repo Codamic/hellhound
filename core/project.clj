@@ -1,5 +1,5 @@
-(defproject codamic/hellhound.core "1.0.0-SNAPSHOT"
-  :description "A simple full-stack web framework for clojure on top of Pnedestal"
+(defproject codamic/hellhound.core "1.0.0-alpha1"
+  :description "The HellHound core is a library to create simple and elegant data pipelines."
   :license     {"mit"
                 "https://opensource.org/licenses/MIT"}
   :url         "http://hellhound.io"
@@ -18,6 +18,9 @@
                  [org.slf4j/jcl-over-slf4j         "1.7.25"]
                  [manifold                         "0.1.6"]]
 
+
+  :lein-release {:deploy-via :clojars
+                 :build-uberjar true}
 
   :plugins [[lein-codox "0.10.3"]]
 

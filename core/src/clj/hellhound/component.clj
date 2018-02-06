@@ -246,7 +246,6 @@
     fn?
     #(s/gen #{(fn [component context] component)})))
 
-
 (s/def ::stream
   (s/with-gen stream/stream?
     #(s/gen #{(stream/stream) (stream/stream 100)})))

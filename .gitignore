@@ -24,3 +24,4 @@ core/target/
 http/target/
 core/.lein-*
 http/.lein-*
+**/*/.lein-failu*
