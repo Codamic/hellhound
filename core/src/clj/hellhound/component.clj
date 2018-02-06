@@ -236,8 +236,16 @@
 ;;              ;; necessary keys
 ;;              :fn #(map? (:ret %)))
 ;;     #(s/gen #{(fn [component] component)})))
-(s/def ::start-fn fn?)
-(s/def ::stop-fn fn?)
+(s/def ::start-fn
+  (s/with-gen
+    fn?
+    #(s/gen #{(fn [component context] component)})))
+
+(s/def ::stop-fn
+  (s/with-gen
+    fn?
+    #(s/gen #{(fn [component context] component)})))
+
 
 (s/def ::stream
   (s/with-gen stream/stream?
