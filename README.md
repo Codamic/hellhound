@@ -1,6 +1,6 @@
 <div align="center"><img src="https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.png" /></div>
 
-# HellHound [![Build Status](https://travis-ci.org/Codamic/hellhound.svg?branch=master)](https://travis-ci.org/Codamic/hellhound)
+# HellHound
 
 **IMPORTANT NOTE**: This software is not ready to use yet. It's under heavy development
 and reaches the alpha stage pretty soon. If you like to be part of this process please
@@ -9,6 +9,7 @@ leave [me](//github.com/lxsameer) a message.
 ---
 [Guides](http://docs.hellhound.io/guides/) | [API Reference](http://docs.hellhound.io/api/) | [Examples](https://github.com/Codamic/hellhound_examples) | [How to contribute?](http://docs.hellhound.io/guides/#_contributing_to_hellhound)
 ----
+[![Build Status](https://travis-ci.org/Codamic/hellhound.svg?branch=master)](https://travis-ci.org/Codamic/hellhound) [![Clojars Project](https://img.shields.io/clojars/v/codamic/hellhound.svg)](https://clojars.org/codamic/hellhound)
 
 ## What is HellHound
 **HellHound** is a set of libraries to create simple and elegant programs based on streams. An **HellHound** application
