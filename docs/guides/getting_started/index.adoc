@@ -7,7 +7,18 @@ box.
 
 The final application is available at https://github.com/lxsameer/getting_started_with_hellhound[this github repository].
 
+== Before start
+The aim of this tutorial is to given you a rough overview about the *HellHound* systems. In order to continue
+with this tutorial you should know about http://clojure.org/[clojure] and https://leiningen.org/[Leiningen].
+
 == What are we going to make ?
+In order to gain an overview of HellHound systems we're going to build a real world application together. In this
+example we're going to create a simple web proxy application which gets a domain name and a port number, setup a
+webserver to serve the content of the given domain name and serve it locally.
+
+*HellHound is library to create data pipelines.* Basically data pipelines are suitable for stream processing and
+those use cases which involve with data streams. *But I chose the proxy use case intentionally to demonstrate
+the usage of HellHound for a use case which is not a case of stream processing by default.*
 
 == Installation
 
@@ -15,5 +26,10 @@ Add *HellHound* to your dependencies as follow:
 
 [source,clojure]
 ----
-[codamic/hellhound "1.0.0-SNAPSHOT"]
+[codamic/hellhound "1.0.0-alpha3"]
 ----
+
+`codamic/hellhound` is a meta package which automatically install serveral HellHound libraries like `codamic/hellhound.core`
+and `codamic/hellhound.http`. So your can only install an specific library that you need instead of using `codamic/hellhound`.
+For instance you might not need the `codamic/hellhound.i18n` library or `codamic/hellhound.http` so you can just install
+`codamic/hellhound.core`. Systems are part of `codamic/hellhound.core` artifact.
