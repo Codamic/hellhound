@@ -33,3 +33,15 @@ Add *HellHound* to your dependencies as follow:
 and `codamic/hellhound.http`. So your can only install an specific library that you need instead of using `codamic/hellhound`.
 For instance you might not need the `codamic/hellhound.i18n` library or `codamic/hellhound.http` so you can just install
 `codamic/hellhound.core`. Systems are part of `codamic/hellhound.core` artifact.
+
+
+== Tackle the problem
+How to solve the problem.
+
+== Components
+
+== System
+
+== Workflow
+
+== Version 2.0
