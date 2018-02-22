@@ -1,3 +1,4 @@
+[[workflow]]
 == Workflow
 System's workflow a vector describing the dataflow of the system. Each component has an input and an output stream. Each
 stream is a`manifold.stream`. HellHound connects io of each component to another component based on the desciption given

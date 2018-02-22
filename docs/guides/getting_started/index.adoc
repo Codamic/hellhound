@@ -16,13 +16,17 @@ In order to have easier time reading this tutorial, I'm going to give you a brie
 concepts we're going to use in this tutorial. You can read more about each of these concepts in more details later
 in their own sections.
 
-* *System*: It's a hashmap describing our application system. Basically how it should work.
-* *Component*: A system is create by a set of components. You can think of a component as a unix command or a function ( they
-are more than a function though ). Just like a unix command each component has a input and output.
-* *Workflow*: A workflow is a graph like data structure which defines the data flow of the system. Simply describes how to pipe
-the output of a component to input of another component.
+* *System*:
+    It's a hashmap describing our application system. Basically how it should work. <<systems, Learn More.>>
 
-== What are we going to make ?
+* *Component*:
+  A system is create by a set of components. You can think of a component as a unix command or a function ( they
+are more than a function though ). Just like a unix command each component has a input and output. <<components, Learn More>>
+
+* *Workflow*: A workflow is a graph like data structure which defines the data flow of the system. Simply describes how to pipe
+the output of a component to input of another component.<<workflow, Learn More>>
+
+== What do we want to build ?
 In order to gain an overview of HellHound systems we're going to build a real world application together. In this
 example we're going to create a simple web proxy application which gets a domain name and a port number, setup a
 webserver to serve the content of the given domain name and serve it locally.
@@ -60,6 +64,21 @@ For instance you might not need the `codamic/hellhound.i18n` library or `codamic
 `codamic/hellhound.core`. Systems are part of `codamic/hellhound.core` artifact.
 
 == Components
+Lets start with <<components, components>> creation. HellHound's components are just hashmaps. Simple, good old hashmaps.
+Any component map should contains at least three keys, `:hellhound.component/name`, `:hellhound.component/start-fn` and
+`:hellhound.component/stop-fn`. The value of the `:hellhound.component/name` key should be a namespaced keyword which is
+the component name. We use this name to refer to the component later in our system configuration. the value  of
+`:hellhound.component/start-fn` should be function that takes two arguments. The first argument is the component hashmap
+itself and the second argument is another hashmap which is called context map (In order to learn more about components
+in details, please checkout the <<components, components section of this documentation>>). The main logic of the component
+goes into this function. It should return a component map again. The `:hellhound.component/stop-fn` function is similar
+to `start-fn` but accept only one argument which is the component map itself. This function is responsible for tearing down
+the logic of the component and do the clean up. For example, close the connection which has been opened on `start-fn` or similar
+stuff.
+
+Ok, It's time to write some code. Let's start with a really basic component skeleton for the `webserver` component.
+Check out the following code.
+
 
 == System
 

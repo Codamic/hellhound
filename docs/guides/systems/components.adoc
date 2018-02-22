@@ -1,3 +1,4 @@
+[[components]]
 == Components
 A *Component* is a data structure to managing the lifecycle, dependencies
 and data flow of a program. A Component is the smallest unit of execution which is reusable and
