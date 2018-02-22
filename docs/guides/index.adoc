@@ -55,8 +55,8 @@ endif::[]
 
 == What is HellHound?
 *HellHound* is a set of libraries to create simple and elegant programs based on streams. An *HellHound* application
-basically is a <<_systems,system>> of <<_components,components>> which work together in order to achieve a common goal.
-Components form one or more data pipelines through <<_workflow_2,workflows>>. In general systems are a great way to
+basically is a <<systems,system>> of <<components,components>> which work together in order to achieve a common goal.
+Components form one or more data pipelines through <<workflow,workflows>>. In general systems are a great way to
 manage the lifecycle and data flow or your program and components are awesome for managing the state and dependencies
 of different pieces of your program.
 

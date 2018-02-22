@@ -13,9 +13,9 @@ leave [me](//github.com/lxsameer) a message.
 
 ## What is HellHound
 **HellHound** is a set of libraries to create simple and elegant programs based on streams. An **HellHound** application
-basically is a [system](http://docs.hellhound.io/guides/#_systems) of [components](http://docs.hellhound.io/guides/#_components)
+basically is a [system](http://docs.hellhound.io/guides/#systems) of [components](http://docs.hellhound.io/guides/#components)
 which work together in order to achieve a common goal. Components form one or more data pipelines through
-[workflows](http://docs.hellhound.io/guides/#_workflow_2). In general systems are a great way to manage the lifecycle and data flow
+[workflows](http://docs.hellhound.io/guides/#workflow). In general systems are a great way to manage the lifecycle and data flow
 or your program and components are awesome for managing the state and dependencies of different pieces of your program.
 
 HellHound provides different built-in components for different types of systems. For example Webserver component for creating
