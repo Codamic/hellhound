@@ -11,6 +11,17 @@ The final application is available at https://github.com/lxsameer/getting_starte
 The aim of this tutorial is to given you a rough overview about the *HellHound* systems. In order to continue
 with this tutorial you should know about http://clojure.org/[clojure] and https://leiningen.org/[Leiningen].
 
+== A little bit of theory
+In order to have easier time reading this tutorial, I'm going to give you a brief introduction about some of the
+concepts we're going to use in this tutorial. You can read more about each of these concepts in more details later
+in their own sections.
+
+* *System*: It's a hashmap describing our application system. Basically how it should work.
+* *Component*: A system is create by a set of components. You can think of a component as a unix command or a function ( they
+are more than a function though ). Just like a unix command each component has a input and output.
+* *Workflow*: A workflow is a graph like data structure which defines the data flow of the system. Simply describes how to pipe
+the output of a component to input of another component.
+
 == What are we going to make ?
 In order to gain an overview of HellHound systems we're going to build a real world application together. In this
 example we're going to create a simple web proxy application which gets a domain name and a port number, setup a
@@ -19,6 +30,20 @@ webserver to serve the content of the given domain name and serve it locally.
 *HellHound is library to create data pipelines.* Basically data pipelines are suitable for stream processing and
 those use cases which involve with data streams. *But I chose the proxy use case intentionally to demonstrate
 the usage of HellHound for a use case which is not a case of stream processing by default.*
+
+== Tackle the problem
+For this specific usage case web need to spin up a webserver which listens to a port for any HTTP URL and contructs new
+requests from the incoming requests with different host ( the remote host ) and sent them to the actual host and response
+back to user with the reponses fetch from the remote host.
+
+So we're going to create a system hashmap with two component. A `webserver` component and a `loader` component. As the name
+suggests `webserver` component should be responsible for getting the user requests and serving responses to the user. The
+`loader` component should fetch the url content from the remote host. In this system we want to connect the output of
+`webserver` to the input of `loader` and connect the output of `loader` to input of `webserver`. So we're going to end
+up with a closed system.
+
+Now let's get our feet wet.
+
 
 == Installation
 
@@ -33,10 +58,6 @@ Add *HellHound* to your dependencies as follow:
 and `codamic/hellhound.http`. So your can only install an specific library that you need instead of using `codamic/hellhound`.
 For instance you might not need the `codamic/hellhound.i18n` library or `codamic/hellhound.http` so you can just install
 `codamic/hellhound.core`. Systems are part of `codamic/hellhound.core` artifact.
-
-
-== Tackle the problem
-How to solve the problem.
 
 == Components
 
