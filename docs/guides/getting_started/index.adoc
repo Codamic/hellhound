@@ -5,7 +5,8 @@ and features of HellHound.
 In order to continue with this section you need to have https://leiningen.org/[Leiningen] setup in your
 box.
 
-The final application is available at https://github.com/lxsameer/getting_started_with_hellhound[this github repository].
+The final application is available at https://github.com/lxsameer/hellhound_examples[this github repository] and
+under the `getting-started` namespace.
 
 == Before start
 The aim of this tutorial is to given you a rough overview about the *HellHound* systems. In order to continue
