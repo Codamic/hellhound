@@ -6,17 +6,6 @@
             [manifold.stream :as stream]))
 
 
-;; make-component test ---------------------------------------
-(def simple-map {:hellhound.component/name       :component/name
-                 :hellhound.component/start-fn   inc
-                 :hellhound.component/stop-fn    inc
-                 :hellhound.component/depends-on []})
-
-(deftest make-component-test
-  (testing "make-component"
-    (is (= simple-map (hcomp/make-component :component/name inc inc)))
-    (is (= simple-map (hcomp/make-component :component/name inc inc [])))))
-
 ;; System tests --------------------------------------------
 (def component-counter (atom 0))
 
