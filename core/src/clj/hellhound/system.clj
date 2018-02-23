@@ -58,14 +58,14 @@
   [name]
   (get (:components (core/get-system)) name))
 
-(defn defcomponent
+(defn make-component
   "A short cut function to create a component map with the given details.
 
   TODO: more doc"
   {:added      1.0
    :public-api true}
   ([component-name start-fn stop-fn]
-   (defcomponent component-name start-fn stop-fn []))
+   (make-component component-name start-fn stop-fn []))
 
   ([component-name start-fn stop-fn dependencies]
    {:hellhound.component/name component-name

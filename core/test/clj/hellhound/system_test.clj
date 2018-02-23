@@ -2,20 +2,20 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.test :as t :refer [deftest testing is are]]
             [hellhound.component :as hcomp]
-            [hellhound.system :as system :refer [defcomponent]]
+            [hellhound.system :as system :refer [make-component]]
             [manifold.stream :as stream]))
 
 
-;; defcomponent test ---------------------------------------
+;; make-component test ---------------------------------------
 (def simple-map {:hellhound.component/name       :component/name
                  :hellhound.component/start-fn   inc
                  :hellhound.component/stop-fn    inc
                  :hellhound.component/depends-on []})
 
-(deftest defcomponent-test
-  (testing "defcomponent"
-    (is (= simple-map (defcomponent :component/name inc inc)))
-    (is (= simple-map (defcomponent :component/name inc inc [])))))
+(deftest make-component-test
+  (testing "make-component"
+    (is (= simple-map (make-component :component/name inc inc)))
+    (is (= simple-map (make-component :component/name inc inc [])))))
 
 ;; System tests --------------------------------------------
 (def component-counter (atom 0))
@@ -39,14 +39,14 @@
 
 (def sample-system
   {:components
-   [(defcomponent :sample/component2
+   [(make-component :sample/component2
       (sample-start-fn :key2 :value2)
       (sample-stop-fn :key2)
       [:sample/component1])
-    (defcomponent :sample/component1
+    (make-component :sample/component1
       (sample-start-fn :key1 :value1)
       (sample-stop-fn :key1))
-    (defcomponent :sample/component3
+    (make-component :sample/component3
       (sample-start-fn :key3 :value3)
       (sample-stop-fn :key3)
       [:sample/component1])]

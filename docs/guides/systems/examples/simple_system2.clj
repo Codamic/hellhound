@@ -1,7 +1,7 @@
 (ns systems.simple-system2
   (:require
    [manifold.stream :as s]
-   [hellhound.system :as system :refer [defcomponent]]
+   [hellhound.system :as system :refer [make-component]]
    [hellhound.component :as hcomp]))
 
 (defn start-fn1 <1>
@@ -41,9 +41,9 @@
     (s/consume #(println "Message Component 3: " %) input) <5>
     component))
 
-(def component-1 (defcomponent :simple-system/component-1 start-fn1 stop-fn)) <6>
-(def component-2 (defcomponent :simple-system/component-2 start-fn2 stop-fn))
-(def component-3 (defcomponent :simple-system/component-3 start-fn3 stop-fn))
+(def component-1 (make-component :simple-system/component-1 start-fn1 stop-fn)) <6>
+(def component-2 (make-component :simple-system/component-2 start-fn2 stop-fn))
+(def component-3 (make-component :simple-system/component-3 start-fn3 stop-fn))
 
 (def simple-system
   {:components [component-2 component-1 component-3]

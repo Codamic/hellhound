@@ -1,5 +1,5 @@
 (ns systems.simple-system1
-  (:require [hellhound.system :as system :refer [defcomponent]]))
+  (:require [hellhound.system :as system :refer [make-component]]))
 
 (defn start-fn1 <1>
   [component context]
@@ -29,7 +29,7 @@
                   :hellhound.component/start-fn start-fn1
                   :hellhound.component/stop-fn  stop-fn1})
 
-(def component-2 (defcomponent :simple-system/component-2
+(def component-2 (make-component :simple-system/component-2
                                start-fn2
                                stop-fn2
                                [:simple-system/component-1])) <9>
