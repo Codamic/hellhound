@@ -183,6 +183,22 @@
     (::output new-component)))
 
 ;; Public Functions ----------------------------------------
+(defn make-component
+  "A short cut function to create a component map with the given details.
+
+  Returns a component map with the given `name`, `start-fn`, `stop-fn` and
+  the optional `dependencies` collection."
+  {:added      1.0
+   :public-api true}
+  ([component-name start-fn stop-fn]
+   (make-component component-name start-fn stop-fn []))
+
+  ([component-name start-fn stop-fn dependencies]
+   {::name component-name
+    ::start-fn start-fn
+    ::stop-fn stop-fn
+    ::depends-on dependencies}))
+
 (defn io
   "Returns a vector containing the IO streams of the given `component`.
 
