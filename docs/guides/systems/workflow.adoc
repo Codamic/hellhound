@@ -16,7 +16,7 @@ For example, consider the following system:
 ----
 (ns example.system
   ;; We want to use defcomponenet to define the components instead of defining the maps
-  (:require [hellhound.system :as hh :refer [make-component]]
+  (:require [hellhound.system :as hh]
             [hellhound.system :as hcomp]
             [manifold.stream :as s]))
 
@@ -31,9 +31,9 @@ For example, consider the following system:
 (defn dummy-stop [component] component)
 
 (def example-system
-     {:components [(make-component :component-1 dummy-start dummy-stop)   <2>
-                   (make-component :component-2 dummy-start dummy-stop)   <3>
-                   (make-component :component-3 dummy-start dummy-stop)]  <4>
+     {:components [(hcomp/make-component :component-1 dummy-start dummy-stop)   <2>
+                   (hcomp/make-component :component-2 dummy-start dummy-stop)   <3>
+                   (hcomp/make-component :component-3 dummy-start dummy-stop)]  <4>
 
       :workflow [[:component-1 :component-2]    <5>
                  [:component-2 :component-3]]}) <6>

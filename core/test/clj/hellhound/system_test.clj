@@ -2,7 +2,7 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.test :as t :refer [deftest testing is are]]
             [hellhound.component :as hcomp]
-            [hellhound.system :as system :refer [make-component]]
+            [hellhound.system :as system]
             [manifold.stream :as stream]))
 
 
@@ -14,8 +14,8 @@
 
 (deftest make-component-test
   (testing "make-component"
-    (is (= simple-map (make-component :component/name inc inc)))
-    (is (= simple-map (make-component :component/name inc inc [])))))
+    (is (= simple-map (hcomp/make-component :component/name inc inc)))
+    (is (= simple-map (hcomp/make-component :component/name inc inc [])))))
 
 ;; System tests --------------------------------------------
 (def component-counter (atom 0))
@@ -39,14 +39,14 @@
 
 (def sample-system
   {:components
-   [(make-component :sample/component2
+   [(hcomp/make-component :sample/component2
       (sample-start-fn :key2 :value2)
       (sample-stop-fn :key2)
       [:sample/component1])
-    (make-component :sample/component1
+    (hcomp/make-component :sample/component1
       (sample-start-fn :key1 :value1)
       (sample-stop-fn :key1))
-    (make-component :sample/component3
+    (hcomp/make-component :sample/component3
       (sample-start-fn :key3 :value3)
       (sample-stop-fn :key3)
       [:sample/component1])]

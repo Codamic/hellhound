@@ -2,7 +2,7 @@
   (:require [hellhound.system.workflow :as sut]
             [clojure.test :as t :refer [deftest testing is are]]
             [hellhound.component :as hcomp]
-            [hellhound.system :as system :refer [make-component]]
+            [hellhound.system :as system]
             [manifold.stream :as stream]
             [clojure.spec.alpha :as s]))
 
@@ -20,14 +20,14 @@
 
 (def sample-system
   {:components
-   [(make-component :sample/component2
+   [(hcomp/make-component :sample/component2
       sample-start-fn
       sample-stop-fn
       [:sample/component1])
-    (make-component :sample/component1
+    (hcomp/make-component :sample/component1
       sample-start-fn
       sample-stop-fn)
-    (make-component :sample/component3
+    (hcomp/make-component :sample/component3
       sample-start-fn
       sample-stop-fn
       [:sample/component1])]
