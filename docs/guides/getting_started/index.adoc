@@ -80,6 +80,35 @@ stuff.
 Ok, It's time to write some code. Let's start with a really basic component skeleton for the `webserver` component.
 Check out the following code.
 
+[source,clojure,linums]
+.Basic skeleton for a component
+----
+(ns getting-started.proxy.components.web
+  (:require [hellhound.component :as component])) <1>
+
+(defn start-fn   <2>
+  [this context]
+  this)
+
+(defn stop-fn    <3>
+  [this]
+  this)
+
+(defn factory   <4>
+  []
+  (component/make-component ::server start-fn stop-fn)) <5>
+----
+<1> In order to use `make-component` function we need the `hellhound.component` ns.
+<2> <<_component_start_fn,start-fn>> is the entry point to each component logic. Simply think of it
+    as the place where you have to implement the logic behind your component. In this case our `start-fn`
+    does nothing.
+<3> <<_component_start_fn,start-fn>> is responsible for component termination logic, mostly cleanup. For instance,
+    closing a socket, flushing data do disk and so on.
+<4> Factory function is a simple function to create instances of our component with different configuration. In this
+    case we just creates a fix component map. Nothing special.
+<5> `make-component` function is just a shortcut function to create the component map easily. We can replace it by
+    the actual hashmap definition of the component. We passed `::server` as the first argument to this function which
+    is the name of our component. Component's name should be namespaced keyword.
 
 == System
 
