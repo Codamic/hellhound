@@ -337,3 +337,34 @@ include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src
 As you see, the response generator component is very very simple.
 
 Now It is time to improve our system and workflow.
+
+[source,clojure,linums]
+.Response generator component
+----
+include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src/clj/getting_started/proxy/system.clj[]
+----
+<1> A helper function that extract the uri from the ring request map.
+
+<2> In this connection we want all the values which their `:uri` value is not `/` to go to `::crawler/job` component from
+    `::web/server`. The second value in the connection collection (if total number of values in the connection collection
+    is more than two) is a predicate function. If that predicate returns true only then values will pass to downstream
+    component.
+
+<3> By the predicate of this connection, only requests which has `/` as the `:uri` value passes down to the downstream
+    component that is `::loader/job`.
+
+<4> Same as before, we want the output of `::crawler/job` to be connected to input of `::webserver`.
+<5> Connects the output of `::loader/job` to input of `::response/->response`. This step might be un-necessary we could
+    just do it in the same component but just to have more complicated workflow, we separated the components.
+
+<6> And finally the output of `::response/->response` component (which will be a stream of ring responses) should
+    goes to `::web/server`.
+
+In this example we branched off our workflow from `::web/server` based on couple of predicates functions. Each branch
+will do its job and will have its own workflow. Finally we merge both pipes back in `::web/server` again. So any
+request flowing from webserver that is not a request to get the root path will goes to `::crawler/job` and the content
+would be fetched from the actual host and the request for root path will goes to `::loader/job` and loads from a file
+on filesystem. Pretty neat, right?
+
+I hope this tutorial gave you an idea about HellHound systems. HellHound is definitely more than this, but now you have
+enough knowledge to get started with *HellHound*.
