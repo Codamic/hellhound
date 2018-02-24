@@ -11,6 +11,7 @@ guard 'shell' do
         'stylesdir' => 'styles',
         'imagesdir' => './images',
         'nofooter' => true,
+        'allow-uri-read' => true,
         'stylesheet' => 'style.css'
       })
   end

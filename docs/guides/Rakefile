@@ -23,6 +23,7 @@ task :compile do
       'stylesdir' => 'styles',
       'imagesdir' => './images',
       'nofooter' => true,
+      'allow-uri-read' => true,
       'stylesheet' => 'style.css'
     })
   `cp images ./_build/images -rv`
@@ -35,6 +36,7 @@ task :compile do
       'stylesdir' => 'styles',
       'imagesdir' => './images',
       'nofooter' => true,
+      'allow-uri-read' => true,
       'stylesheet' => 'style.css'
     })
 
@@ -47,6 +49,7 @@ task :compile do
       'stylesdir' => 'styles',
       'imagesdir' => './images',
       'nofooter' => true,
+      'allow-uri-read' => true,
       'stylesheet' => 'style.css'
     })
 
@@ -61,6 +64,7 @@ task :compile do
       'stylesdir' => 'styles',
       'imagesdir' => './images',
       'nofooter' => true,
+      'allow-uri-read' => true,
       'front-cover-image' => 'image:cover.svg[Front Cover,1050,1050]',
       'stylesheet' => 'style.css'
     })

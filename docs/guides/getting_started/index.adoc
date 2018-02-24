@@ -110,6 +110,76 @@ Check out the following code.
     the actual hashmap definition of the component. We passed `::server` as the first argument to this function which
     is the name of our component. Component's name should be namespaced keyword.
 
+Almost all of the components that you may encounter or create, will have the same skeleton. Let's go over the basics of
+a component again. Each component has a name which must be a namespaced keyword, a `start-fn` with holds the logic of the
+component and gets two arguments, the component map itself and a context map, and should return a component map, a `stop-fn`
+that gets a component map and holds the termination logic. Every component has an input stream and an output stream defined
+in their component-map. There are more details about components which you can read in <<components, components section>>.
+
+HellHound created around and shares similar ideas as <<_the_unix_philosophy,unix philosophy>>. Components are isolated
+unix of execution which read data from their input, process the data and write the result to the output. System makes a
+data pipeline by pipeing IO of different components to one another. You'll learn more about this concept later on this
+documentation.
+
+Now that we setup a very basic component and we have better understanding about component concept. let's focus on the
+webserver logic and create a real world webserver component.
+
+[source,clojure,linums]
+.Web server component.
+----
+include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src/clj/getting_started/proxy/components/web.clj[]
+----
+<1> Namespace definition. As you can see we orginized the `web` component under `getting-started.proxy.components`
+    namespace. It is a good practice to store all of your components under the same parent namespace.
+
+<2> We're going to use the awesome http://aleph.io(Aleph) library to build our webserver. HellHound depends on this
+    library by default (If we use the `codamic/hellhound` or `codamic/hellhound.http` artifact).
+
+<3> `manifold.stream` library provides a very robust stream abstraction. Component's IO build around this abstraction
+    and we need to use this library to work with component's IO. HellHound depends on the `manifold` library, so there's
+    no need to add it explicitly to your dependencies.
+
+<4> `manifold.deferred` library provides an abstraction around promises and futures, and aleph webserver uses them as
+    async responses.
+
+<5> The return value of this function is in fact the ring handler which we want to use to handle the incoming requests.
+    The two paramter of `handler` function are the `input` and `output` of the webserver component.
+
+<6> Before we return the actual ring handler, we need to setup a consumer for incoming data from the input stream.
+    The basic idea is to treat any incoming data from the `input` stream of webserver component as a response and
+    return the response to the user. Alph support async responses using deferreds, So by returning a deferred
+    from *(8)* alph send back the response as soon as the deferred realised. In our consumer we just extract the same
+    deferred value from the incoming map ( any incoming value is a hashmap and we placed the deferred into it in *(9)*)
+    and resolve it the response map that again extracted from the same hashmap.
+
+<7> The actual ring handler that receives the HTTP request hashmap (`req`).
+
+<8> Created a deferred value to use as the response and pass it through the pipeline.
+
+<9> Simply create a hashmap containing `:request` and `:response-deferred` with the corresponding values and put the
+    hashmap into the webserver output stream (send it down to the pipeline). Then, return the created deferred so
+    alph can return the reponse to user as soon as the response deferred realise.
+
+<10> Receives a port number and return an anonymous function to be used as a start function for webserver component.
+     It passes the given port number to the `start-server` function of aleph.
+
+<11> `hellhound.component/io` function is a helper function which returns a vector in form of `[input output]` of
+     the IO streams of the given component.
+
+<12> Starts the aleph webserver. As you can see we passed the input and output of the component to `handler` fn.
+     We assigned the returned value of `start-server` to a key in component map so we can close it later.
+
+<13> `stop-fn` of the webserver component.
+
+<14> Stop the aleph server by calling `.close` on the server object which we assigned to `:server` in the `start-fn`.
+
+<15> Remove the `:server` key to get back to the initial state.
+
+<16> Desctruct the port number from the given `config` map.
+
+<17> Create and return a component map for with the name of `::server`.
+
+
 == System
 
 == Workflow
