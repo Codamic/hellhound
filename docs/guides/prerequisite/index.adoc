@@ -1,3 +1,4 @@
+[appendix]
 = Prerequisite
 Before learning more about *HellHound* and how to use it, you need to know about several concepts and libraries in advance
 which are heavily used in *HellHound*. If you already know about tools and concepts such as Manifold, Deffered and Stream

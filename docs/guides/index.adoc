@@ -72,9 +72,6 @@ while *HellHound* takes care of different aspects of their distributed and scala
 to achieve this using different component which provides these kind of tasks.
 
 
-// Prerequisite
-include::prerequisite/index.adoc[leveloffset=+1]
-
 // Getting Started
 include::getting_started/index.adoc[leveloffset=+1]
 
@@ -87,10 +84,13 @@ include::components/index.adoc[leveloffset=+1]
 // HTTP
 include::http/index.adoc[leveloffset=+1]
 
-// Appendix 1
-include::appendix/contribute.adoc[leveloffset=+1]
+// Appendix 1 - Prerequisite
+include::prerequisite/index.adoc[leveloffset=+1]
 
 // Appendix 2
+include::appendix/contribute.adoc[leveloffset=+1]
+
+// Appendix 3
 include::appendix/code_of_conduct.adoc[leveloffset=+1]
 
 
