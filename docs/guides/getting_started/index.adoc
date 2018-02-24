@@ -216,8 +216,92 @@ include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src
 
 <10> Creates a new component with name `:getting-started.proxy.components.crawler/job`.
 
-== System
+Alright, Now we have two components that we can create a system from them and build our proxy.
 
-== Workflow
+== System
+HellHound's systems are the most important part of our application. We express our thoughts on how the application
+should behave using systems.
+
+Let's create the first version of our system and then talk about a little bit of details.
+
+[source,clojure,linums]
+.Crawler component.
+----
+(ns getting-started.proxy.system
+  (:require
+   [getting-started.proxy.components.web :as web] <1>
+   [getting-started.proxy.components.crawler :as crawler])) <2>
+
+
+;; System factory
+(defn factory <3>
+  [port host]
+  {:components                       <4>
+        [(web/factory {:port port})  <5>
+         (crawler/factory host)]     <6>
+
+   :workflow                             <7>
+        [[::web/server ::crawler/job]    <8>
+         [::crawler/job ::web/server]})  <9>
+
+----
+<1> Our webserver component.
+<2> Our crawler component.
+<3> A system factory function which gets the configuration of the system and returns a system map based on those values.
+<4> Each system must have a `:components` key with a collection of components as the value.
+<5> We created an instance of webserver component by calling the factory function of web namespace and passing the webserver
+    configuration to it. We can refer to this component later using its name which we defined in the web ns.
+<6> Same as webserver component we created an instance of the crawler.
+<7> Every system must have a `:workflow` key as well. This key describes how HellHound should create the data pipeline by
+    pipeing IO of components together. Its value should be a collection of collections which each element represent a
+    connection.
+<8> In this connection we want to plug the output stream of `::web/server` (which is the name of our webserver component) to
+    input stream of `::crawler/job` (which is the name of our crawler component). So any value that goes to `::web/server`
+    output would be available to `::crawler/job` through its input stream.
+<9> In this connection we connect `::crawler/job` back to `::web/server`. So values from crawler's output will goes to
+    webserver input stream.
+
+As you can see, system definition is fairly straight forward. HellHound starts all the components by calling their
+start function first and the setup the data pipeline based on the `:workflow` description.
+
+In our example by sending a request to our webserver, the `::web/server` component will process the request and send to
+to the its output and the request would endup in the input of `::crawler/job`. Then crawler fetches the content of any
+incoming request and put it to its output that according to the `:workflow`, its output connected to the input of
+`::web/server`. Webserver component will send back in value coming from the input stream to user as response. Pretty simple,
+isn't it ?
+
+Systems decouple the logic of the program in to smaller pieces (components). It's easier to reason about each piece and
+it's much easier to replace a piece with another piece. Due to input/output abstraction systems are highly composable
+and components are heavily reusable.
+
+Now it's time to use our system and run our program. Here is our `core` namespace and main function:
+
+
+[source,clojure,linums]
+.Core namespace.
+----
+include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src/clj/getting_started/proxy/core.clj[]
+----
+<1> Create an instance of our system by passing the configuration to the factory function.
+<2> Set the default system of our program. Each program can have only one default system at any given time.
+<3> Fire up the default system (start the program).
+
+Now it's time to run our program using lein. Issue the following command in the project root:
+
+[source,bash,linums]
+----
+lein run -m getting-started.proxy.core/-main http://hellhound.io 3000
+----
+
+Or if you're using your own project:
+[source,bash,linums]
+----
+lein run http://hellhound.io 3000
+----
+
+Open up your browser and navigate to http://localhost:3000/(http://localhost:3000/). You should be able to see HellHound's
+website loading using your proxy.
 
 == Version 2.0
+Let's improve our code so we can serve the index of the website locally and through a file (Actually I personally use this
+software on my daily development). But first, let's think about what we want to do.
