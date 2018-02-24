@@ -71,7 +71,6 @@ Another goal of this project is to create a tool which allows developers to focu
 while *HellHound* takes care of different aspects of their distributed and scalable software in an opinionated way. We want
 to achieve this using different component which provides these kind of tasks.
 
-
 // Getting Started
 include::getting_started/index.adoc[leveloffset=+1]
 

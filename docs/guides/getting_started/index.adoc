@@ -1,4 +1,6 @@
 = Getting Started
+Before continue with document please make sure the you know enough about <<_prerequisite,HellHound prerequisite>>.
+
 In this section we're going to build an example application to cover some the most important concepts
 and features of HellHound.
 
