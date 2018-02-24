@@ -304,4 +304,36 @@ website loading using your proxy.
 
 == Version 2.0
 Let's improve our code so we can serve the index of the website locally and through a file (Actually I personally use this
-software on my daily development). But first, let's think about what we want to do.
+software on my daily development). But first, let's think about what we want to do. Generally in order to do such thing,
+we should look into the `:uri` value inside the request map of a ring handler. If it is `/` we need to load the content
+from a file instead of sending a request to the remote host. We need to treat other URIs the same as before.
+
+We can use system's workflow to achieve our goal. But we need more components. Let's create a component which loads
+the index content from a file.
+
+[source,clojure,linums]
+.Index loader component
+----
+include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src/clj/getting_started/proxy/components/index_loader.clj[]
+----
+<1> Returns a function that process any incoming value from the input and but the result to output stream
+<2> `event` will hold each of the incoming values.
+<3> Get the home directory of the user.
+<4> Set the file path to `$HOME/index.html`
+<5> Reads the content of the `file` and assign it to a new key in the map. Send the map to the output.
+<6> Consumes any incoming value and process them using the anonymous function returned by `load-index` fn.
+<7> Creates a component and call it  `::job`.
+
+Now just for fun let's create another component which reads from the input stream and construct a ring response from
+any incoming value and put the generate ring response to the output stream. Totally simple and easy to build.
+
+[source,clojure,linums]
+.Response generator component
+----
+include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src/clj/getting_started/proxy/components/response.clj[]
+----
+<1> Let's call this component `::->response`.
+
+As you see, the response generator component is very very simple.
+
+Now It is time to improve our system and workflow.
