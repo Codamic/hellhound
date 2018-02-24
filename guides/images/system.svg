@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:xhtml="http://www.w3.org/1999/xhtml"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="771px"
+   height="154px"
+   version="1.1"
+   content="&lt;mxfile userAgent=&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/61.0.3163.100 Chrome/61.0.3163.100 Safari/537.36&quot; version=&quot;7.5.5&quot; editor=&quot;www.draw.io&quot; type=&quot;google&quot;&gt;&lt;diagram id=&quot;edbb0b12-d525-ace5-c7f0-6b1e4aaaea60&quot; name=&quot;Page-1&quot;&gt;zVZNc5swEP01HDMDEjbOMaZJc2kvPvSswho0ESwVIuD++q6QMBA7M8lMOzUXpLer/Xj7BhHwtBq+atGU3zAHFbAwHwL+JWAsitmWXhY5OSRJYgcUWubeaQYO8jd4MPRoJ3NoV44GURnZrMEM6xoys8KE1tiv3Y6o1lkbUcAFcMiEukR/yNyUDt1twhl/BlmUU+Yo9JafInspNHa1zxcwfhwfZ67EFMv7t6XIsV9A/DHgqUY0blUNKSjL7USbO/f0jvVct4bafOjADiALiaHkPmdchHc+wqtQHUwtjIWa00TO2B7YAGHA930pDRwakVlrT3IgrDSVol1ESx8OtIHh3Rqjc+ekKMAKjD6Riz8wse61xP22nweTJB4rl0OJPSi8GIpz5JkQWnhOPsgPu+AnxarB2vbyv4lK1kTdXxJ1Jm9J1PZf8MRvmCfOboio+IaJ2tySopIrX6atooz7hhaFGVt2wBEteQvmtr86nAx37XjdPJADcTHMRntRODJn7BnUKxiZiaWbS3Y4tQaqKSW147KuKyF4Ud2bcdJgzHpmrdH4Aikq1ITUpAJbtFTqDSSULGraZjRIIHxvx0xVqgdvqGSe2zRXRWILfRKVVHasKXZaUgwWfofeG/2FzHZ/R0ZxtFnJaHMpo/iKitjnVUTb+e4cbYsfFP74Bw==&lt;/diagram&gt;&lt;/mxfile&gt;"
+   style="background-color: rgb(255, 255, 255);"
+   id="svg38"
+   sodipodi:docname="System.svg"
+   inkscape:version="0.92.1 r15371">
+  <metadata
+     id="metadata42">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="960"
+     inkscape:window-height="1061"
+     id="namedview40"
+     showgrid="false"
+     inkscape:zoom="1.0785442"
+     inkscape:cx="786.78866"
+     inkscape:cy="49.603734"
+     inkscape:window-x="960"
+     inkscape:window-y="19"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="switch32" />
+  <defs
+     id="defs2" />
+  <g
+     transform="translate(0.5,0.5)"
+     id="g36">
+    <rect
+       x="0"
+       y="13"
+       width="770"
+       height="140"
+       fill="#ffffff"
+       stroke="#000000"
+       pointer-events="none"
+       id="rect4" />
+    <rect
+       x="20"
+       y="73"
+       width="230"
+       height="60"
+       fill="#ffffff"
+       stroke="#000000"
+       pointer-events="none"
+       id="rect6" />
+    <g
+       transform="translate(103.5,96.5)"
+       id="g12">
+      <switch
+         id="switch10">
+        <foreignObject
+           style="overflow:visible;"
+           pointer-events="all"
+           width="62"
+           height="12"
+           requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+          <xhtml:div
+             style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 64px; white-space: nowrap; word-wrap: normal; text-align: center;">
+            <xhtml:div
+               style="display:inline-block;text-align:inherit;text-decoration:inherit;">Component</xhtml:div>
+          </xhtml:div>
+        </foreignObject>
+        <text
+           x="31"
+           y="12"
+           fill="#000000"
+           text-anchor="middle"
+           font-size="12px"
+           font-family="Helvetica"
+           id="text8">Component</text>
+      </switch>
+    </g>
+    <rect
+       x="270"
+       y="73"
+       width="230"
+       height="60"
+       fill="#ffffff"
+       stroke="#000000"
+       pointer-events="none"
+       id="rect14" />
+    <g
+       transform="translate(353.5,96.5)"
+       id="g20">
+      <switch
+         id="switch18">
+        <foreignObject
+           style="overflow:visible;"
+           pointer-events="all"
+           width="62"
+           height="12"
+           requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+          <xhtml:div
+             style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 64px; white-space: nowrap; word-wrap: normal; text-align: center;">
+            <xhtml:div
+               style="display:inline-block;text-align:inherit;text-decoration:inherit;">Component</xhtml:div>
+          </xhtml:div>
+        </foreignObject>
+        <text
+           x="31"
+           y="12"
+           fill="#000000"
+           text-anchor="middle"
+           font-size="12px"
+           font-family="Helvetica"
+           id="text16">Component</text>
+      </switch>
+    </g>
+    <rect
+       x="520"
+       y="73"
+       width="230"
+       height="60"
+       fill="#ffffff"
+       stroke="#000000"
+       pointer-events="none"
+       id="rect22" />
+    <g
+       transform="translate(603.5,96.5)"
+       id="g28">
+      <switch
+         id="switch26">
+        <foreignObject
+           style="overflow:visible;"
+           pointer-events="all"
+           width="62"
+           height="12"
+           requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+          <xhtml:div
+             style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 64px; white-space: nowrap; word-wrap: normal; text-align: center;">
+            <xhtml:div
+               style="display:inline-block;text-align:inherit;text-decoration:inherit;">Component</xhtml:div>
+          </xhtml:div>
+        </foreignObject>
+        <text
+           x="31"
+           y="12"
+           fill="#000000"
+           text-anchor="middle"
+           font-size="12px"
+           font-family="Helvetica"
+           id="text24">Component</text>
+      </switch>
+    </g>
+    <g
+       transform="translate(351.5,-0.5)"
+       id="g34">
+      <switch
+         id="switch32">
+        <foreignObject
+           style="overflow:visible;"
+           pointer-events="all"
+           width="66"
+           height="87"
+           requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+          <xhtml:div
+             style="display: inline-block; font-size: 28px; font-family: &quot;Courier New&quot;; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 68px; white-space: nowrap; word-wrap: normal; text-align: center;">
+            <xhtml:div
+               style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+              <xhtml:p>
+                <xhtml:font
+                   style="font-size: 20px"
+                   face="Helvetica">System</xhtml:font>
+              </xhtml:p>
+            </xhtml:div>
+          </xhtml:div>
+        </foreignObject>
+        <text
+           x="33"
+           y="58"
+           font-size="28px"
+           id="text30"
+           style="font-size:28px;font-family:'Courier New';text-anchor:middle;fill:#000000">System</text>
+      </switch>
+    </g>
+  </g>
+</svg>
