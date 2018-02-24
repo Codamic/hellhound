@@ -23,8 +23,8 @@
 [IMPORTANT]
 .Under development software
 ====
-This software is not ready to use yet. It's under heavy development
-and reaches the alpha stage pretty soon. If you like to be part of this process please
+This software is in Alpha stage. It's under heavy development
+and reaches the Beta stage pretty soon. If you like to be part of this process please
 leave us a message.
 ====
 
@@ -59,9 +59,6 @@ basically is a <<systems,system>> of <<components,components>> which work togeth
 Components form one or more data pipelines through <<workflow,workflows>>. In general systems are a great way to
 manage the lifecycle and data flow or your program and components are awesome for managing the state and dependencies
 of different pieces of your program.
-
-HellHound provides different built-in components for different types of systems. For example Webserver component for creating
-a fullstack web application, or a kafka component for a data processing application.
 
 === Goals
 The ultimate goal of *HellHound* is to create a set of libraries for creating well orginized, simple, easy to test, easy to
