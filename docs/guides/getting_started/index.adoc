@@ -179,6 +179,42 @@ include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src
 
 <17> Create and return a component map for with the name of `::server`.
 
+So far we created a webserver component which its output is a stream of hashmaps that each of them has a `:request` key
+containing the request map and conceptually it will send any incoming response from the input stream to user.
+
+Now we need another component to fetch the content of each requested URL from the remote host. Let's jump in:
+
+[source,clojure,linums]
+.Crawler component.
+----
+include::https://raw.githubusercontent.com/Codamic/hellhound_examples/master/src/clj/getting_started/proxy/components/crawler.clj[]
+----
+<1> Yupe, aleph again. Aleph library provides a HTTP client as well.
+
+<2> A simple an stupid function to extract data from the response and generate a ring response again. This function is
+    useless in this case but You might want to change the response a bit. In that case this function would be
+    the best place for your logic.
+
+<3> Fetch the content of the given url and uses the `manifold.deferred/chain` function to pass the content to `response`
+    function as soon as it arrived. `manifold.deferred/chain` returns a `deferred` value.
+
+<4> Returns an anonymous function with gets a parameter that would be any incoming value from the input stream. Then, we
+    we extract the request from the incoming value and fetch the content for that request.
+
+<5> Fetch the content or `url` by using `fetch-url` function and creates a new hashmap from the received input data with
+    an additional key called `:response` that has a deferred value representing the content and push it to the output of
+    crawler component.
+
+<6> Retrieve the content of the given `url`. The return value of this function is a deferred value.
+
+<7> `hellhound.component/io` is a helper function that returns input and output of the given component.
+
+<8> Consumes any incoming value from the input and uses the function returned by the `proxy` function to process each
+    value.
+
+<9> A dummy stop funtion which does nothing. Because we don't have any termination or cleanup logic.
+
+<10> Creates a new component with name `:getting-started.proxy.components.crawler/job`.
 
 == System
 
