@@ -63,7 +63,7 @@
   optional `config` map.
 
   The `routes` argument should be a valid **HellHound** route collection,
-  compatible with [bidi library](https://github.com/juxt/bidi). **Hellhound**
+  compatible with Pedestal library. **Hellhound**
   provides a helper namespace for dealing with routes. Checkout
   [[hellhound.http]] and [[hellhound.http.route]] namespaces for more info."
   ([routes]

@@ -25,3 +25,4 @@ http/target/
 core/.lein-*
 http/.lein-*
 **/*/.lein-failu*
+i18n/target/
