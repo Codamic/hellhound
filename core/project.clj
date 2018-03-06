@@ -35,6 +35,7 @@
 
   :profiles {:dev
              {:dependencies [[funcool/codeina            "0.5.0"]
+                             [hawk                       "0.2.11"]
                              [org.clojure/tools.nrepl    "0.2.13"]]}
 
              :uberjar
