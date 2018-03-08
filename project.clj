@@ -5,13 +5,14 @@
             :url "http://opensource.org/licenses/MIT"}
   :scm         {:name "git"
                 :url "https://github.com/Codamic/hellhound"}
-  :dependencies [[org.clojure/clojure    "1.9.0"]
-                 [codamic/hellhound.core "1.0.0-SNAPSHOT"]
-                 [codamic/hellhound.http "1.0.0-SNAPSHOT"]]
+  :dependencies [[org.clojure/clojure     "1.9.0"]
+                 [codamic/hellhound.core  "1.0.0-SNAPSHOT"]
+                 [codamic/hellhound.http  "1.0.0-SNAPSHOT"]
+                 [codamic/hellhound.kafka "1.0.0-SNAPSHOT"]]
 
   :plugins [[lein-sub "0.3.0"]
             [lein-codox "0.10.3"]]
-  :sub ["core" "i18n" "http"]
+  :sub ["core" "i18n" "http" "kafka"]
 
 
   :deploy-repositories [["releases" :clojars]
@@ -26,4 +27,5 @@
           :source-uri "http://github.com/Codamic/hellhound/blob/{version}/{filepath}#L{line}"
           :source-paths ["core/src"
                          "i18n/src"
-                         "http/src"]})
+                         "http/src"
+                         "extra_components/kafka/src"]})
