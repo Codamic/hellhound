@@ -12,7 +12,7 @@
 
   :plugins [[lein-sub "0.3.0"]
             [lein-codox "0.10.3"]]
-  :sub ["core" "i18n" "http" "kafka"]
+  :sub ["core" "i18n" "http" "extra_components/kafka"]
 
 
   :deploy-repositories [["releases" :clojars]
