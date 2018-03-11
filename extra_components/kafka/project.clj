@@ -22,8 +22,6 @@
   :uberjar-name "hellhound.kafka.standalone.jar"
   :jar-name "hellhound.kafka.jar"
 
-  :repl-options {:init-ns user}
-
   :profiles {:dev
              {:dependencies [[funcool/codeina            "0.5.0"]
                              [org.clojure/tools.nrepl    "0.2.13"]]}
