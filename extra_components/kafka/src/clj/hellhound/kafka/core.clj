@@ -1,4 +1,5 @@
 (ns hellhound.kafka.core
+  (:require [manifold.stream :as stream])
   (:import
    [java.util Properties]
    [org.apache.kafka.streams KafkaStreams StreamsBuilder]
@@ -38,5 +39,11 @@
 
 (reset! _builder nil)
 
-(streams {"application.id"    "test.app"
-          "bootstrap.servers" ["localhost:9092"]})
+(def  s (stream "sam1"))
+(def a (streams {"application.id"    "test.app"
+                 "bootstrap.servers" ["localhost:29092"]}))
+
+(.close a)
+(.forEach s #(println (str "<<<< key: " %1 " >>>> val: " %2)))
+  ;;(.start a))
+  ;;(.close a))
