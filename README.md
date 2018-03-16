@@ -23,6 +23,24 @@ a fullstack web application, or a kafka component for a data processing applicat
 [guides](http://docs.hellhound.io/guides/) and [Examples](https://github.com/Codamic/hellhound_examples).
 
 
+## Road Map for next stable version
+Our near future goals are:
+* Support for configurable execution model for the entire system and components as well.
+  In addition to manage the execution model of the system automatically by HellHound, We like to add a configurable
+  execution model which allows users to change the behavior based on the use case. For example user might want
+  to run a component on a blocking thread pool or control the number of threads in each thread pool under hood.
+
+* Support for Kafka streams. We're working on adding the support for kafka streams in our stream abstractions so
+  users can easily take advantage of good features of Apache Kafka in their systems. (Development Started)
+
+* Support for IO spec for each component. The basic idea is to add the support for a pair of configurations to
+  components that allow them to define specs for incoming and outgoing messages. It should be possible to enforce
+  these spec on messages. Another purpose of having these specs is to create a diagram later that demonstrates how
+  data transform in the system. This way by creating the diagram in any given time, as a developer we would have
+  better understanding of our system and data flow. This feature would be awesome specially for new developers.
+
+If you like to help us with any of these. Give us a shout.
+
 ## Branching guide
 The `master` branch of this repo is for development purposes. In order to get the latest stable code please checkout the
 `stable` branch.
