@@ -39,6 +39,8 @@ Our near future goals are:
   data transform in the system. This way by creating the diagram in any given time, as a developer we would have
   better understanding of our system and data flow. This feature would be awesome specially for new developers.
 
+* Better support for REPL driven development
+
 If you like to help us with any of these. Give us a shout.
 
 ## Branching guide

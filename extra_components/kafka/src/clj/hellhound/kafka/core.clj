@@ -37,13 +37,15 @@
                  (make-config config)))
 
 
+(def cb (reify org.apache.kafka.streams.kstream.ForeachAction
+          (apply [this k v]
+            (println (str "<<<<<<<<<<<<<< " k ">>>> " v)))))
+
 (reset! _builder nil)
 
-(def  s (stream "sam1"))
 (def a (streams {"application.id"    "test.app"
                  "bootstrap.servers" ["localhost:29092"]}))
 
-(.close a)
-(.forEach s #(println (str "<<<< key: " %1 " >>>> val: " %2)))
+(.forEach s cb)
   ;;(.start a))
   ;;(.close a))
