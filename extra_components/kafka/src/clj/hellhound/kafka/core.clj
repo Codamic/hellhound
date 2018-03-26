@@ -43,9 +43,11 @@
 
 (reset! _builder nil)
 
+(def ss (stream "something"))
 (def a (streams {"application.id"    "test.app"
-                 "bootstrap.servers" ["localhost:29092"]}))
+                 "retries"           "1"
+                 "bootstrap.servers" ["localhost:9092"]}))
 
-(.forEach s cb)
-  ;;(.start a))
-  ;;(.close a))
+(.foreach ss cb)
+(.start a)
+(.close a)
