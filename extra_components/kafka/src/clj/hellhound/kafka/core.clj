@@ -2,7 +2,7 @@
   (:require [manifold.stream :as stream])
   (:import
    [java.util Properties]
-   [org.apache.kafka.streams KafkaStreams StreamsBuilder]
+   [org.apache.kafka.streams KafkaStreams StreamsBuilder StreamsConfig]
    [org.apache.kafka.streams.kstream KStream]))
 
 
@@ -41,13 +41,21 @@
           (apply [this k v]
             (println (str "<<<<<<<<<<<<<< " k ">>>> " v)))))
 
-(reset! _builder nil)
+(defn xx []
+  (reset! _builder nil)
+  (let [ss (stream "something")
+        a (streams {"application.id"    "test.app"
+                    "retries"           "1"
+                    (StreamsConfig/BOOTSTRAP_SERVERS_CONFIG) "localhost:9092"})]
+                    ;;"bootstrap.servers" "localhost:9092"})]
 
-(def ss (stream "something"))
-(def a (streams {"application.id"    "test.app"
-                 "retries"           "1"
-                 "bootstrap.servers" ["localhost:9092"]}))
+    (.foreach ss cb)
+    (.start a)
+    a))
 
-(.foreach ss cb)
-(.start a)
-(.close a)
+(defn cc [a]
+  (.close a))
+
+
+(def x (xx))
+(cc x)
