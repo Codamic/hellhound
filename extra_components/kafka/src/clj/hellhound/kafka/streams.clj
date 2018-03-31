@@ -27,27 +27,3 @@
   [config]
   (KafkaStreams. (.build (builder))
                  (make-config config)))
-
-
-(def cb (reify org.apache.kafka.streams.kstream.ForeachAction
-          (apply [this k v]
-            (println (str "<<<<<<<<<<<jjjjjjjjjjjjjjjjjjjjjjjjjjjjj<<< " k ">>>> " v)))))
-
-(defn xx []
-  (reset! _builder nil)
-  (let [ss (stream "something")
-        a (streams {"application.id"    "test.app"
-                    "retries"           "1"
-                    (StreamsConfig/BOOTSTRAP_SERVERS_CONFIG) "localhost:9092"})]
-                    ;;"bootstrap.servers" "localhost:9092"})]
-
-    (.foreach ss cb)
-    (.start a)
-    a))
-
-(defn cc [a]
-  (.close a))
-
-
-(def x (xx))
-(cc x)
