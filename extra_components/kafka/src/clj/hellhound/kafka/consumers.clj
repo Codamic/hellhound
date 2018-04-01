@@ -49,6 +49,21 @@
      (finally
        (.close consumer)))))
 
+(defn consume-each
+  "Consume records from the given kafka `consumer` and applies `f` to each
+  record.
+
+  Each record would be an instance of `ConsumerRecord`. Optionally there's
+  a third arg which is the `timeout` value for the poll call and its default
+  is `2000ms`."
+  ([^Consumer consumer f]
+   (consume-each consumer f nil))
+
+  ([^Consumer consumer f timeout]
+   (let [func #(doseq [r %] (f r))]
+     (if timeout
+       (consume consumer func timeout)
+       (consume consumer func)))))
 
 (comment
   (def c (make-consumer {"bootstrap.servers" "localhost:9092"
@@ -56,7 +71,7 @@
 
 
   (subscribe c ["something"])
-  (consume c (fn [x]
-               (doseq [r x]
-                 (println r))) 1000)
+  (consume-each c (fn [x]
+                    (println "-------------------")
+                    (println x))) 1000
   (.close c))
