@@ -1,4 +1,16 @@
 (ns hellhound.kafka.consumers
+  "This namespace provides a very lightweight wrapper around the official Kafka
+  Consumer API. Here's a very simple example:
+
+  ``` clj
+  (let [c (make-consumer {"bootstrap.servers" "localhost:9092"
+                          "group.id"          "test"})]
+    (subscribe c ["sometopoc"])
+    (consume-each c #(println %))
+    (.close c)
+  ```
+  For more information please checkout the KafkaConsumer API documentation
+  "
   (:require
    [hellhound.kafka.core :as core])
   (:import
@@ -64,14 +76,3 @@
      (if timeout
        (consume consumer func timeout)
        (consume consumer func)))))
-
-(comment
-  (def c (make-consumer {"bootstrap.servers" "localhost:9092"
-                         "group.id"          "test"}))
-
-
-  (subscribe c ["something"])
-  (consume-each c (fn [x]
-                    (println "-------------------")
-                    (println x))) 1000
-  (.close c))
