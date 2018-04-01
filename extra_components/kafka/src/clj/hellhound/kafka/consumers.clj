@@ -3,9 +3,9 @@
   Consumer API. Here's a very simple example:
 
   ``` clj
-  (let [c (make-consumer {"bootstrap.servers" "localhost:9092"
-                          "group.id"          "test"})]
-    (subscribe c ["sometopoc"])
+  (let [c (make-consumer {\"bootstrap.servers\" \"localhost:9092\"
+                          \"group.id\"          \"test\"})]
+    (subscribe c [\"sometopoc\"])
     (consume-each c #(println %))
     (.close c)
   ```
