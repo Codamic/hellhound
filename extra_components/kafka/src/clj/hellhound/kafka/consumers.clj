@@ -44,18 +44,19 @@
   (.subscribe consumer topics))
 
 (defn consume
-  "Consume records from the given `consumer` and apply function`f` on them.
+  "Consume records from the given `consumer` until the given `pred` function
+  returns true and apply function`f` on them.
 
   By default consumed values are a `ConsumerRecords` java object.
   An optional third arg is the `timeout` for the connection. The default value
   for the timeout is `2000ms`."
-  ([^Consumer consumer f]
+  ([^Consumer consumer pred f]
    ;; TODO: fetch the default timeout value from global config
-   (consume consumer f 2000))
+   (consume consumer pred f 2000))
 
   ([^Consumer consumer f timeout]
    (try
-     (while true
+     (while (pred)
        (let [records (.poll consumer timeout)]
          (f records)))
      (finally
