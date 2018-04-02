@@ -69,11 +69,11 @@
   Each record would be an instance of `ConsumerRecord`. Optionally there's
   a third arg which is the `timeout` value for the poll call and its default
   is `2000ms`."
-  ([^Consumer consumer f]
-   (consume-each consumer f nil))
+  ([^Consumer consumer pred f]
+   (consume-each consumer pred f nil))
 
-  ([^Consumer consumer f timeout]
+  ([^Consumer consumer pred f timeout]
    (let [func #(doseq [r %] (f r))]
      (if timeout
-       (consume consumer func timeout)
-       (consume consumer func)))))
+       (consume consumer pred func timeout)
+       (consume consumer pred func)))))

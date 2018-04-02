@@ -17,10 +17,14 @@
   (fn [this context]
     (let [[input output] (hcomp/io this)
           c              (consumer/make-consumer config)
-          event-loop     (d/deferred)]
+          active-loop?   (atom true)]
+
       (consumer/subscribe topics)
-      (consumer/consume-each #(s/put! output %))
-      (assoc this :consumer c))))
+      (assoc this
+             :consumer c
+             :poll-loop (d/future (consumer/consume-each
+                                   #(deref active-loop?
+                                   #(s/put! output %))))))))
 
 
 (defn stop!
