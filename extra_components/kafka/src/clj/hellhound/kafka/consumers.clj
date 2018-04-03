@@ -12,7 +12,9 @@
   For more information please checkout the KafkaConsumer API documentation
   "
   (:require
-   [hellhound.kafka.core :as core])
+   [hellhound.kafka.core :as core]
+   [clojure.spec.alpha :as spec])
+
   (:import
    [org.apache.kafka.clients.consumer
     KafkaConsumer
@@ -41,6 +43,10 @@
 (defn subscribe
   "Subscribe to the given list of `topics` of the given `consumer`."
   [^Consumer consumer topics]
+  (when (not (seq? topics))
+    (throw (ex-info "'topics' should be a collection of topics."
+                    {:cause topics})))
+
   (.subscribe consumer topics))
 
 (defn consume
@@ -54,7 +60,7 @@
    ;; TODO: fetch the default timeout value from global config
    (consume consumer pred f 2000))
 
-  ([^Consumer consumer f timeout]
+  ([^Consumer consumer pred f timeout]
    (try
      (while (pred)
        (let [records (.poll consumer timeout)]
@@ -77,3 +83,8 @@
      (if timeout
        (consume consumer pred func timeout)
        (consume consumer pred func)))))
+
+(defn close
+  "Close the given `consumer`."
+  [^Consumer consumer]
+  (.close consumer))

@@ -1,11 +1,11 @@
 (ns hellhound.components.kafka-consumer
   (:require
-   [hellhound.kafka.consumers :as consumer]
+   [hellhound.kafka.consumers :as consumers]
    [hellhound.core :as hellhound]
    [hellhound.component :as hcomp]
    [manifold.stream :as s]
-   [manifold.deferred :as d]
-   [kafka-clj.client :as kafka]))
+   [manifold.deferred :as d]))
+
 
 (defn make-config
   [config]
@@ -16,25 +16,28 @@
   [config topics]
   (fn [this context]
     (let [[input output] (hcomp/io this)
-          c              (consumer/make-consumer config)
-          active-loop?   (atom true)]
+          c              (consumers/make-consumer config)
+          active?   (atom true)]
 
-      (consumer/subscribe topics)
+      (consumers/subscribe c topics)
       (assoc this
              :consumer c
-             :poll-loop (d/future (consumer/consume-each
-                                   #(deref active-loop?
-                                   #(s/put! output %))))))))
+             :active? active?
+             :poll-loop (d/future (consumers/consume-each
+                                   #(deref active?)
+                                   #(s/put! output %)))))))
 
 
 (defn stop!
   [this]
   (when (:consumer this)
-    (consumer/stop (:consumer this)))
+    (reset! (:active? this) false)
+    (consumers/close (:consumer this)))
+
   (dissoc this :consumer))
 
 (defn factory
   [config topic]
-  (hcomp/make-component ::hellhound.components/kafka-consumer
+  (hcomp/make-component :hellhound.components/kafka-consumer
                         (start! config topic)
                         stop!))
