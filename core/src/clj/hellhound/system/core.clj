@@ -4,7 +4,6 @@
   your doing."
   (:require
    [clojure.spec.alpha         :as s]
-   [hellhound.component        :as comp]
    [hellhound.system.workflow  :as workflow]
    [hellhound.system.utils     :as utils]
    [hellhound.logger :as log]
@@ -152,3 +151,18 @@
                   system-map
                   (vals (utils/get-components system-map))))
   (log/info "System stopped successfully."))
+
+
+(defn get-supervisor
+  [system]
+  (:supervisor system))
+
+(defn setup-supervisor
+  [system]
+  (if-let [supervisor (get-supervisor system)]
+    (hcomp/initialize supervisor)))
+
+(defn start-supervisor
+  [system]
+  (if-let [supervisor (get-supervisor system)]
+    (hcomp/start supervisor)))
