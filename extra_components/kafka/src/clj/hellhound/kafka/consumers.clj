@@ -43,7 +43,7 @@
 (defn subscribe
   "Subscribe to the given list of `topics` of the given `consumer`."
   [^Consumer consumer topics]
-  (when (not (seq? topics))
+  (when (not (coll? topics))
     (throw (ex-info "'topics' should be a collection of topics."
                     {:cause topics})))
 
