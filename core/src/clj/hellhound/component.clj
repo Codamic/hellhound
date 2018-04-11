@@ -182,6 +182,14 @@
             "::output should not be empty. Please file a bug")
     (::output new-component)))
 
+(defn- executor-of
+  "Returns the executor of the given `component`.
+
+  If component does not provide an executor then HellHound will choose
+  one base on the system configuration."
+  [component]
+  (::executor component))
+
 ;; Public Functions ----------------------------------------
 (defn make-component
   "A short cut function to create a component map with the given details.
@@ -231,7 +239,10 @@
     (input-of component))
 
   (output [component]
-    (output-of component)))
+    (output-of component))
+
+  (executor [component]
+    (executor-of component)))
 
 ;; SPECS ---------------------------------------------------
 (s/def ::name qualified-keyword?)

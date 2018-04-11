@@ -23,9 +23,10 @@
       (assoc this
              :consumer c
              :active? active?
-             :poll-loop (consumers/consume-each c
-                                                #(deref active?)
-                                                #(s/put! output %))))))
+             :poll-loop (d/future
+                          (consumers/consume-each c
+                                                  #(deref active?)
+                                                  #(s/put! output %)))))))
 
 (defn stop!
   [this]
