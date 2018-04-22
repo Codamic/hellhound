@@ -10,14 +10,15 @@
 
   :dependencies [[org.clojure/clojure        "1.9.0"]
                  [org.clojure/test.check     "0.10.0-alpha2"]
+                 [org.clojure/core.async     "0.4.474"]
                  ;; Logging
                  [org.slf4j/slf4j-api              "1.7.25"]
                  [com.taoensso/timbre              "4.10.0"]
                  [com.fzakaria/slf4j-timbre        "0.3.7"]
                  [org.slf4j/log4j-over-slf4j       "1.7.25"]
                  [org.slf4j/jul-to-slf4j           "1.7.25"]
-                 [org.slf4j/jcl-over-slf4j         "1.7.25"]
-                 [manifold                         "0.1.6"]]
+                 [org.slf4j/jcl-over-slf4j         "1.7.25"]]
+
 
   :plugins [[lein-codox "0.10.3"]]
 
