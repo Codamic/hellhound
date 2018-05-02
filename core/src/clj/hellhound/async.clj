@@ -43,4 +43,4 @@
 
 
 (let [b (chan 1)
-      a (go-block (<! b))])
+      a (go-block (println "----------------") (<! b))])
