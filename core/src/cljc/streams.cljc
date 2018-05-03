@@ -63,7 +63,7 @@
             (async/>! c x)
             (recur)))
 
-        (doseq [x [1 2 3 4 5 6 7 8 9 10 11 12 13]]
+        (doseq [x [1 2 3 4 6 7 8 9 10 11 12 13]]
           (async/>!! a x))))
     (let [m (async/mult a)]
       (read b "b")
