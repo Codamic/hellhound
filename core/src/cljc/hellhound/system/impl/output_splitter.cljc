@@ -1,17 +1,18 @@
-(ns hellhound.components.protocols)
+(ns hellhound.system.impl.output-splitter
+  (:require
+   [clojure.core.async :refer [go <! >!]]
+   [hellhound.system.protocols :as proto]))
 
+(def
+  ^{:doc "A map which describes a set of operations that should apply to values
+          from a source channel before putting them on any sink channel."}
 
-(defprotocol Splitter
-  (connect [this sink operation-map]
-    "Setup the `sink` channel to be connected to a source later based on
-     the given `operation-map` which basically defines all the operations
-     that should apply to the value before sending it to the sink. Operations
-     like filter and map.")
-
-  (commit [_] "Connect source channel to all the sinks"))
-
-(def default-operations
-  {:filter-fn #(identity %)
+  default-operations
+  {;; If the function returns a treuthy by passing the value from the source,
+   ;; we will the the value to the sink assigned to this map.
+   :filter-fn #(identity %)
+   ;; This function will apply to the value came from the source channel before
+   ;; sending it to the sink channel.
    :map-fn    #(identity %)})
 
 (defn ->sink
@@ -33,7 +34,7 @@
       (close! sink))))
 
 (deftype OutputSplitter [^Channel source sinks]
-  Splitter
+  proto/Splitter
   (connect
     [this sink operation-map]
     (let [m (or operation-map default-operations)]
