@@ -1,6 +1,7 @@
 (ns hellhound.system.impl.output-splitter
   (:require
-   [clojure.core.async :refer [go <! >!]]
+   [clojure.core.async.impl.channels :as channels]
+   [clojure.core.async :as async :refer [go <! >! chan close! go-loop]]
    [hellhound.system.protocols :as proto]))
 
 (def
@@ -18,31 +19,60 @@
 (defn ->sink
   "Send the given `value` to the given `sink` channel by applying changes
   defined in `op-map` to the value. "
-  [sink value {:keys [filter-fn map-fn :as ops]}]
+  [put sink value {:keys [filter-fn map-fn] :as ops}]
   (if (filter-fn value)
-    (>! sink (map-fn value))))
+    (put sink (map-fn value))))
 
 (defn send->sink
   "Send the given `value` to all the `sinks` by applying changes defined
   in `op-map` to the value. If the value is `nil` it will close all the
   `sinks`."
-  [sinks value]
+  [put sinks value]
   (if value
     (doseq [[sink op-map] sinks]
-      (->sink sink op-map value))
+      (println "SINK: " sink)
+      (->sink put sink value op-map))
     (doseq [[sink _] sinks]
       (close! sink))))
 
-(deftype OutputSplitter [^Channel source sinks]
+(deftype OutputSplitter [source sinks]
   proto/Splitter
   (connect
     [this sink operation-map]
     (let [m (or operation-map default-operations)]
-      (conj sinks [sink m])))
+      (swap! sinks conj [sink m])))
 
   (commit
     [this]
     (go-loop []
       (let [v (<! source)]
-        (send->sink sinks value)
+        (println "xxxeeeee")
+        (println >!)
+        (send->sink #(>! %1 %2) @sinks v)
         (recur)))))
+
+
+(defn output-splitter
+  [source]
+  (OutputSplitter. source (atom [])))
+
+(comment
+  (let [a (chan 10)
+        b (chan 10)
+        c (chan 10)
+        splitter (output-splitter a)
+        read #(async/go-loop []
+                (let [v (async/<! %1)]
+                  (println (format "GO-%s: %s" %2 v)))
+                (recur))]
+    (read b "b")
+    (read c "c")
+    (proto/connect splitter b default-operations)
+    (proto/connect splitter c default-operations)
+    (proto/commit splitter)
+    (println "xxxx")
+    (println (.sinks splitter))
+    (println c)
+    (println default-operations)
+    (doseq [x [1 2 3 4 5 6 7 8 9 10 11 12 13]]
+          (async/>!! a x))))
