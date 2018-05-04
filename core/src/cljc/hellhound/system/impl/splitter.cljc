@@ -1,4 +1,4 @@
-(ns hellhound.system.impl.output-splitter
+(ns hellhound.system.impl.splitter
   (:require
    [clojure.core.async.impl.channels :as channels]
    [clojure.core.async :as async :refer [go <! >! chan close! go-loop]]
@@ -16,43 +16,49 @@
    ;; sending it to the sink channel.
    :map-fn    #(identity %)})
 
-(defn ->sink
-  "Send the given `value` to the given `sink` channel by applying changes
-  defined in `op-map` to the value. "
-  [put sink value {:keys [filter-fn map-fn] :as ops}]
+(defn- transorm-value
+  "Applies all the operations defined in the given `ops` map and return the
+  transformed value."
+  [value {:keys [filter-fn map-fn] :as ops}]
   (if (filter-fn value)
-    (put sink (map-fn value))))
+    (map-fn value)
+    nil))
 
-(defn send->sink
-  "Send the given `value` to all the `sinks` by applying changes defined
-  in `op-map` to the value. If the value is `nil` it will close all the
-  `sinks`."
-  [put sinks value]
-  (if value
-    (doseq [[sink op-map] sinks]
-      (println "SINK: " sink)
-      (->sink put sink value op-map))
-    (doseq [[sink _] sinks]
-      (close! sink))))
 
 (deftype OutputSplitter [source sinks]
   proto/Splitter
   (connect
     [this sink operation-map]
+    ;; Simply puts the sink and it's operation-map into sinks vector
     (let [m (or operation-map default-operations)]
       (swap! sinks conj [sink m])))
 
   (commit
     [this]
     (go-loop []
-      (let [v (<! source)]
-        (println "xxxeeeee")
-        (println >!)
-        (send->sink #(>! %1 %2) @sinks v)
+      ;; Asynchronously reads a value from the source and transform
+      ;; it based on operation map of each sink and if it was'nt nil
+      ;; put it into sink.
+      (let [value (<! source)
+            sinks @sinks]
+
+        (if (nil? value)
+          ;; Closes all the sinks if the value from source is nil which means
+          ;; the source channel is closed.
+          (doseq [[sink _] sinks]
+            (close! sink))
+
+          ;; filter and transorm the value according to the operation map
+          ;; of each sink and put it on the sink channel.
+          (doseq [[sink ops] sinks]
+            (let [filtered-value (transorm-value v ops)]
+              (when (not (nil? filtered-value))
+                (>! sink filtered-value)))))
         (recur)))))
 
 
 (defn output-splitter
+  "Create and return an output-splitter for the given `source` channel."
   [source]
   (OutputSplitter. source (atom [])))
 
