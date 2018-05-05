@@ -16,6 +16,11 @@
    ;; sending it to the sink channel.
    :map-fn    #(identity %)})
 
+(defn make-ops-map
+  [filter-fn map-fn]
+  {:filter-fn (or filter-fn #(identity %))
+   :map-fn    (or map-fn    #(identity %))})
+
 (defn- transorm-value
   "Applies all the operations defined in the given `ops` map and return the
   transformed value."

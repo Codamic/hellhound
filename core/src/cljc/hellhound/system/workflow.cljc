@@ -15,7 +15,8 @@
   messages which pass the predicate.
 
   Predicate function should be a pure function obviousely."
-  (:require [hellhound.system.impl.splitter :as splitter]
+  (:require [hellhound.system.impl.splitter :as spltr]
+            [hellhound.system.protocols     :as impl]
             [hellhound.logger               :as log]
             [hellhound.system.utils         :as utils]
             [hellhound.component            :as hcomp])
@@ -91,7 +92,7 @@
     (impl/connec splitter to {:filter-fn pred
                               :map-fn    map-fn})]))
 
-(defn wire-io!
+(defn wire-io1!
   "Walks through the workflow vectors and wire up the system workflow
   based on desciption given by each vector.
 
@@ -111,6 +112,60 @@
      (let [component-vec (apply parse-triple components workflow-triple)]
        (apply connect component-vec))
      (recur components (rest workflow) (first workflow)))))
+
+
+(defn parse
+  ([from to]
+   (parse from #(identity %) #(identity %) to))
+
+  ([from pred to]
+   (parse from pred #(identity %) to))
+
+  ([from pred map-fn to]
+   [from (spltr/make-ops-map pred map-fn) to]))
+
+(defn make-splitter
+  [components from]
+  (spltr/make-splitter (hcomp/output from)))
+
+(defn connect-workflow
+  [[splitters components] connection-vec]
+
+  (let [[from ops-map to] (apply parse connection-vec)
+        dest-componen     (get components to)
+        splitter          (or (get splitters from)
+                              (make-splitter components from))]
+    (when (nil? to-component)
+      (throw (ex-info (format "Can't find component '%s' in the running components." to)
+                      {:cause to})))
+
+    (impl/connect splitter
+                  (hcomp/input dest-component)
+                  ops-map)
+
+
+    [(assoc splitters from splitter)
+     components]))
+
+(defn wire-io!
+  "Walks through the workflow vectors and wire up the system workflow
+  based on desciption given by each vector.
+
+  System's workflow is a vector of vectors. Each vector contains two
+  mandatory element which are:
+    * The name of the output component
+    * The name of the input component(defn make-splitter
+  [components from]
+  (spltr/make-splitter (hcomp/output from)))
+
+  and an optional predicate function. This function connects the
+  output stream of output component to input stream of input component,
+  and in case of existance of a predicate function, it only sends those
+  messages which pass the predicate."
+  [state ^IPersistentMap components ^IPersistentMap workflow]
+  (doseq [splitter (first (reduce connect-workflow state workflow))]
+    (impl/commit splitter)))
+
 
 (defn ^IPersistentMap setup
   "Sets up the workflow of the system by wiring the io of each component
