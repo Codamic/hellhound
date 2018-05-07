@@ -115,6 +115,7 @@
 
 
 (defn parse
+  "Returns a operations map based on the given arguments."
   ([from to]
    (parse from #(identity %) #(identity %) to))
 
@@ -125,19 +126,30 @@
    [from (spltr/make-ops-map pred map-fn) to]))
 
 (defn make-splitter
-  [components from]
-  (spltr/make-splitter (hcomp/output from)))
+  "Creates a splitter from the given `source-component` component."
+  [components source-component]
+  (spltr/make-splitter (hcomp/output source-component)))
 
 (defn connect-workflow
+  "Setup and connect the components through the splitters."
   [[splitters components] connection-vec]
 
   (let [[from ops-map to] (apply parse connection-vec)
-        dest-componen     (get components to)
-        splitter          (or (get splitters from)
-                              (make-splitter components from))]
-    (when (nil? to-component)
-      (throw (ex-info (format "Can't find component '%s' in the running components." to)
-                      {:cause to})))
+        source-component  (get components from)
+        dest-componen     (get components to)]
+
+    ;; Validates the source and dest components
+    (when (nil? source-component)
+      (invalid-component-name from))
+
+    (when (nil? dest-component)
+      (invalid-component-name to))
+
+
+    ;; Get or create a new splitter from the source
+    ;; component
+    (let [splitter (or (get splitters from)
+                       (make-splitter source-component))])
 
     (impl/connect splitter
                   (hcomp/input dest-component)
