@@ -9,11 +9,12 @@
    [hellhound.logger           :as log]
    [hellhound.component        :as hcomp])
 
-  (:import
-   (hellhound.component IComponent)
-   (clojure.lang IPersistentMap
-                 PersistentArrayMap
-                 PersistentVector)))
+
+  #?(:clj (:import
+           (hellhound.component IComponent)
+           (clojure.lang IPersistentMap
+                         PersistentArrayMap
+                         PersistentVector))))
 
 ;; Main storage for system data.
 (def system (atom {}))
@@ -58,6 +59,7 @@
   (if (s/valid? :hellhound.component/component component)
     [(hcomp/get-name component) (hcomp/initialize component)]
     ;; If component did not satisfies component spec
+    ;; TODO: fix the long line
     (throw (ex-info "Component does not satisfies ':hellhound.component/component' spec."
                     {:cause (hcomp/get-name component)
                      :explain (s/explain-data :hellhound.component/component component)}))))
@@ -66,12 +68,13 @@
 (s/fdef hellhound.system.core/conform-component
         :args (s/cat :component :hellhound.component/component)
         :ret  vector?
-        :fn #(= (first (:ret %)) (:hellhound.component/name (:component (:args %)))))
+        :fn #(= (first (:ret %))
+                (:hellhound.component/name (:component (:args %)))))
 
-(defn ^IPersistentMap components-map
+(defn #?(:clj ^IPersistentMap) components-map
   "Returns a map of components from the given `system`. Basically
   the return value of this function would be index of components."
-  [^IPersistentMap system-map]
+  [#?(:clj ^IPersistentMap) system-map]
   (into {} (map conform-component
                 (utils/get-components system-map))))
 
@@ -84,20 +87,21 @@
 
 (defn set-system!
   "Sets the system of HellHound."
-  [^IPersistentMap system-map]
+  [#?(:clj ^IPersistentMap) system-map]
   (reset! system (update-system-components system-map)))
 
 (defn get-dependencies-of
   "Returns a vector of dependencies for the given `component` ins the given
   `system`."
-  [system-map component]
+  [#?(:clj ^IPersistentMap) system-map component]
   (let [dependencies (hcomp/dependencies component)]
     (filter #(some #{(hcomp/get-name %)} dependencies)
             (vals (utils/get-components system-map)))))
 
-(defn ^IPersistentMap start-component!
+(defn #?(:clj ^IPersistentMap) start-component!
   "Starts the given `component` of the given `system`."
-  [^IPersistentMap system-map ^IComponent component]
+  [#?(:clj ^IPersistentMap) system-map
+   #?(:clj ^IComponent)     component]
   (let [dependencies (get-dependencies-of system-map component)
         new-system   (reduce start-component! system-map dependencies)]
     (update-in new-system
@@ -110,7 +114,8 @@
 
 (defn stop-component!
   "Stops the given `component` of the given `system`."
-  [^IPersistentMap system-map ^IComponent component]
+  [#?(:clj ^IPersistentMap) system-map
+   #?(:clj ^IComponent)     component]
   (reduce stop-component!
           (update-in system-map
                      [:components (hcomp/get-name component)]
@@ -128,7 +133,7 @@
   TODO: More explaination."
   {:public-api true
    :added      1.0}
-  [^IPersistentMap system-map]
+  [#?(:clj ^IPersistentMap) system-map]
   (if-not (s/valid? ::system-map system-map)
     (throw (ex-info "Provided system is not valid"
                     {:cause (s/explain-data ::system-map system-map)})))
@@ -145,7 +150,7 @@
   TODO: More explaination"
   {:public-api true
    :added      1.0}
-  [^IPersistentMap system-map]
+  [#?(:clj ^IPersistentMap) system-map]
   (reset! system
           (reduce stop-component!
                   system-map
