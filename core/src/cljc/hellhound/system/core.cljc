@@ -157,15 +157,14 @@
                   (vals (utils/get-components system-map))))
   (log/info "System stopped successfully."))
 
-
 (defn get-supervisor
   [system]
   (:supervisor system))
 
-(defn setup-supervisor
+(defn setup-supervisor)
   [system]
   (if-let [supervisor (get-supervisor system)]
-    (hcomp/initialize supervisor)))
+    (hcomp/initialize supervisor))
 
 (defn start-supervisor
   [system]
