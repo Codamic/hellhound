@@ -10,7 +10,6 @@
 
   :dependencies [[org.clojure/clojure        "1.9.0"]
                  [org.clojure/test.check     "0.10.0-alpha2"]
-                 [org.clojure/core.async     "0.4.474"]
                  ;; Logging
                  [org.slf4j/slf4j-api              "1.7.25"]
                  [com.taoensso/timbre              "4.10.0"]
@@ -20,30 +19,52 @@
                  [org.slf4j/jcl-over-slf4j         "1.7.25"]]
 
 
-  :plugins [[lein-codox "0.10.3"]]
+  :plugins [[lein-codox "0.10.3"]
+            [lein-figwheel "0.5.10"]]
 
   :min-lein-version "2.6.1"
 
-  :source-paths ["src/clj" "src/cljc"]
+  :source-paths [ "src/cljc"]
 
-  :test-paths ["test/clj" "test/cljc"]
+  :test-paths ["test/cljc"]
   :clean-targets ^{:protect false} [:target-path]
 
   :uberjar-name "hellhound.core.standalone.jar"
   :jar-name "hellhound.core.jar"
 
-  :repl-options {:init-ns user}
+  :profiles
+  {:clj-dev
+   {:dependencies [[funcool/codeina            "0.5.0"]
+                   [hawk                       "0.2.11"]
+                   [org.clojure/coren.async     "0.4.474"]
+                   [org.clojure/tools.nrepl    "0.2.13"]]}
 
-  :profiles {:dev
-             {:dependencies [[funcool/codeina            "0.5.0"]
-                             [hawk                       "0.2.11"]
-                             [org.clojure/tools.nrepl    "0.2.13"]]}
+   :cljs-dev
+   {:dependencies [[org.clojure/clojurescript "1.9.229"]
+                   [andare                    "0.9.0"]
+                   [figwheel-sidecar          "0.5.10"]
+                   [com.cemerick/piggieback   "0.2.1"]]
 
-             :uberjar
-             {:source-paths ^:replace ["src/clj" "src/cljc"]
-              :prep-tasks ["compile"]
-              :hooks []
-              :omit-source true
-              :aot :all}
+    :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+    :plugins      []
 
-             :test {}})
+    :cljsbuild {:builds
+                [{:id "dev"
+                  :source-paths ["src/cljs"]
+                  :figwheel true
+                  :compiler {;; in order to call node from root of project
+                             ;; need to have :asset-path be the same as :output-dir
+                             :asset-path "target/js/compiled/out"
+                             ;; the script you will run with node
+                             :output-to  "target/js/compiled/hellhound.core.js"
+                             :output-dir "target/js/compiled/out"
+                             :source-map-timestamp true
+                             :target :nodejs}}]}}
+   :uberjar
+   {:source-paths ^:replace ["src/clj" "src/cljc"]
+    :prep-tasks ["compile"]
+    :hooks []
+    :omit-source true
+    :aot :all}
+
+   :test {}})
