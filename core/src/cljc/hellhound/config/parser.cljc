@@ -14,8 +14,11 @@
 
      :cljs
      (:require
-      [cljs.edn :as edn])))
+      [cljs.edn    :as edn]
+      [cljs.nodejs :as node])))
 
+#?(:cljs
+   (def io (node/require "fs")))
 
 (defn var-reader
   "Reader function for `#hh/var` edn tag which resolve the given
@@ -36,7 +39,10 @@
   "Read the content of the config file with the given `config-name`
   and return a clojure data structure."
   [config-name]
-  (let [resource (io/resource config-name)]
+  (let [resource #?(:clj  (io/resource config-name)
+                    :cljs config-name)]
     (if (nil? resource)
       {}
-      (edn/read-string {:readers readers} (slurp resource)))))
+      (edn/read-string {:readers readers}
+                       #?(:clj (slurp resource)
+                          :cljs (io/readFileSync resource))))))

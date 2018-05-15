@@ -11,6 +11,7 @@
   #?(:cljs
      (:import [goog.string.format])))
 
+
 ;; Definitions ---------------------------------------------
 (def environment-configuration (atom {}))
 

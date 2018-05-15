@@ -52,7 +52,8 @@
                 [{:id "dev"
                   :source-paths ["src/cljs"]
                   :figwheel true
-                  :compiler {;; in order to call node from root of project
+                  :compiler {:main hellhound.dummy-core
+                             ;; in order to call node from root of project
                              ;; need to have :asset-path be the same as :output-dir
                              :asset-path "target/js/compiled/out"
                              ;; the script you will run with node
