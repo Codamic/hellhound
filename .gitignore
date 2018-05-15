@@ -29,3 +29,5 @@ i18n/target/
 .lein-repl-history
 **/*/target
 **/*/.nrepl-port
+figwheel_server.log
+package-lock.json
