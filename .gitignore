@@ -31,3 +31,4 @@ i18n/target/
 **/*/.nrepl-port
 figwheel_server.log
 package-lock.json
+.fg42.el

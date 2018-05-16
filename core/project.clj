@@ -8,8 +8,9 @@
 
   :exclusions [ch.qos.logback/logback-classic]
 
-  :dependencies [[org.clojure/clojure        "1.9.0"]
-                 [org.clojure/test.check     "0.10.0-alpha2"]
+  :dependencies [[org.clojure/clojure              "1.9.0"]
+                 [org.clojure/test.check           "0.10.0-alpha2"]
+                 [org.clojure/core.async          "0.4.474"]
                  ;; Logging
                  [org.slf4j/slf4j-api              "1.7.25"]
                  [com.taoensso/timbre              "4.10.0"]
@@ -26,17 +27,16 @@
 
   :source-paths [ "src/cljc"]
 
-  :test-paths ["test/cljc"]
+  :test-paths ["test/clj"]
   :clean-targets ^{:protect false} [:target-path]
 
   :uberjar-name "hellhound.core.standalone.jar"
   :jar-name "hellhound.core.jar"
 
   :profiles
-  {:clj-dev
+  {:dev
    {:dependencies [[funcool/codeina            "0.5.0"]
                    [hawk                       "0.2.11"]
-                   [org.clojure/coren.async     "0.4.474"]
                    [org.clojure/tools.nrepl    "0.2.13"]]}
 
    :cljs-dev

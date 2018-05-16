@@ -12,6 +12,5 @@
     `(println (str "[" ~*ns* ":" ~(:line (meta &form))
                    "] TODO: " ~msg))))
 
-
 (comment
   (todo "something important"))

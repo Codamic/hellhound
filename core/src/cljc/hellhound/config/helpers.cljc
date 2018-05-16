@@ -7,10 +7,10 @@
 (defn default-value-for
   "Returns the delay which resolves to the default config value
   of the given key-names."
-  [#?(:clj ^clojure.lang.PersistentVector) key-names]
+  [^clojure.lang.PersistentVector key-names]
   (get-in default/config key-names))
 
-(defn #?(:clj ^clojure.lang.Delay) derefiy
+(defn ^clojure.lang.Delay derefiy
   "Wrap the given `value` with a delay if it wasn't already wrapped"
   [value]
   (if (delay? value)

@@ -9,18 +9,15 @@
             [hellhound.config.defaults     :as default]))
 
 (defn set-system!
-  "Set the default system.
-
-  TODO: more doc"
+  "Sets the default system of HellHound application to the given
+  `system` map."
   {:added      1.0
    :public-api true}
   [system]
   (core/set-system! system))
 
 (defn system
-  "Returns the processed system.
-
-  TODO: more doc"
+  "Returns the processed system."
   {:added      1.0
    :public-api true}
   []

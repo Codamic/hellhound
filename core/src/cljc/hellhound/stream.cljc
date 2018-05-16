@@ -28,6 +28,9 @@
       (f v)
       (recur))))
 
+(defn stream?
+  [x]
+  (satisfies? clojure.core.async.impl.protocols/Channel x))
 
 (comment
   (let [s (stream)]
