@@ -7,3 +7,9 @@
   "Returns the components catalog of the given `system`."
   [^IPersistentMap system]
   (:components system))
+
+
+(defn ^PersistentVector get-workflow
+  "Returns the workflow desciption of the given `system`."
+  [^IPersistentMap system]
+  (:workflow system))

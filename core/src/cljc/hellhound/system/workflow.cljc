@@ -50,7 +50,7 @@
 (defn make-splitter
   "Creates a splitter from the given `source-component` component."
   [components source-component]
-  (spltr/make-splitter (hcomp/output source-component)))
+  (spltr/output-splitter (hcomp/output source-component)))
 
 (defn connect-workflow
   "Setup and connect the components through the splitters."
@@ -58,7 +58,7 @@
 
   (let [[from ops-map to] (apply parse connection-vec)
         source-component  (get components from)
-        dest-componen     (get components to)]
+        dest-component    (get components to)]
 
     ;; Validates the source and dest components
     (when (nil? source-component)
@@ -71,15 +71,15 @@
     ;; Get or create a new splitter from the source
     ;; component
     (let [splitter (or (get splitters from)
-                       (make-splitter source-component))])
+                       (make-splitter source-component))]
 
-    (impl/connect splitter
-                  (hcomp/input dest-component)
-                  ops-map)
+      (impl/connect splitter
+                    (hcomp/input dest-component)
+                    ops-map)
 
 
-    [(assoc splitters from splitter)
-     components]))
+      [(assoc splitters from splitter)
+       components])))
 
 (defn wire-io!
   "Walks through the workflow vectors and wire up the system workflow
@@ -105,7 +105,7 @@
   "Sets up the workflow of the system by wiring the io of each component
   in the order provided by the user in `:workflow` key."
   [^IPersistentMap system]
-  (let [workflow-vector (get-workflow system)]
+  (let [workflow-vector (utils/get-workflow system)]
     (when (not (empty? workflow-vector))
       (do
         (log/debug "Setting up workflow...")
