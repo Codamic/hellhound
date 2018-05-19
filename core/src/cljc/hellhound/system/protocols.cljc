@@ -9,3 +9,15 @@
      like filter and map.")
 
   (commit [_] "Connect source channel to all the sinks"))
+
+(defprotocol ComponentManagement
+  (components-vector [_]
+    "Returns the raw definition of system components as a vector of components")
+  (components-map [_]
+    "Returns a map of components name to valid components.")
+  (make-components-map [_]
+    "Create a mapping from components name to components and validates each component."))
+
+(defprotocol WorkflowManagement
+  (get-worfklow [_])
+  (setup [_]))

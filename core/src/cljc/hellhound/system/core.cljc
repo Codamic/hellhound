@@ -34,7 +34,7 @@
   NOTE: for more info checkout the guides for `Context Map`."
   [system-map component]
 
-  (let [components   (:components system-map)
+  (let [components   (impl/components-map system-map)
         dependencies (hcomp/dependencies component)
         deps         (map #(get components %) dependencies)]
     {:dependencies deps
@@ -47,43 +47,12 @@
   @system)
 
 
-(defn conform-component
-  "Checks for a valid compnoent structure and returns a pair of component
-  name and the component structure."
-  [component]
-  (when (not (satisfies? hcomp/IComponent component))
-    ;; Throw if component didn't satisfy the protocol.
-    (throw (ex-info "Provided component does not satisfies `IComponent` protocol."
-                    {:cause component})))
-
-  (if (s/valid? :hellhound.component/component component)
-    [(hcomp/get-name component) (hcomp/initialize component)]
-    ;; If component did not satisfies component spec
-    ;; TODO: fix the long line
-    (throw (ex-info "Component does not satisfies ':hellhound.component/component' spec."
-                    {:cause (hcomp/get-name component)
-                     :explain (s/explain-data :hellhound.component/component component)}))))
-
-
-(s/fdef hellhound.system.core/conform-component
-        :args (s/cat :component :hellhound.component/component)
-        :ret  vector?
-        :fn #(= (first (:ret %))
-                (:hellhound.component/name (:component (:args %)))))
-
-(defn ^IPersistentMap components-map
-  "Returns a map of components from the given `system`. Basically
-  the return value of this function would be index of components."
-  [^IPersistentMap system-map]
-  (into {} (map conform-component
-                (utils/get-components system-map))))
-
 (defn update-system-components
   "Replace the components vector of an unprocessed `system` with the indexed
   version of the vector which is map."
   [system-map]
   (merge system-map
-         {:components (components-map system-map)}))
+         (impl/make-components-map system-map)))
 
 (defn set-system!
   "Sets the system of HellHound."
@@ -141,7 +110,7 @@
   (reset! system
           (reduce start-component!
                   system-map
-                  (vals (utils/get-components system-map))))
+                  (vals (impl/components-map system-map))))
   (log/info "System started successfully."))
 
 (defn stop-system!
@@ -154,7 +123,7 @@
   (reset! system
           (reduce stop-component!
                   system-map
-                  (vals (utils/get-components system-map))))
+                  (vals (impl/components-map system-map))))
   (log/info "System stopped successfully."))
 
 ;; (defn get-supervisor
