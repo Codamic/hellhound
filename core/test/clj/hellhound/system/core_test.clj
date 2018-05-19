@@ -1,6 +1,6 @@
 (ns hellhound.system.core_test
   (:require
-   [clojure.test :refer [deftest run-tests is]]
+   [clojure.test :refer [deftest run-tests is testing]]
    [clojure.spec.test.alpha :as stest]
    [hellhound.component     :as hcomp]
    [hellhound.system.core   :as sut]
@@ -18,12 +18,18 @@
   {:components [c1 c2]})
 
 
-
 (deftest context-for
-  (println "sadasdads")
-  (println c2)
-  (let [ctx-map (sut/context-for subject-system c2)]
-    (is (map? ctx-map))))
+  (testing "Before setting the system"
+    (try
+      (sut/context-for subject-system c2)
+      (catch clojure.lang.ExceptionInfo e
+        (is (= (.getMessage e) "Components map is nil. Did you set the system?")))))
+
+  (testing "After setting the system"
+    (sut/set-system! subject-system)
+
+    (let [ctx-map (sut/context-for (sut/get-system) c2)]
+      (is (map? ctx-map)))))
 
 (deftest spec-test
   (ht/ns-spec-tests 'hellhound.system.core))

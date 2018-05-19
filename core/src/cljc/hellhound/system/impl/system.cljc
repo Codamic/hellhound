@@ -26,7 +26,7 @@
 
 (s/fdef hellhound.system.core/conform-component
         :args (s/cat :component :hellhound.component/component)
-        :ret  vector?n
+        :ret  vector?
         :fn #(= (first (:ret %))
                 (:hellhound.component/name (:component (:args %)))))
 
@@ -42,4 +42,4 @@
 
   (make-components-map [this]
     {:components-map (into {} (map conform-component
-                                   (components-vector this)))}))
+                                   (protocols/components-vector this)))}))

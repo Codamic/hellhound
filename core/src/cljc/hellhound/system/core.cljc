@@ -7,7 +7,9 @@
    [hellhound.system.workflow  :as workflow]
    [hellhound.system.utils     :as utils]
    [hellhound.logger           :as log]
-   [hellhound.component        :as hcomp])
+   [hellhound.component        :as hcomp]
+   [hellhound.system.impl.system :as sysimpl]
+   [hellhound.system.protocols :as impl])
 
 
   #?(:clj (:import
@@ -37,6 +39,10 @@
   (let [components   (impl/components-map system-map)
         dependencies (hcomp/dependencies component)
         deps         (map #(get components %) dependencies)]
+    (when (nil? components)
+      (throw (ex-info "Components map is nil. Did you set the system?"
+                      {:cause system-map})))
+
     {:dependencies deps
      :dependencies-map (into {} (map (fn [x] [(hcomp/get-name x) x]) deps))}))
 
