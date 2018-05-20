@@ -26,10 +26,14 @@
         (is (= (.getMessage e) "Components map is nil. Did you set the system?")))))
 
   (testing "After setting the system"
-    (sut/set-system! subject-system)
+    (let [ctx-map (sut/context-for (sut/update-system-components subject-system)
+                                   c2)]
+      (is (map? ctx-map))
 
-    (let [ctx-map (sut/context-for (sut/get-system) c2)]
-      (is (map? ctx-map)))))
+      (sut/set-system! subject-system)
+      (is (map? (sut/context-for (sut/get-system) c2))))))
+
+
 
 (deftest spec-test
   (ht/ns-spec-tests 'hellhound.system.core))

@@ -21,6 +21,13 @@
 ;; Main storage for system data.
 (def system (atom {}))
 
+
+(defn get-system
+  "A shortcut function for derefing `system`."
+  []
+  @system)
+
+
 (defn context-for
   "Returns the `context map` for the given component in the given
   `system-map`.
@@ -47,12 +54,6 @@
      :dependencies-map (into {} (map (fn [x] [(hcomp/get-name x) x]) deps))}))
 
 
-(defn get-system
-  "A shortcut function for derefing `system`."
-  []
-  @system)
-
-
 (defn update-system-components
   "Replace the components vector of an unprocessed `system` with the indexed
   version of the vector which is map."
@@ -71,7 +72,7 @@
   [^IPersistentMap system-map component]
   (let [dependencies (hcomp/dependencies component)]
     (filter #(some #{(hcomp/get-name %)} dependencies)
-            (vals (utils/get-components system-map)))))
+            (vals (impl/components-map system-map)))))
 
 (defn ^IPersistentMap start-component!
   "Starts the given `component` of the given `system`."
