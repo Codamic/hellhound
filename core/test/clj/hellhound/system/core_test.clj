@@ -26,7 +26,7 @@
         (is (= (.getMessage e) "Components map is nil. Did you set the system?")))))
 
   (testing "After setting the system"
-    (let [ctx-map (sut/context-for (sut/update-system-components subject-system)
+    (let [ctx-map (sut/context-for (sut/make-components-index subject-system)
                                    c2)]
       (is (map? ctx-map))
 
@@ -34,6 +34,12 @@
       (is (map? (sut/context-for (sut/get-system) c2))))))
 
 
+(deftest get-dependencies-of
+  (testing "Uninitialized dependency tree"
+    (is (= [] (sut/get-dependencies-of subject-system c2))))
+  (testing "initialized dependency tree"
+    (is (=  1 (count (sut/get-dependencies-of
+                      (sut/make-components-index subject-system) c2))))))
 
 (deftest spec-test
   (ht/ns-spec-tests 'hellhound.system.core))

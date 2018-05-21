@@ -54,9 +54,9 @@
      :dependencies-map (into {} (map (fn [x] [(hcomp/get-name x) x]) deps))}))
 
 
-(defn update-system-components
-  "Replace the components vector of an unprocessed `system` with the indexed
-  version of the vector which is map."
+(defn make-components-index
+  "Creates an index from components vector of the `system` and store it
+  under `:component-map` key in system."
   [system-map]
   (merge system-map
          (impl/make-components-map system-map)))
@@ -64,10 +64,10 @@
 (defn set-system!
   "Sets the system of HellHound."
   [^IPersistentMap system-map]
-  (reset! system (update-system-components system-map)))
+  (reset! system (make-components-index system-map)))
 
 (defn get-dependencies-of
-  "Returns a vector of dependencies for the given `component` ins the given
+  "Returns a vector of dependencies for the given `component` in the given
   `system`."
   [^IPersistentMap system-map component]
   (let [dependencies (hcomp/dependencies component)]
