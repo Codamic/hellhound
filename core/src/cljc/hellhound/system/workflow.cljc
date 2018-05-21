@@ -105,10 +105,10 @@
   "Sets up the workflow of the system by wiring the io of each component
   in the order provided by the user in `:workflow` key."
   [^IPersistentMap system]
-  (let [workflow-vector (utils/get-workflow system)]
+  (let [workflow-vector (impl/get-workflow system)]
     (when (not (empty? workflow-vector))
       (do
         (log/debug "Setting up workflow...")
-        (wire-io! (utils/get-components system)
+        (wire-io! (impl/get-components system)
                   workflow-vector)
         (log/info "Workflow setup done.")))))
