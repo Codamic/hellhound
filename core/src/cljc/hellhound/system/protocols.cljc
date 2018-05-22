@@ -19,5 +19,4 @@
     "Create a mapping from components name to components and validates each component."))
 
 (defprotocol WorkflowManagement
-  (get-workflow [system] "Returns the workflow of the given system")
-  (setup [setup] "Setup the workflow of the given systemrep"))
+  (get-workflow [system] "Returns the workflow of the given system"))

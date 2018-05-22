@@ -16,6 +16,7 @@
 
   Predicate function should be a pure function obviousely."
   (:require [hellhound.system.impl.splitter :as spltr]
+            [hellhound.system.impl.system   :as sys]
             [hellhound.system.protocols     :as impl]
             [hellhound.logger               :as log]
             [hellhound.system.utils         :as utils]

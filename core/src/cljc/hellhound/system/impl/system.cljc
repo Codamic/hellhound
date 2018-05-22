@@ -30,6 +30,7 @@
         :fn #(= (first (:ret %))
                 (:hellhound.component/name (:component (:args %)))))
 
+
 (extend-type clojure.lang.IPersistentMap
   protocols/ComponentManagement
   ;; The system map should have a `:component` key which its value
@@ -42,4 +43,8 @@
 
   (make-components-map [this]
     {:components-map (into {} (map conform-component
-                                   (protocols/components-vector this)))}))
+                                   (protocols/components-vector this)))})
+
+  protocols/WorkflowManagement
+  (get-workflow [this]
+    (:workflow this)))
