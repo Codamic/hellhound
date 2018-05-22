@@ -109,6 +109,6 @@
     (when (not (empty? workflow-vector))
       (do
         (log/debug "Setting up workflow...")
-        (wire-io! (impl/get-components system)
+        (wire-io! (impl/components-map system)
                   workflow-vector)
         (log/info "Workflow setup done.")))))

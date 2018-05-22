@@ -8,7 +8,7 @@
 
 
 (def c1 (hcomp/make-component ::c1
-                              (fn [this ctx ] this)
+                              (fn [this ctx] this)
                               #(identity %)))
 (def c2 (hcomp/make-component ::c2
                               (fn [this ctx ] this)
@@ -41,6 +41,7 @@
     (is (=  1 (count (sut/get-dependencies-of
                       (sut/make-components-index subject-system) c2))))))
 
+(deftest stop-start-system)
 (deftest spec-test
   (ht/ns-spec-tests 'hellhound.system.core))
 

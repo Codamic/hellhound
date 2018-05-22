@@ -61,10 +61,12 @@
   (merge system-map
          (impl/make-components-map system-map)))
 
+
 (defn set-system!
   "Sets the system of HellHound."
   [^IPersistentMap system-map]
   (reset! system (make-components-index system-map)))
+
 
 (defn get-dependencies-of
   "Returns a vector of dependencies for the given `component` in the given
@@ -73,6 +75,7 @@
   (let [dependencies (hcomp/dependencies component)]
     (filter #(some #{(hcomp/get-name %)} dependencies)
             (vals (impl/components-map system-map)))))
+
 
 (defn ^IPersistentMap start-component!
   "Starts the given `component` of the given `system`."
@@ -87,6 +90,7 @@
                (fn [old-component]
                  (hcomp/start! old-component
                                (context-for new-system old-component))))))
+
 
 (defn stop-component!
   "Stops the given `component` of the given `system`."
@@ -103,10 +107,17 @@
                            #(map? (:components %))))
 
 
+
 (defn start-system!
   "Starts the given `system-map`.
 
-  TODO: More explaination."
+  The given system should contains a vector of components under `:components`
+  key and a vector of workflow defination under `:workflow` key.
+
+  In order to start the system. HellHound creates a dependency tree form
+  the components and call start function on all of them. After starting
+  all the components, HellHound will setup the workflow and data pipeline
+  according to description in `:workflow`."
   {:public-api true
    :added      1.0}
   [^IPersistentMap system-map]
@@ -120,10 +131,10 @@
                   (vals (impl/components-map system-map))))
   (log/info "System started successfully."))
 
-(defn stop-system!
-  "Stops the given `system-map`.
 
-  TODO: More explaination"
+(defn stop-system!
+  "Stops the given `system-map` by calling stop function of all the
+  components with respect to dependency tree."
   {:public-api true
    :added      1.0}
   [^IPersistentMap system-map]
