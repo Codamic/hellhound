@@ -9,8 +9,8 @@
   ([]
    (todo "Get the default buffer size from the config")
    (stream 100))
-  ([buffer-size]
-   (async/chan buffer-size)))
+  ([buffer-or-size]
+   (async/chan buffer-or-size)))
 
 (defn sliding-stream
   "Create a core async channl with a sliding buffer."
