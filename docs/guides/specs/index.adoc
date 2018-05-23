@@ -1,0 +1,10 @@
+= Implementation Specs
+This chapter describes all the specifications and design decisions around different parts of *HellHound*.
+If you're not planning on contributing to *HellHound* you can safely skip this chapter. Some the speficiation
+in this chapter might be related to the stuff we want to implement but we are still discussing them.
+
+// STREAMS
+include::streams.adoc[leveloffset=+1]
+
+// DISTRIBUTED SYSTEMS
+include::distributed_system.adoc[leveloffset=+1]

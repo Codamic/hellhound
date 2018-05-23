@@ -1,0 +1,12 @@
+= Distributed Systems
+The goal of this section is to describe how we should implement distributed systems in order
+to run a system on a cluster of nodes which are running *HellHound*
+
+== Expectations
+We should be able to:
+
+* [ ] Execute a system across several coordinating nodes in parallel.
+* [ ] Assign a cluster of nodes to an specific component.
+* [ ] Have a fault tolerant distributed system.
+* [ ] Choose between availablity and consistancy in case of failure.
+* [ ] Pause/Cancel/Restart any unit of execution at any given time.

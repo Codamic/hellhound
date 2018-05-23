@@ -1,0 +1,13 @@
+= HellHound Streams
+In order to make a better abstraction around systems we need to abstract away the `stream`
+concept. Up until now (1.0.0-alpha3) We are using `manifold.stream` library which is great
+but has some problems. For example the execution model is not a good fit for out use case.
+
+== Expectations
+Streams shoud be:
+
+* [ ] *Connectable*: We should be able to connect streams together and create a pipeline.
+
+* [ ] *Consumable*: We should be able to consume data from stream in sync and async fashion.
+
+* [ ] *Sinkable*: We should be able to put data on a stream.

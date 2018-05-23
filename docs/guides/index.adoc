@@ -100,6 +100,9 @@ include::components/index.adoc[leveloffset=+1]
 // HTTP
 include::http/index.adoc[leveloffset=+1]
 
+// Specifications
+include::specs/index.adoc[leveloffset=+1]
+
 // Appendix 1 - Prerequisite
 include::prerequisite/index.adoc[leveloffset=+1]
 
