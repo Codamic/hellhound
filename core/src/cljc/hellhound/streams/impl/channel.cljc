@@ -1,4 +1,4 @@
-(ns hellhound.stream.impl.channel
+(ns hellhound.streams.impl.channel
   (:require
    [clojure.core.async               :as async]
    [clojure.core.async.impl.channels :as chans]

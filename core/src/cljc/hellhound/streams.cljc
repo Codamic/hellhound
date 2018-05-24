@@ -1,4 +1,4 @@
-(ns hellhound.stream
+(ns hellhound.streams
   (:require
    [clojure.core.async :as async]
    [hellhound.stream.protocols :as impl]

@@ -1,4 +1,4 @@
-(ns hellhound.stream.protocols)
+(ns hellhound.streams.protocols)
 
 (defprotocol Consumable
   ;; consume should be async. It might block if buffer is empty
