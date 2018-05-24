@@ -1,8 +1,8 @@
 (ns hellhound.stream
   (:require
    [clojure.core.async :as async]
+   [hellhound.stream.protocols :as impl]
    [hellhound.utils    :refer [todo]]))
-
 
 (defn stream
   "An alias to core async channels."
@@ -22,12 +22,7 @@
   [buffer-size]
   (async/chan (async/dropping-buffer buffer-size)))
 
-(defn consume
-  [f c]
-  (async/go-loop []
-    (let [v (async/<! c)]
-      (f v)
-      (recur))))
+(def consume impl/consume)
 
 (defn stream?
   [x]
