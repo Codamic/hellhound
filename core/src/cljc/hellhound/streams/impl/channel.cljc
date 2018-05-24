@@ -1,8 +1,7 @@
 (ns hellhound.streams.impl.channel
   (:require
-   [clojure.core.async               :as async]
-   [clojure.core.async.impl.channels :as chans]
-   [hellhound.stream.protocols       :as impl])
+   [clojure.core.async                :as async]
+   [hellhound.streams.protocols       :as impl])
   (:import
    [clojure.core.async.impl.channels ManyToManyChannel]))
 
