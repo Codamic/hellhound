@@ -18,7 +18,7 @@
           (recur)))))
 
   impl/Sinkable
-  (put [sink v]
+  (put! [sink v]
     (when v
       (async/go (async/>! sink v))))
 
@@ -39,12 +39,16 @@
       (when-let [v (async/<! sink)]
         (when-let [output (f v)]
           (async/>! source output))
-        (recur)))))
+        (recur))))
+  impl/Closable
+  (close! [this]
+    (async/close! this)))
+
 
 (comment
   (let [c (async/chan 10)]
     (impl/consume c #(println (str "<<<< " %)))
     (impl/put c "hellhound")
     (impl/put c "IO")
-    (async/close! c)
+    (impl/close! c)
     ))

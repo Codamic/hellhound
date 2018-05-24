@@ -5,6 +5,14 @@
    [hellhound.utils             :refer [todo]]
    [hellhound.streams.impl.channel]))
 
+;; Protocol Functions ---------------------------------------------------------
+(def consume impl/consume)
+(def put!    impl/put!)
+(def connect impl/connect)
+(def connect-via impl/connect-via)
+(def close!  impl/close!)
+
+;; Public API -----------------------------------------------------------------
 (defn stream
   "An alias to core async channels."
   ([]
@@ -23,9 +31,8 @@
   [buffer-size]
   (async/chan (async/dropping-buffer buffer-size)))
 
-(def consume impl/consume)
-
 (defn stream?
+  "Returns true if the given value can be used as a stream."
   [x]
   (and
    (satisfies? impl/Consumable x)
