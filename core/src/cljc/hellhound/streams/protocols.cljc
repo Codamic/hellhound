@@ -9,8 +9,14 @@
 (defprotocol Sinkable
   ;; put should be async. It might block if buffer is full and
   ;; there is no consume operation.
-  (put! [stream v]
-    "Asynchronously puts `v` on the stream."))
+  (put!
+    [stream v]
+    [stream v f]
+    "Asynchronously puts `v` on the stream.")
+  (try-put!
+    [stream v]
+    [stream v timeout]
+    "Try to put the value `v` into the given `stream` with the given `timeout`. Returns a boolean value."))
 
 (defprotocol Connectable
   (connect [sink source] "Connects `sink` to `source`")

@@ -49,7 +49,7 @@
   {:added 1.0}
   (:require [clojure.spec.alpha     :as s]
             [clojure.spec.gen.alpha :as gen]
-            [hellhound.stream       :as stream]
+            [hellhound.streams      :as stream]
             [hellhound.core         :as core]
             [hellhound.logger       :as log]))
 

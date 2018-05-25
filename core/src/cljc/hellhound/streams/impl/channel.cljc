@@ -1,6 +1,7 @@
 (ns hellhound.streams.impl.channel
   (:require
    [clojure.core.async                :as async]
+   [hellhound.core                    :as hellhound]
    [hellhound.streams.protocols       :as impl])
   (:import
    [clojure.core.async.impl.channels ManyToManyChannel]))
@@ -22,6 +23,17 @@
     (when v
       (async/go (async/>! sink v))))
 
+  (try-put! [sink v]
+    (impl/try-put! sink
+                   v
+                   (hellhound/get-config :streams :default-timeout)
+                   (hellhound/get-config :streams :default-timeout-value)))
+
+  (try-put! [sink v timeout]
+    (async/go
+      (async/alt! [[sink v]]               true
+                  (async/timeout timeout)  false)))
+
   impl/Connectable
   (connect [sink source]
     (async/go-loop []
@@ -40,6 +52,7 @@
         (when-let [output (f v)]
           (async/>! source output))
         (recur))))
+
   impl/Closable
   (close! [this]
     (async/close! this)))
@@ -50,5 +63,11 @@
     (impl/consume c #(println (str "<<<< " %)))
     (impl/put c "hellhound")
     (impl/put c "IO")
-    (impl/close! c)
-    ))
+    (impl/close! c))
+  (async/go
+    )
+  (let [c (async/chan 1)]
+    (async/go
+      (println (async/alt!
+                 [[c "sameer"]]        :sent
+                 (async/timeout 3000)  :timeout)))))
