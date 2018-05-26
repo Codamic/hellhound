@@ -21,13 +21,13 @@
   impl/Sinkable
   (put! [sink v]
     (when v
-      (async/go (async/>! sink v))))
+      (async/go
+        (async/>! sink v))))
 
   (try-put! [sink v]
     (impl/try-put! sink
                    v
-                   (hellhound/get-config :streams :default-timeout)
-                   (hellhound/get-config :streams :default-timeout-value)))
+                   (hellhound/get-config :streams :default-timeout)))
 
   (try-put! [sink v timeout]
     (async/go
@@ -61,13 +61,11 @@
 (comment
   (let [c (async/chan 10)]
     (impl/consume c #(println (str "<<<< " %)))
-    (impl/put c "hellhound")
-    (impl/put c "IO")
+    (impl/put! c "hellhound")
+    (impl/put! c "IO")
     (impl/close! c))
-  (async/go
-    )
+
   (let [c (async/chan 1)]
     (async/go
-      (println (async/alt!
-                 [[c "sameer"]]        :sent
-                 (async/timeout 3000)  :timeout)))))
+      (println (async/<! (impl/put! c 1)))
+      (println (async/<! (impl/try-put! c 2 3000))))))

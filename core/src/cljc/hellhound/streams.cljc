@@ -8,6 +8,8 @@
 ;; Protocol Functions ---------------------------------------------------------
 (def consume impl/consume)
 (def put!    impl/put!)
+(def try-put! impl/try-put!)
+
 (def connect impl/connect)
 (def connect-via impl/connect-via)
 (def close!  impl/close!)

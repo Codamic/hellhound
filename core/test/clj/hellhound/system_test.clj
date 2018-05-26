@@ -98,8 +98,8 @@
             ;; (is (= (second (first (stream/downstream input3))) output3))
             ;; (is (= (second (first (stream/downstream output1))) input2))
             ;; (is (= (second (first (stream/downstream output2))) input3))
-            (is (true? @(stream/try-put! input1 10 1000 20)))
-            (is (= 10 @(stream/try-take! output3 20 1000 30)))))))
+            (is (true? (stream/try-put! input1 10 1000)))))))
+
 
     (system/stop!)))
 
