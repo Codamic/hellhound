@@ -50,7 +50,7 @@
 
 (defn make-splitter
   "Creates a splitter from the given `source-component` component."
-  [components source-component]
+  [source-component]
   (spltr/output-splitter (hcomp/output source-component)))
 
 (defn connect-workflow
@@ -82,7 +82,7 @@
       [(assoc splitters from splitter)
        components])))
 
-(defn wire-io!
+(defn wire-io
   "Walks through the workflow vectors and wire up the system workflow
   based on desciption given by each vector.
 
@@ -97,19 +97,29 @@
   output stream of output component to input stream of input component,
   and in case of existance of a predicate function, it only sends those
   messages which pass the predicate."
-  [state ^IPersistentMap components ^IPersistentMap workflow]
-  (doseq [splitter (first (reduce connect-workflow state workflow))]
-    (impl/commit splitter)))
+  [components workflow]
+  (let [[splitters _] (reduce connect-workflow [{} components] workflow)
+        commit-fn     (fn [acc [k v]] (assoc acc k (impl/commit v)))]
+    (doall (reduce commit-fn {} splitters))))
+
+(defn wire-components
+  [system workflow-vector]
+  (if (not (empty? workflow-vector))
+    (impl/update-system system
+                      :splitters
+                      (wire-io (impl/components-map system)
+                               workflow-vector))
+    (do
+      (log/warn "':workflow' of the system is empty. Skipping....")
+      system)))
 
 
 (defn ^IPersistentMap setup
   "Sets up the workflow of the system by wiring the io of each component
   in the order provided by the user in `:workflow` key."
   [^IPersistentMap system]
-  (let [workflow-vector (impl/get-workflow system)]
-    (when (not (empty? workflow-vector))
-      (do
-        (log/debug "Setting up workflow...")
-        (wire-io! (impl/components-map system)
-                  workflow-vector)
-        (log/info "Workflow setup done.")))))
+  (log/debug "Setting up the system workflow...")
+  (let [workflow-vector (impl/get-workflow system)
+        wired-system    (wire-components system workflow-vector)]
+    (log/debug "Workflow setup has been done.")
+    wired-system))

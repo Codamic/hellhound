@@ -6,6 +6,7 @@
             [hellhound.system.core         :as core]
             [hellhound.system.workflow     :as workflow]
             [hellhound.logger              :as logger]
+            [hellhound.system.protocols    :as impl]
             [hellhound.config.defaults     :as default]))
 
 (defn set-system!
@@ -13,8 +14,8 @@
   `system` map."
   {:added      1.0
    :public-api true}
-  [system]
-  (core/set-system! system))
+  [system-map]
+  (core/set-system! system-map))
 
 (defn system
   "Returns the processed system."
@@ -34,8 +35,13 @@
   ;; specified by `HH_ENV` environment. Default env is `:development`
   (config/load-runtime-configuration)
   (logger/init! (config/get-config :logger))
-  (core/start-system! @core/system)
-  (workflow/setup @core/system))
+  (core/set-system!
+   (-> @core/system
+       (core/init-system)
+       (core/start-system)
+       (workflow/setup)))
+
+  (logger/info "System has been started successfully."))
 
 (defn stop!
   "Stops the default system.
@@ -44,7 +50,10 @@
   {:added      1.0
    :public-api true}
   []
-  (core/stop-system! @core/system))
+  (core/set-system!
+   (-> @core/system
+       (core/stop-system)))
+  (logger/info "System has been stopped successfully."))
 
 (defn get-component
   "Finds and returns the component with the given `name`.
@@ -53,4 +62,4 @@
   {:added      1.0
    :public-api true}
   [name]
-  (get (:components (core/get-system)) name))
+  (impl/get-component @core/system name))

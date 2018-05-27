@@ -27,6 +27,10 @@
   []
   @system)
 
+(defn set-system!
+  "Sets the system of HellHound."
+  [^IPersistentMap system-map]
+  (reset! system system-map))
 
 (defn context-for
   "Returns the `context map` for the given component in the given
@@ -62,10 +66,11 @@
          (impl/make-components-map system-map)))
 
 
-(defn set-system!
-  "Sets the system of HellHound."
-  [^IPersistentMap system-map]
-  (reset! system (make-components-index system-map)))
+(defn init-system
+  "Initializes the given `system-map` by making an index from components and
+  returns the new system."
+  [system-map]
+  (make-components-index system-map))
 
 
 (defn get-dependencies-of
@@ -84,7 +89,7 @@
   (let [dependencies (get-dependencies-of system-map component)
         new-system   (reduce start-component! system-map dependencies)]
     (update-in new-system
-               [:components (hcomp/get-name component)]
+               [:components-map (hcomp/get-name component)]
                ;; New value for the component name which will be the return
                ;; value of the `start-fn` function
                (fn [old-component]
@@ -98,17 +103,17 @@
    ^IComponent     component]
   (reduce stop-component!
           (update-in system-map
-                     [:components (hcomp/get-name component)]
+                     [:components-map (hcomp/get-name component)]
                      (fn [old-component] (hcomp/stop! old-component)))
           (get-dependencies-of system-map component)))
 
 (s/def ::system-map (s/and map?
                            #(contains? % :components)
-                           #(map? (:components %))))
+                           #(vector? (:components %))))
 
 
 
-(defn start-system!
+(defn start-system
   "Starts the given `system-map`.
 
   The given system should contains a vector of components under `:components`
@@ -125,21 +130,20 @@
     (throw (ex-info "Provided system is not valid"
                     {:cause (s/explain-data ::system-map system-map)})))
 
-  (reset! system
-          (reduce start-component!
-                  system-map
-                  (vals (impl/components-map system-map))))
-  (log/info "System started successfully."))
+  (reduce start-component!
+          system-map
+          (vals (impl/components-map system-map))))
 
 
-(defn stop-system!
+
+
+(defn stop-system
   "Stops the given `system-map` by calling stop function of all the
   components with respect to dependency tree."
   {:public-api true
    :added      1.0}
   [^IPersistentMap system-map]
-  (reset! system
-          (reduce stop-component!
-                  system-map
-                  (vals (impl/components-map system-map))))
-  (log/info "System stopped successfully."))
+
+  (reduce stop-component!
+          system-map
+          (vals (impl/components-map system-map))))

@@ -30,7 +30,7 @@
                                    c2)]
       (is (map? ctx-map))
 
-      (sut/set-system! subject-system)
+      (sut/set-system! (sut/init-system subject-system))
       (is (map? (sut/context-for (sut/get-system) c2))))))
 
 

@@ -55,11 +55,13 @@
 
           ;; filter and transorm the value according to the operation map
           ;; of each sink and put it on the sink channel.
-          (doseq [[sink ops] sinks]
-            (let [filtered-value (transorm-value value ops)]
-              (when (not (nil? filtered-value))
-                (>! sink filtered-value)))))
-        (recur)))))
+          (do
+            (doseq [[sink ops] sinks]
+              (let [filtered-value (transorm-value value ops)]
+                (when (not (nil? filtered-value))
+                  (>! sink filtered-value))))
+            (recur)))))
+    this))
 
 
 (defn output-splitter

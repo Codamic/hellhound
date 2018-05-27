@@ -35,16 +35,30 @@
   protocols/ComponentManagement
   ;; The system map should have a `:component` key which its value
   ;; is a vector of component.
-  (components-vector [this]
+  (components-vector
+    [this]
     (:components this))
 
-  (components-map [this]
+  (components-map
+    [this]
     (:components-map this))
 
-  (make-components-map [this]
+  (get-component
+    [this component-name]
+    (let [components-map (protocols/components-map this)]
+      (when components-map
+        (get components-map component-name))))
+
+  (make-components-map
+    [this]
     {:components-map (into {} (map conform-component
                                    (protocols/components-vector this)))})
 
   protocols/WorkflowManagement
   (get-workflow [this]
-    (:workflow this)))
+    (:workflow this))
+
+  protocols/SystemManagement
+  (update-system
+    [system k v]
+    (assoc system k v)))

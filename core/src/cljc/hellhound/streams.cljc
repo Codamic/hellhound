@@ -14,6 +14,15 @@
 (def connect-via impl/connect-via)
 (def close!  impl/close!)
 
+(defmacro do-async
+  "A dummy macro to create a level of indirection toword core async go macro.
+
+  In order to have more control over go macro in the future we need a layer of
+  indirection. Let's say in the future we decided to ditch core async. This way
+  we can be backward compatible."
+  [& body]
+  `(clojure.core.async/go ~@body))
+
 ;; Public API -----------------------------------------------------------------
 (defn stream
   "An alias to core async channels."
