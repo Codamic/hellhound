@@ -1,3 +1,8 @@
+* TODOs
+** TODO Fix `system.core` to use `protocols/update-system` instead of `update-in` fn.
+** TODO We need to have control over splitters and destroy them when there's no need for them
+   for example stop the go-loop.
+
 * Feature plans
 ** TODO Add dynamic workflow support for system
 ** TODO Dynamic component creation
