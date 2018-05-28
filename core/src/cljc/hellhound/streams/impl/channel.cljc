@@ -8,7 +8,8 @@
 
 (extend-type ManyToManyChannel
   impl/Consumable
-  (consume [source f]
+  (consume
+    [source f]
     (async/go-loop []
       (let [v (async/<! source)]
         ;; A nil value for `v` indicates that source is closed.
@@ -17,6 +18,20 @@
           ;; Only process to the next cycle if `v` is not nil. Meaning
           ;; that source is still open.
           (recur)))))
+
+  (take!
+    [source]
+    (async/go (async/<! source)))
+
+  (try-take!
+    [source]
+    (protocols/try-take! source
+                         (hellhound/get-config :streams :default-read-timeout)))
+
+  (try-take!
+    [source timeout]
+    (async/go
+      (async/alts! [source (async/timeout timeout)])))
 
   impl/Sinkable
   (put! [sink v]
@@ -27,7 +42,7 @@
   (try-put! [sink v]
     (impl/try-put! sink
                    v
-                   (hellhound/get-config :streams :default-timeout)))
+                   (hellhound/get-config :streams :default-write-timeout)))
 
   (try-put! [sink v timeout]
     (async/go

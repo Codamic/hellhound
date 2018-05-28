@@ -7,11 +7,15 @@
 
 ;; Protocol Functions ---------------------------------------------------------
 (def consume impl/consume)
+(def take!   impl/take!)
+(def try-take! impl/try-take!)
+
 (def put!    impl/put!)
 (def try-put! impl/try-put!)
 
 (def connect impl/connect)
 (def connect-via impl/connect-via)
+
 (def close!  impl/close!)
 
 (defmacro do-async

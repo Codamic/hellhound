@@ -4,7 +4,11 @@
   ;; consume should be async. It might block if buffer is empty
   ;; and there is no pending put operation.
   (consume [stream f]
-    "Asynchronously consumes values from `stream` and applies `f` on each value."))
+    "Asynchronously consumes values from `stream` and applies `f` on each value.")
+  (take! [stream]
+    "Asynchronously takes a value from the given `stream`.")
+  (try-take! [stream timeout]
+    "Try to asynchronously take a value from the given `stream` in the given `timeout`."))
 
 (defprotocol Sinkable
   ;; put should be async. It might block if buffer is full and
