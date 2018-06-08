@@ -7,7 +7,7 @@ and features of HellHound.
 In order to continue with this section you need to have https://leiningen.org/[Leiningen] setup in your
 box.
 
-The final application is available at https://github.com/lxsameer/hellhound_examples[this github repository] and
+The final application is available at https://github.com/Codamic/hellhound_examples[this github repository] and
 under the `getting-started` namespace.
 
 == Before start
