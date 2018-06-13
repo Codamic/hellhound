@@ -3,7 +3,8 @@
             [clojure.test :as t :refer [deftest testing is are]]
             [hellhound.component :as hcomp]
             [hellhound.system  :as system]
-            [hellhound.streams :as stream]))
+            [hellhound.streams :as stream]
+            [hellhound.utils :refer [todo]]))
 
 
 ;; System tests --------------------------------------------
@@ -93,13 +94,13 @@
             (is (stream/stream? output1))
             (is (stream/stream? output2))
 
+            (todo "Replace these tests with splitter tests!")
             ;; (is (= (second (first (stream/downstream input1))) output1))
             ;; (is (= (second (first (stream/downstream input2))) output2))
             ;; (is (= (second (first (stream/downstream input3))) output3))
             ;; (is (= (second (first (stream/downstream output1))) input2))
             ;; (is (= (second (first (stream/downstream output2))) input3))
-            (stream/do-async
-             (is (true? (stream/try-put! input1 10 1000))))))))
+            (is (true? @(stream/try-put! input1 10 1000)))))))
 
 
     (system/stop!)))
