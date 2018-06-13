@@ -1,8 +1,8 @@
 (ns hellhound.system.impl.splitter
   (:require
-   [clojure.core.async.impl.channels :as channels]
-   [clojure.core.async :as async :refer [go <! >! chan close! go-loop]]
-   [hellhound.system.protocols :as proto]))
+   [hellhound.streams :as streams]
+   [hellhound.system.protocols :as proto]
+   [hellhound.utils :refer [todo]]))
 
 (def
   ^{:doc "A map which describes a set of operations that should apply to values
@@ -21,14 +21,22 @@
   {:filter-fn (or filter-fn #(identity %))
    :map-fn    (or map-fn    #(identity %))})
 
-(defn- transorm-value
-  "Applies all the operations defined in the given `ops` map and return the
-  transformed value."
+(defn- transform-and-put
+  "Applies all the operations defined in the given `ops` map and returns
+  the transformed value."
   [value {:keys [filter-fn map-fn] :as ops}]
   (if (filter-fn value)
     (map-fn value)
     nil))
 
+(defn- connect
+  [source sink op-map]
+  (streams/connect-via source
+                       (fn [v]
+                         (when-let [tv (transform-and-put v op-map)]
+                           (todo "Should we block here ???")
+                           (streams/put! sink tv)))
+                       sink))
 
 (deftype OutputSplitter [source sinks]
   proto/Splitter
@@ -40,27 +48,8 @@
 
   (commit
     [this]
-    (go-loop []
-      ;; Asynchronously reads a value from the source and transform
-      ;; it based on operation map of each sink and if it was'nt nil
-      ;; put it into sink.
-      (let [value (<! source)
-            sinks @sinks]
-
-        (if (nil? value)
-          ;; Closes all the sinks if the value from source is nil which means
-          ;; the source channel is closed.
-          (doseq [[sink _] sinks]
-            (close! sink))
-
-          ;; filter and transorm the value according to the operation map
-          ;; of each sink and put it on the sink channel.
-          (do
-            (doseq [[sink ops] sinks]
-              (let [filtered-value (transorm-value value ops)]
-                (when (not (nil? filtered-value))
-                  (>! sink filtered-value))))
-            (recur)))))
+    (doseq [[sink op-map] @sinks]
+      (connect source sink op-map))
     this))
 
 
@@ -70,22 +59,21 @@
   (OutputSplitter. source (atom [])))
 
 (comment
-  (let [a (chan 10)
-        b (chan 10)
-        c (chan 10)
+  (let [a (streams/stream 10)
+        b (streams/stream 10)
+        c (streams/stream 10)
         splitter (output-splitter a)
-        read #(async/go-loop []
-                (let [v (async/<! %1)]
-                  (println (format "GO-%s: %s" %2 v)))
-                (recur))]
+        read (fn [x y]
+               (streams/consume
+                (fn [v]
+                  (Thread/sleep 100)
+                  (println (format "S-%s: %s" y v))) x))]
+
     (read b "b")
     (read c "c")
     (proto/connect splitter b default-operations)
     (proto/connect splitter c default-operations)
     (proto/commit splitter)
-    (println "xxxx")
-    (println (.sinks splitter))
-    (println c)
-    (println default-operations)
+
     (doseq [x [1 2 3 4 5 6 7 8 9 10 11 12 13]]
-          (async/>!! a x))))
+          (streams/put! a x))))
