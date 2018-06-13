@@ -33,4 +33,5 @@
 (def description s/description)
 (def downstream s/downstream)
 
+(def close! s/close!)
 ;; ----------------------------------------------------------------------------
