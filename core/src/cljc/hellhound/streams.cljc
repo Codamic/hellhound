@@ -1,4 +1,5 @@
 (ns hellhound.streams
+  (:refer-clojure :exclude [map])
   (:require
    [manifold.stream                :as s]
    [hellhound.utils                :refer [todo]]
