@@ -16,6 +16,7 @@
 
   Predicate function should be a pure function obviousely."
   (:require [hellhound.system.impl.splitter :as spltr]
+            [hellhound.system.operations    :as op]
             [hellhound.system.impl.system   :as sys]
             [hellhound.system.protocols     :as impl]
             [hellhound.logger               :as log]
@@ -46,7 +47,7 @@
    (parse from pred #(identity %) to))
 
   ([from pred map-fn to]
-   [from (spltr/make-ops-map pred map-fn) to]))
+   [from (op/make-ops-map pred map-fn) to]))
 
 (defn make-splitter
   "Creates a splitter from the given `source-component` component."

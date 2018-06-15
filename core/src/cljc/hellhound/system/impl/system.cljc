@@ -56,8 +56,14 @@
                                    (protocols/components-vector this)))})
 
   protocols/WorkflowManagement
-  (get-workflow [this]
+  (get-workflow
+    [this]
     (:workflow this))
+
+  protocols/ExecutionManagement
+  (execution-mode
+    [system]
+    (:execution-mode system))
 
   protocols/SystemManagement
   (update-system

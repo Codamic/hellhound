@@ -1,27 +1,12 @@
 (ns hellhound.system.impl.splitter
   {:added 1.0}
   (:require
+   [hellhound.system.operations :as op]
    [hellhound.async :as ha]
    [hellhound.streams :as streams]
    [hellhound.system.protocols :as proto]
    [hellhound.utils :refer [todo]]))
 
-(def
-  ^{:doc "A map which describes a set of operations that should apply to values
-          from a source channel before putting them on any sink channel."}
-
-  default-operations
-  {;; If the function returns a treuthy by passing the value from the source,
-   ;; we will the the value to the sink assigned to this map.
-   :filter-fn #(identity %)
-   ;; This function will apply to the value came from the source channel before
-   ;; sending it to the sink channel.
-   :map-fn    #(identity %)})
-
-(defn make-ops-map
-  [filter-fn map-fn]
-  {:filter-fn (or filter-fn #(identity %))
-   :map-fn    (or map-fn    #(identity %))})
 
 (defn- transform-and-put
   "Applies all the operations defined in the given `ops` map and returns
@@ -46,7 +31,7 @@
   (connect
     [this sink operation-map]
     ;; Simply puts the sink and it's operation-map into sinks vector
-    (let [m (or operation-map default-operations)]
+    (let [m (or operation-map op/default-operations)]
       (swap! sinks conj [sink m])))
 
   (commit
@@ -73,8 +58,8 @@
                     (Thread/sleep 100)
                     (println (format "%s-%s: %s" (.getName (Thread/currentThread)) y v)))) x))]
 
-    (proto/connect splitter b default-operations)
-    (proto/connect splitter c default-operations)
+    (proto/connect splitter b op/default-operations)
+    (proto/connect splitter c op/default-operations)
     (proto/commit splitter)
 
     (doseq [x [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24]]

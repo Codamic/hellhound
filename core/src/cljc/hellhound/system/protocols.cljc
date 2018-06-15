@@ -36,3 +36,8 @@
   (update-system
     [system k v]
     "Updates the value of `k` with the given `v` in the given `system`."))
+
+(defprotocol ExecutionManagement
+  (execution-mode [system]
+    "Returns a keyword describing the execution model of the system. Possible
+     values are ':single-threaded' and 'multi-threaded'"))
