@@ -1,9 +1,11 @@
 (ns hellhound.streams
+  "TODO: Write docstring for this ns.
+   CAUTION: Experimental ns."
   (:refer-clojure :exclude [map])
   (:require
    [manifold.stream                :as s]
-   [hellhound.utils                :refer [todo]]
-   [hellhound.streams.impl.channel]))
+   [hellhound.utils                :refer [todo]]))
+
 
 ;; IMPORTANT NOTE: At this point, this namespace is just a proxy for
 ;; manifold.stream. But in near future we want to introduce our own

@@ -1,5 +1,7 @@
 (ns hellhound.system.impl.splitter
+  {:added 1.0}
   (:require
+   [hellhound.async :as ha]
    [hellhound.streams :as streams]
    [hellhound.system.protocols :as proto]
    [hellhound.utils :refer [todo]]))
@@ -33,9 +35,10 @@
   [source sink op-map]
   (streams/connect-via source
                        (fn [v]
-                         (when-let [tv (transform-and-put v op-map)]
-                           (todo "Should we block here ???")
-                           (streams/put! sink tv)))
+                         (ha/future
+                           (when-let [tv (transform-and-put v op-map)]
+                             (todo "Should we block here ???")
+                             (streams/put! sink tv))))
                        sink))
 
 (deftype OutputSplitter [source sinks]
@@ -66,14 +69,19 @@
         read (fn [x y]
                (streams/consume
                 (fn [v]
-                  (Thread/sleep 100)
-                  (println (format "S-%s: %s" y v))) x))]
+                  (ha/future
+                    (Thread/sleep 100)
+                    (println (format "%s-%s: %s" (.getName (Thread/currentThread)) y v)))) x))]
 
-    (read b "b")
-    (read c "c")
     (proto/connect splitter b default-operations)
     (proto/connect splitter c default-operations)
     (proto/commit splitter)
 
-    (doseq [x [1 2 3 4 5 6 7 8 9 10 11 12 13]]
-          (streams/put! a x))))
+    (doseq [x [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24]]
+      (streams/put! a x))
+    (read b "b")
+    (read c "c")))
+
+    ;; (streams/close! a)
+    ;; (streams/close! b)
+    ;; (streams/close! c)

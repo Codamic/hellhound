@@ -1,4 +1,5 @@
 (ns hellhound.system.impl.system
+  {:added 1.0}
   (:require
    [clojure.spec.alpha         :as s]
    [hellhound.component        :as hcomp]
