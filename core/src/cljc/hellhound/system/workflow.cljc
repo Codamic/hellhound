@@ -90,9 +90,7 @@
   System's workflow is a vector of vectors. Each vector contains two
   mandatory element which are:
     * The name of the output component
-    * The name of the input component(defn make-splitter
-  [components from]
-  (spltr/make-splitter (hcomp/output from)))
+    * The name of the input component
 
   and an optional predicate function. This function connects the
   output stream of output component to input stream of input component,
@@ -100,7 +98,8 @@
   messages which pass the predicate."
   [components workflow]
   (let [[splitters _] (reduce connect-workflow [{} components] workflow)
-        commit-fn     (fn [acc [k v]] (assoc acc k (impl/commit v)))]
+        commit-fn     (fn [acc [k v]]
+                        (assoc acc k (impl/commit v)))]
     (doall (reduce commit-fn {} splitters))))
 
 (defn wire-components
