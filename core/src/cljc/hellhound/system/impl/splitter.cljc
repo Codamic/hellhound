@@ -43,15 +43,8 @@
 
 (defn output-splitter
   "Create and return an output-splitter for the given `source` channel."
-  ([source]
-   (output-splitter source :single-thread))
-  ([source execution-mode]
-   (cond
-     (= execution-mode :single-thread) (OutputSplitter. source (atom []))
-     (= execution-mode :multi-thread) (ThreadedOutputSplitter. source (atom []) (threadpool 4))
-     :else (throw (ex-info (format "Don't know about '%s' execution mode."
-                                   execution-mode)
-                           :cause {:execution-mode execution-mode})))))
+  [source]
+  (OutputSplitter. source (atom [])))
 
 
 (comment
