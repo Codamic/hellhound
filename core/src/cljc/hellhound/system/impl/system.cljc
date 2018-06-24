@@ -5,6 +5,20 @@
    [hellhound.component        :as hcomp]
    [hellhound.system.protocols :as protocols]))
 
+(def SINGLE_THREAD :single-thread)
+(def MULTI_THREAD :multi-thread)
+
+(defn execution-map
+  [system]
+  (or (:execution system) {}))
+
+(defn single-threaded?
+  [system]
+  (= SINGLE_THREAD (:mode (execution-map))))
+
+(defn multi-threaded?
+  [system]
+  (= MULTI_THREAD (:mode (execution-map))))
 
 (defn conform-component
   "Checks for a valid compnoent structure and returns a pair of component
@@ -61,9 +75,31 @@
     (:workflow this))
 
   protocols/ExecutionManagement
+  (execution-pool
+    [system]
+    (cond
+      (single-threaded? system) nil
+      (multi-threaded? system)  (create-execution-pool system)
+      :else (throw (ex-info "Don't know about the given execution mode."))))
+
+  (wait-pool
+    [system]
+    (cond
+      (single-threaded? system) nil
+      (multi-threaded? system)  (create-wait-pool system)
+      :else (throw (ex-info "Don't know about the given execution mode."))))
+
+  (schedule-pool
+    [system]
+    (cond
+      (single-threaded? system) nil
+      (multi-threaded? system)  (create-schedule-pool system)
+      :else (throw (ex-info "Don't know about the given execution mode."))))
+
   (execution-mode
     [system]
-    (:execution-mode system))
+    (or (:mode (execution-map system))
+        :single-thread))
 
   protocols/SystemManagement
   (update-system

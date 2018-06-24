@@ -38,6 +38,22 @@
     "Updates the value of `k` with the given `v` in the given `system`."))
 
 (defprotocol ExecutionManagement
+  (execution-pool
+    [system]
+    "Returns the main thread pool of the system which is responsible for
+     executing none blocking code. Nil in case of a single thread system.")
+
+  (wait-pool
+    [system]
+    "Returns the wait thread pool of the system which is responsible for
+     executing blocking code. Nil in case of a single thread system.")
+
+  (schedule-pool
+    [system]
+    "Returns the schedule thread pool of the system which is responsible for
+     scheduling code to be run in future. Nil in case of a single thread
+     system.")
+
   (execution-mode [system]
     "Returns a keyword describing the execution model of the system. Possible
      values are ':single-threaded' and 'multi-threaded'"))
