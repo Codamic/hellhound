@@ -1,6 +1,9 @@
 (ns hellhound.system.execution
   (:require
-   [hellhound.system.protocols :as impl]))
+   [hellhound.system.protocols :as impl])
+  (:import
+   [java.util.concurrent Executors]))
+
 
 (defn execute-in
   [executor f]
@@ -17,3 +20,13 @@
 (defn schedule-with-system
   [system f details]
   (execute-in (impl/schedule-pool system) f))
+
+(comment
+  (let [threadpool (fn [size]
+                     (Executors/newFixedThreadPool size))
+
+        a (system {:components []
+                   :workflow []
+                   :execution {:mode :multi-thread
+                               :execution-pool (threadpool 3)
+                               :wait-pool}})]))

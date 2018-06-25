@@ -45,6 +45,10 @@
         :fn #(= (first (:ret %))
                 (:hellhound.component/name (:component (:args %)))))
 
+(defn get-or-create-execute-pool
+  [system]
+  (let [ex-map (execution-map system)]))
+
 
 (extend-type clojure.lang.IPersistentMap
   protocols/ComponentManagement
