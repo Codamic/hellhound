@@ -45,11 +45,6 @@
         :fn #(= (first (:ret %))
                 (:hellhound.component/name (:component (:args %)))))
 
-(defn get-or-create-execute-pool
-  [system]
-  (let [ex-map (execution-map system)]))
-
-
 (extend-type clojure.lang.IPersistentMap
   protocols/ComponentManagement
   ;; The system map should have a `:component` key which its value
@@ -79,25 +74,33 @@
     (:workflow this))
 
   protocols/ExecutionManagement
+  (set-execution-pool
+    [system pool]
+    (let [ex-map (execution-map system)]
+      (if (= single-threaded? system)
+        system
+        (protocols/update-system system
+                                 :execution
+                                 (assoc ex-map :execution-pool pool)))))
   (execution-pool
     [system]
     (cond
       (single-threaded? system) nil
-      (multi-threaded? system)  (create-execution-pool system)
+      (multi-threaded? system)  (:execution-pool (execution-map system))
       :else (throw (ex-info "Don't know about the given execution mode."))))
 
   (wait-pool
     [system]
     (cond
       (single-threaded? system) nil
-      (multi-threaded? system)  (create-wait-pool system)
+      (multi-threaded? system)  (:wait-pool (execution-map system))
       :else (throw (ex-info "Don't know about the given execution mode."))))
 
   (schedule-pool
     [system]
     (cond
       (single-threaded? system) nil
-      (multi-threaded? system)  (create-schedule-pool system)
+      (multi-threaded? system)  (:schedule-pool (execution-map system))
       :else (throw (ex-info "Don't know about the given execution mode."))))
 
   (execution-mode
