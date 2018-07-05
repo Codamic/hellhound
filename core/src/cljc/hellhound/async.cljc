@@ -7,7 +7,7 @@
   (:require
    [manifold.deferred :as d]
    [hellhound.system :as hellhound]
-   [hellhound.execution :as exec]))
+   [hellhound.system.execution :as exec]))
 
 ;; IMPORTANT NOTE: At this point, this namespace is just a proxy for
 ;; manifold.deferred. But in near future we want to introduce our own
@@ -51,10 +51,14 @@
 
 (def zip d/zip)
 
-(defn io!
+(defn execute-io!
   [f]
-  (exec/execute-io-with-system (hellhound/system) f))
+  ;;   (exec/execute-io-with-system  f)
+  (d/future-with (exec/wait-pool (hellhound/system))
+                 (f)))
 
-(defn non-io
+(defn execute
   [f]
-  (exec/execute-with-system (hellhound/system) f))
+  ;;(exec/execute-with-system (hellhound/system) f)
+  (d/future-with (exec/execution-pool (hellhound/system))
+                 (f)))

@@ -54,6 +54,18 @@
   ;; calculating the size of the pool.
   (delay (create-schedule-pool)))
 
+(defn execution-pool
+  [system]
+  (impl/execution-pool system))
+
+(defn wait-pool
+  [system]
+  (impl/wait-pool system))
+
+(defn schedule-pool
+  [system]
+  (impl/schedule-pool system))
+
 (defn execution-map
   [system]
   (or (:execution system) {}))

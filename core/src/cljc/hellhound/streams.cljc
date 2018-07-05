@@ -3,8 +3,9 @@
    CAUTION: Experimental ns."
   (:refer-clojure :exclude [map])
   (:require
-   [manifold.stream                :as s]
-   [hellhound.utils                :refer [todo]]))
+   [manifold.stream :as s]
+   [hellhound.async :as async]
+   [hellhound.utils :refer [todo]]))
 
 
 ;; IMPORTANT NOTE: At this point, this namespace is just a proxy for
@@ -38,3 +39,36 @@
 
 (def close! s/close!)
 ;; ----------------------------------------------------------------------------
+(defn >>
+  ([s v]
+   (>> s v (fn [_])))
+  ([s v f]
+   (async/execute
+    (fn []
+      ;; TODO: We need to handle the situation which the
+      ;; stream is closed.
+      (f @(put! s v))))))
+
+;; TODO: Is there any scenario for running a blocking code on the
+;; put call back ?
+(defn >>!
+  ([s v]
+   (>>! s v (fn [_])))
+  ([s v f]
+   (async/execute-io!
+    (fn []
+      ;; TODO: We need to handle the situation which the
+      ;; stream is closed.
+      (f @(put! s v))))))
+
+(defn <<
+  [s f]
+  (async/execute
+   (fn []
+     (f @(take! s)))))
+
+(defn <<!
+  [s f]
+  (async/execute-io!
+   (fn []
+     (f @(take! s)))))
