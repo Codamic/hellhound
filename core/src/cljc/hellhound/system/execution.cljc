@@ -8,13 +8,13 @@
 (def SINGLE_THREAD :single-thread)
 (def MULTI_THREAD :multi-thread)
 
-(def execution-pool-size
+(defn execution-pool-size
   [system]
   ;; TODO: Try to guess number of processors and return a
   ;; pool size based on that or 8
   8)
 
-(def schedule-pool-size
+(defn schedule-pool-size
   [system]
   ;; TODO: Find the optimal number for the schedule size
   8)
@@ -93,13 +93,3 @@
 (defn schedule-with-system
   [system f details]
   (execute-in (impl/schedule-pool system) f))
-
-(comment
-  (let [threadpool (fn [size]
-                     (Executors/newFixedThreadPool size))
-
-        a (system {:components []
-                   :workflow []
-                   :execution {:mode :multi-thread
-                               :execution-pool (threadpool 3)
-                               :wait-pool}})]))

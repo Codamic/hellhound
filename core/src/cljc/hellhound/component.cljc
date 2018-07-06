@@ -48,13 +48,15 @@
   "
   {:added 1.0}
   (:require
-   [hellhound.components.impl.persistant-map]
    [hellhound.streams :as streams]
-   [hellhound.component.protocols :as impl]))
+   [hellhound.components.protocols :as impl]))
 
 
 ;; Public Functions ----------------------------------------
 
+;; IMPORTANT NOTE: These are shortcut functions for public
+;; API of HellHound. As a contributor make sure to use the
+;; protocol instead.
 (def initialize impl/initialize)
 
 (def start! impl/start!)
@@ -71,7 +73,6 @@
 
 (def output impl/output)
 
-(def executor impl/executor)
 
 (defn make-component
   "A short cut function to create a component map with the given details.
@@ -104,11 +105,11 @@
         (fn [v]
           (let [processed-v (f v)]
             (when processed-v
-              (putfn ouput processed-v)))))))
+              (putfn output processed-v)))))))
 
 (defn input->output
   [component f]
-  (in->out componet
+  (in->out component
            streams/<<
            streams/>>
            f))
@@ -116,7 +117,7 @@
 
 (defn input->output!
   [component f]
-  (in->out componet
+  (in->out component
            streams/<<!
            streams/>>!
            f))

@@ -3,34 +3,21 @@
   won't need to use this namespace directly unless you really know what's
   your doing."
   (:require
-   [clojure.spec.alpha         :as s]
-   [hellhound.system.workflow  :as workflow]
-   [hellhound.system.utils     :as utils]
-   [hellhound.logger           :as log]
-   [hellhound.component        :as hcomp]
-   [hellhound.system.impl.system :as sysimpl]
-   [hellhound.system.protocols :as impl])
+   [clojure.spec.alpha             :as s]
+   [hellhound.logger               :as log]
+   [hellhound.components.protocols :as cimpl]
+   [hellhound.system.workflow      :as workflow]
+   [hellhound.system.utils         :as utils]
+   [hellhound.system.impl.system   :as sysimpl]
+   [hellhound.system.protocols     :as impl])
 
 
-  #?(:clj (:import
-           (hellhound.component IComponent)
-           (clojure.lang IPersistentMap
-                         PersistentArrayMap
-                         PersistentVector))))
+  (:import
+   (hellhound.components.protocols IComponent)
+   (clojure.lang IPersistentMap
+                 PersistentArrayMap
+                 PersistentVector)))
 
-;; Main storage for system data.
-(def system (atom {}))
-
-
-(defn get-system
-  "A shortcut function for derefing `system`."
-  []
-  @system)
-
-(defn set-system!
-  "Sets the system of HellHound."
-  [^IPersistentMap system-map]
-  (reset! system system-map))
 
 (defn context-for
   "Returns the `context map` for the given component in the given
@@ -48,14 +35,14 @@
   [system-map component]
 
   (let [components   (impl/components-map system-map)
-        dependencies (hcomp/dependencies component)
+        dependencies (cimpl/dependencies component)
         deps         (map #(get components %) dependencies)]
     (when (nil? components)
       (throw (ex-info "Components map is nil. Did you set the system?"
                       {:cause system-map})))
 
     {:dependencies deps
-     :dependencies-map (into {} (map (fn [x] [(hcomp/get-name x) x]) deps))}))
+     :dependencies-map (into {} (map (fn [x] [(cimpl/get-name x) x]) deps))}))
 
 
 (defn make-components-index
@@ -77,8 +64,8 @@
   "Returns a vector of dependencies for the given `component` in the given
   `system`."
   [^IPersistentMap system-map component]
-  (let [dependencies (hcomp/dependencies component)]
-    (filter #(some #{(hcomp/get-name %)} dependencies)
+  (let [dependencies (cimpl/dependencies component)]
+    (filter #(some #{(cimpl/get-name %)} dependencies)
             (vals (impl/components-map system-map)))))
 
 
@@ -89,11 +76,11 @@
   (let [dependencies (get-dependencies-of system-map component)
         new-system   (reduce start-component! system-map dependencies)]
     (update-in new-system
-               [:components-map (hcomp/get-name component)]
+               [:components-map (cimpl/get-name component)]
                ;; New value for the component name which will be the return
                ;; value of the `start-fn` function
                (fn [old-component]
-                 (hcomp/start! old-component
+                 (cimpl/start! old-component
                                (context-for new-system old-component))))))
 
 
@@ -103,8 +90,8 @@
    ^IComponent     component]
   (reduce stop-component!
           (update-in system-map
-                     [:components-map (hcomp/get-name component)]
-                     (fn [old-component] (hcomp/stop! old-component)))
+                     [:components-map (cimpl/get-name component)]
+                     (fn [old-component] (cimpl/stop! old-component)))
           (get-dependencies-of system-map component)))
 
 (s/def ::system-map (s/and map?

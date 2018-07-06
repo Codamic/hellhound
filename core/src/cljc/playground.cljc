@@ -2,8 +2,8 @@
   (:require
    [hellhound.core :as hh]
    [hellhound.system :as sys]
-   [hellhound.component :as com]
-   [clojure.java.io :as io]))
+   [hellhound.component :as com]))
+
 
 (defn c1
   [this ctx]

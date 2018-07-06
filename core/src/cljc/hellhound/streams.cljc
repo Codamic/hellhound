@@ -4,7 +4,7 @@
   (:refer-clojure :exclude [map])
   (:require
    [manifold.stream :as s]
-   [hellhound.async :as async]
+   [hellhound.system.async :as async]
    [hellhound.utils :refer [todo]]))
 
 

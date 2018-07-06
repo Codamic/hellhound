@@ -2,7 +2,7 @@
   {:added 1.0}
   (:require
    [clojure.spec.alpha         :as s]
-   [hellhound.component        :as hcomp]
+   [hellhound.components.protocols :as cimpl]
    [hellhound.system.protocols :as protocols]
    [hellhound.system.execution :as exec]))
 
@@ -10,16 +10,16 @@
   "Checks for a valid compnoent structure and returns a pair of component
   name and the component structure."
   [component]
-  (when (not (satisfies? hcomp/IComponent component))
+  (when (not (satisfies? cimpl/IComponent component))
     ;; Throw if component didn't satisfy the protocol.
     (throw (ex-info "Provided component does not satisfies `IComponent` protocol."
                     {:cause component})))
 
   (if (s/valid? :hellhound.component/component component)
-    [(hcomp/get-name component) (hcomp/initialize component)]
+    [(cimpl/get-name component) (cimpl/initialize component)]
     (throw (ex-info (format "Component does not satisfies '%s' spec."
                             ":hellhound.component/component")
-                    {:cause (hcomp/get-name component)
+                    {:cause (cimpl/get-name component)
                      :explain (s/explain-data
                                :hellhound.component/component
                                component)}))))
@@ -64,7 +64,7 @@
     [system]
     (cond
       (exec/single-threaded? system) nil
-      (exec/multi-threaded? system)  (or (:execution-pool (execution-map system))
+      (exec/multi-threaded? system)  (or (:execution-pool (exec/execution-map system))
                                          @exec/default-execution-pool)
       :else (throw (ex-info "Don't know about the given execution mode."))))
 
@@ -72,7 +72,7 @@
     [system]
     (cond
       (exec/single-threaded? system) nil
-      (exec/multi-threaded? system)  (or (:wait-pool (execution-map system))
+      (exec/multi-threaded? system)  (or (:wait-pool (exec/execution-map system))
                                          @exec/default-wait-pool)
       :else (throw (ex-info "Don't know about the given execution mode."))))
 
@@ -80,7 +80,7 @@
     [system]
     (cond
       (exec/single-threaded? system) nil
-      (exec/multi-threaded? system)  (or (:schedule-pool (execution-map system))
+      (exec/multi-threaded? system)  (or (:schedule-pool (exec/execution-map system))
                                          @exec/default-schedule-pool)
       :else (throw (ex-info "Don't know about the given execution mode."))))
 

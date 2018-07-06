@@ -15,13 +15,15 @@
   messages which pass the predicate.
 
   Predicate function should be a pure function obviousely."
-  (:require [hellhound.system.impl.splitter :as spltr]
-            [hellhound.system.operations    :as op]
-            [hellhound.system.impl.system   :as sys]
-            [hellhound.system.protocols     :as impl]
-            [hellhound.logger               :as log]
-            [hellhound.system.utils         :as utils]
-            [hellhound.component            :as hcomp])
+  (:require
+   [hellhound.logger               :as log]
+   [hellhound.components.protocols :as cimpl]
+   [hellhound.system.impl.splitter :as spltr]
+   [hellhound.system.operations    :as op]
+   [hellhound.system.impl.system   :as sys]
+   [hellhound.system.protocols     :as impl]
+   [hellhound.system.utils         :as utils])
+
 
   (:import (clojure.lang IPersistentMap
                          PersistentVector)))
@@ -29,7 +31,7 @@
 (defn- invalid-workflow
   [component]
   (throw (ex-info (format "Invalid component '%s' in workflow."
-                          (hcomp/get-name component))
+                          (cimpl/get-name component))
                   {:cause component})))
 
 (defn- invalid-component-name
@@ -52,7 +54,7 @@
 (defn make-splitter
   "Creates a splitter from the given `source-component` component."
   [source-component]
-  (spltr/output-splitter (hcomp/output source-component)))
+  (spltr/output-splitter (cimpl/output source-component)))
 
 (defn connect-workflow
   "Setup and connect the components through the splitters."
@@ -76,7 +78,7 @@
                        (make-splitter source-component))]
 
       (impl/connect splitter
-                    (hcomp/input dest-component)
+                    (cimpl/input dest-component)
                     ops-map)
 
 

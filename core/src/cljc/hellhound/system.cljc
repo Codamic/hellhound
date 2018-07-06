@@ -1,13 +1,16 @@
 (ns hellhound.system
   "Systems are the most important thing in the **HellHound** ecosystem.
   Systems define how your application should work."
-  ^{:author "Sameer Rahmani (@lxsameer)"}
+  ^{:author "Sameer Rahmani (@lxsameer)"
+    :added 1.0}
   (:require [hellhound.config              :as config]
-            [hellhound.system.core         :as core]
-            [hellhound.system.workflow     :as workflow]
             [hellhound.logger              :as logger]
+            [hellhound.config.defaults     :as default]
             [hellhound.system.protocols    :as impl]
-            [hellhound.config.defaults     :as default]))
+            [hellhound.system.core         :as core]
+            [hellhound.system.store        :as store]
+            [hellhound.system.workflow     :as workflow]))
+
 
 (defn set-system!
   "Sets the default system of HellHound application to the given
@@ -15,14 +18,14 @@
   {:added      1.0
    :public-api true}
   [system-map]
-  (core/set-system! system-map))
+  (store/set-system! system-map))
 
 (defn system
   "Returns the processed system."
   {:added      1.0
    :public-api true}
   []
-  (core/get-system))
+  (store/get-system))
 
 (defn start!
   "Starts the default system by calling start on all the components.
@@ -35,8 +38,8 @@
   ;; specified by `HH_ENV` environment. Default env is `:development`
   (config/load-runtime-configuration)
   (logger/init! (config/get-config :logger))
-  (core/set-system!
-   (-> @core/system
+  (store/set-system!
+   (-> @store/system
        (core/init-system)
        (core/start-system)
        (workflow/setup)))
@@ -50,8 +53,8 @@
   {:added      1.0
    :public-api true}
   []
-  (core/set-system!
-   (-> @core/system
+  (store/set-system!
+   (-> @store/system
        (core/stop-system)))
   (logger/info "System has been stopped successfully."))
 
@@ -62,4 +65,4 @@
   {:added      1.0
    :public-api true}
   [name]
-  (impl/get-component @core/system name))
+  (impl/get-component @store/system name))
