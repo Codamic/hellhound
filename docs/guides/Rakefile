@@ -6,7 +6,7 @@ require 'asciidoctor-epub3'
 desc 'Run doc webserver'
 task :serve do
   root = File.expand_path './_build/'
-  `cp images ./_build/images -rv`
+  `cp -rv images ./_build/images`
   server = WEBrick::HTTPServer.new Port: 3000, DocumentRoot: root
   trap 'INT' do server.shutdown end
   server.start
@@ -26,7 +26,7 @@ task :compile do
       'allow-uri-read' => true,
       'stylesheet' => 'style.css'
     })
-  `cp images ./_build/images -rv`
+  `cp -rv images ./_build/images`
   Asciidoctor .convert_file(
     'index.adoc', to_dir: '_build/', mkdirs: true, safe: :safe,
     backend: :pdf, header_footer: true, sourcemap: true, to_file: 'hellhound.pdf',
@@ -68,7 +68,7 @@ task :compile do
       'front-cover-image' => 'image:cover.svg[Front Cover,1050,1050]',
       'stylesheet' => 'style.css'
     })
-  `cp images ./_build/ -rv`
+  `cp -rv images ./_build/`
   `rm -rf hellhound-kf8.epub`
 end
 
