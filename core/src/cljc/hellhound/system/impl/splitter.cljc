@@ -52,7 +52,7 @@
         b (streams/stream 10)
         c (streams/stream 10)
         tp (threadpool 4)
-        splitter (output-splitter a :single-thread)
+        splitter (output-splitter a)
         read (fn [x y]
                (streams/consume
                 (fn [v]

@@ -3,22 +3,8 @@
   (:require
    [clojure.spec.alpha         :as s]
    [hellhound.component        :as hcomp]
-   [hellhound.system.protocols :as protocols]))
-
-(def SINGLE_THREAD :single-thread)
-(def MULTI_THREAD :multi-thread)
-
-(defn execution-map
-  [system]
-  (or (:execution system) {}))
-
-(defn single-threaded?
-  [system]
-  (= SINGLE_THREAD (:mode (execution-map))))
-
-(defn multi-threaded?
-  [system]
-  (= MULTI_THREAD (:mode (execution-map))))
+   [hellhound.system.protocols :as protocols]
+   [hellhound.system.execution :as exec]))
 
 (defn conform-component
   "Checks for a valid compnoent structure and returns a pair of component
@@ -44,7 +30,6 @@
         :ret  vector?
         :fn #(= (first (:ret %))
                 (:hellhound.component/name (:component (:args %)))))
-
 
 (extend-type clojure.lang.IPersistentMap
   protocols/ComponentManagement
@@ -78,27 +63,30 @@
   (execution-pool
     [system]
     (cond
-      (single-threaded? system) nil
-      (multi-threaded? system)  (create-execution-pool system)
+      (exec/single-threaded? system) nil
+      (exec/multi-threaded? system)  (or (:execution-pool (execution-map system))
+                                         @exec/default-execution-pool)
       :else (throw (ex-info "Don't know about the given execution mode."))))
 
   (wait-pool
     [system]
     (cond
-      (single-threaded? system) nil
-      (multi-threaded? system)  (create-wait-pool system)
+      (exec/single-threaded? system) nil
+      (exec/multi-threaded? system)  (or (:wait-pool (execution-map system))
+                                         @exec/default-wait-pool)
       :else (throw (ex-info "Don't know about the given execution mode."))))
 
   (schedule-pool
     [system]
     (cond
-      (single-threaded? system) nil
-      (multi-threaded? system)  (create-schedule-pool system)
+      (exec/single-threaded? system) nil
+      (exec/multi-threaded? system)  (or (:schedule-pool (execution-map system))
+                                         @exec/default-schedule-pool)
       :else (throw (ex-info "Don't know about the given execution mode."))))
 
   (execution-mode
     [system]
-    (or (:mode (execution-map system))
+    (or (:mode (exec/execution-map system))
         :single-thread))
 
   protocols/SystemManagement

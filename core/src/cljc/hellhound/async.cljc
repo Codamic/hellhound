@@ -5,7 +5,9 @@
    :experimental true}
   (:refer-clojure :exclude [future zip realized?])
   (:require
-   [manifold.deferred :as d]))
+   [manifold.deferred :as d]
+   [hellhound.system :as hellhound]
+   [hellhound.system.execution :as exec]))
 
 ;; IMPORTANT NOTE: At this point, this namespace is just a proxy for
 ;; manifold.deferred. But in near future we want to introduce our own
@@ -48,3 +50,15 @@
 (def timeout! d/timeout!)
 
 (def zip d/zip)
+
+(defn execute-io!
+  [f]
+  ;;   (exec/execute-io-with-system  f)
+  (d/future-with (exec/wait-pool (hellhound/system))
+                 (f)))
+
+(defn execute
+  [f]
+  ;;(exec/execute-with-system (hellhound/system) f)
+  (d/future-with (exec/execution-pool (hellhound/system))
+                 (f)))
