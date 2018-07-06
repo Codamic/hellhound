@@ -49,7 +49,8 @@
   {:added 1.0}
   (:require
    [hellhound.streams :as streams]
-   [hellhound.components.protocols :as impl]))
+   [hellhound.components.protocols :as impl]
+   [hellhound.components.impl.persistent-map :as component-impl]))
 
 
 ;; Public Functions ----------------------------------------
