@@ -66,24 +66,24 @@
     (cond
       (exec/single-threaded? system) nil
       (exec/multi-threaded? system)  (or (:execution-pool (exec/execution-map system))
-                                         @exec/default-execution-pool)
-      :else (throw (ex-info "Don't know about the given execution mode."))))
+                                         @(exec/default-execution-pool system))
+      :else (throw (ex-info "Don't know about the given execution mode." {}))))
 
   (wait-pool
     [system]
     (cond
       (exec/single-threaded? system) nil
       (exec/multi-threaded? system)  (or (:wait-pool (exec/execution-map system))
-                                         @exec/default-wait-pool)
-      :else (throw (ex-info "Don't know about the given execution mode."))))
+                                         @(exec/default-wait-pool system))
+      :else (throw (ex-info "Don't know about the given execution mode." {}))))
 
   (schedule-pool
     [system]
     (cond
       (exec/single-threaded? system) nil
       (exec/multi-threaded? system)  (or (:schedule-pool (exec/execution-map system))
-                                         @exec/default-schedule-pool)
-      :else (throw (ex-info "Don't know about the given execution mode."))))
+                                         @(exec/default-schedule-pool system))
+      :else (throw (ex-info "Don't know about the given execution mode." {}))))
 
   (execution-mode
     [system]

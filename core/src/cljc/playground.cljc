@@ -25,7 +25,7 @@
 (defn c3
   [this ctx]
   (let [[in out] (com/io this)]
-    (streams/consume in #(println (str ">>> " %)))
+    (streams/consume #(println (str ">>> " %)) in)
     this))
 
 (def system
@@ -34,7 +34,8 @@
                 (com/make-component ::c3 c3 (fn [this] this) [])]
 
    :workflow [[::c1 ::c2]
-              [::c2 ::c3]]})
+              [::c2 ::c3]]
+   :execution {:mode :multi-thread}})
 
 
 (sys/set-system! system)

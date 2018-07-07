@@ -21,7 +21,8 @@
 
 (defn create-execution-pool
   ([]
-   (create-execution-pool (execution-pool-size)))
+   ;; TODO: Fix this function and pass system to underling fns
+   (create-execution-pool (execution-pool-size {})))
   ([size]
    (Executors/newFixedThreadPool size)))
 
@@ -72,11 +73,11 @@
 
 (defn single-threaded?
   [system]
-  (= SINGLE_THREAD (:mode (execution-map))))
+  (= SINGLE_THREAD (:mode (execution-map system))))
 
 (defn multi-threaded?
   [system]
-  (= MULTI_THREAD (:mode (execution-map))))
+  (= MULTI_THREAD (:mode (execution-map system))))
 
 (defn execute-in
   [executor f]

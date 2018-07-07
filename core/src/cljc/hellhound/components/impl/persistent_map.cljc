@@ -42,7 +42,7 @@
   key basically demonstrates that the component in question is running."
   [component context]
   (let [initialized-component (protocol/initialize component)
-        start-fn              (:hellhound-component/start-fn initialized-component)]
+        start-fn              (:hellhound.component/start-fn initialized-component)]
     (if (not (protocol/started? initialized-component))
       (do (log/debug (format "Starting component '%s'..."
                              (protocol/get-name component)))
@@ -182,7 +182,7 @@
     #(s/gen #{(stream/stream) (stream/stream 100)})))
 
 (s/def :hellhound.component/input-stream-fn
-  (s/fspec :args (s/cat) :ret ::stream))
+  (s/fspec :args (s/cat) :ret :hellhound.component/stream))
 
 (s/def :hellhound.component/output-stream-fn :hellhound.component/input-stream-fn)
 
