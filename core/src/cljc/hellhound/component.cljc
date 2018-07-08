@@ -74,6 +74,13 @@
 
 (def output impl/output)
 
+(defn default-start-fn
+  [this ctx]
+  (assoc this :context ctx))
+
+(defn default-stop-fn
+  [this]
+  this)
 
 (defn make-component
   "A short cut function to create a component map with the given details.
@@ -90,6 +97,53 @@
     ::start-fn start-fn
     ::stop-fn stop-fn
     ::depends-on dependencies}))
+
+
+(defmacro defcomponent
+  [component-name args & body]
+  `(def ~component-name
+     {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))
+      :hellhound.component/start-fn   hellhound.component/default-start-fn
+      :hellhound.component/stop-fn    hellhound.component/default-stop-fn
+      :hellhound.component/depends-on []
+      :hellhound.component/io?        false
+      :hellhound.component/fn         (fn ~args ~@body)}))
+
+(defmacro deftransform
+  [component-name args & body]
+  (let [name-keyword (keyword (str "::"))])
+  `(def ~component-name
+     {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))
+      :hellhound.component/start-fn   hellhound.component/default-start-fn
+      :hellhound.component/stop-fn    hellhound.component/default-stop-fn
+      :hellhound.component/depends-on []
+      :hellhound.component/io?        false
+      :hellhound.component/fn
+      (fn [component in out]
+        (let [f (fn ~args ~@body)]
+          (hellhound.streams/consume
+             (fn [v]
+               (let [processed-v (f component v)]
+                 (when processed-v
+                   (hellhound.streams/>> out processed-v)))))))}))
+
+(defmacro deftransform!
+  [component-name args & body]
+  `(def ~component-name
+     {:hellhound.component/name (keyword (str *ns*) ~(str component-name))
+      :hellhound.component/start-fn   hellhound.component/default-start-fn
+      :hellhound.component/stop-fn    hellhound.component/default-stop-fn
+      :hellhound.component/depends-on []
+      :hellhound.component/io?        true
+      :hellhound.component/fn
+      (fn [component in out]
+        (let [f (fn ~args ~@body)]
+          (hellhound.streams/consume
+             (fn [v]
+               (let [processed-v (f component v)]
+                 (when processed-v
+                   (hellhound.streams/>>! out processed-v)))))))}))
+
 
 (defn io
   "Returns a vector containing the IO streams of the given `component`.

@@ -24,4 +24,10 @@
     "Returns the input stream of the component.")
 
   (output [component]
-    "Returns the output stream of the component."))
+    "Returns the output stream of the component.")
+  (io? [component]
+    "Returns a boolean indicating whether the component
+     contains IO operation or not.")
+  (consumer-fn [component]
+    "Returns a function that would consumes value from the input
+     and return a value which should be pass down the pipeline."))

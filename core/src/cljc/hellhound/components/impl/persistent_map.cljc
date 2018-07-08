@@ -118,6 +118,15 @@
   [component]
   (:hellhound.component/executor component))
 
+(defn- io?
+  [component]
+  (:hellhound.component/io? component))
+
+(defn- consumer-fn
+  [component]
+  (:hellhound.component/fn component))
+
+
 ;; IComponent Implementations ------------------------------
 (extend-protocol protocol/IComponent
   clojure.lang.IPersistentMap
@@ -143,7 +152,13 @@
     (input-of component))
 
   (output [component]
-    (output-of component)))
+    (output-of component))
+
+  (io? [component]
+    (io? component))
+
+  (consumer-fn [component]
+    (consumer-fn component)))
 
   ;; (executor [component]
   ;;   (executor-of component)))

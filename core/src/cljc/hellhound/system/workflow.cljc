@@ -18,6 +18,7 @@
   (:require
    [hellhound.logger               :as log]
    [hellhound.components.protocols :as cimpl]
+   [hellhound.streams              :as streams]
    [hellhound.system.impl.splitter :as spltr]
    [hellhound.system.operations    :as op]
    [hellhound.system.impl.system   :as sys]
@@ -81,9 +82,9 @@
                     (cimpl/input dest-component)
                     ops-map)
 
-
       [(assoc splitters from splitter)
        components])))
+
 
 (defn wire-io
   "Walks through the workflow vectors and wire up the system workflow
@@ -116,12 +117,29 @@
       system)))
 
 
+(defn setup-consumers
+  [system workflow]
+  (doseq [[src-name & _] workflow]
+    (let [component (impl/get-component system src-name)
+          in  (cimpl/input component)
+          out (cimpl/output component)
+          io? (cimpl/io? component)
+          f   (cimpl/consumer-fn component)]
+      (if f
+        (f component in out)
+        (log/debug (format "Skipping '%s' component. No consumer function."
+                           (cimpl/get-name component)))))))
+
+
+
+
 (defn ^IPersistentMap setup
   "Sets up the workflow of the system by wiring the io of each component
   in the order provided by the user in `:workflow` key."
   [^IPersistentMap system]
   (log/debug "Setting up the system workflow...")
   (let [workflow-vector (impl/get-workflow system)
-        wired-system    (wire-components system workflow-vector)]
+        wired-system    (wire-components system workflow-vector)
+        ready-system    (setup-consumers wired-system workflow-vector)]
     (log/debug "Workflow setup has been done.")
     wired-system))
