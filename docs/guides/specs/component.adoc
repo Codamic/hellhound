@@ -1,0 +1,50 @@
+= HellHound Component
+First of all, all the components in *HellHound* should be the same and should follow the same concept.
+Some of the concepts which we introduce in this section like `source components` or `transforms` are
+just names to categorize components based on their usage. At the end of the day all components should follow
+the same rules and concepts.
+
+== Concepts
+A component should be an entity that decouples logic from data flow and execution. As the rest of *HellHound*
+components should follow the https://en.wikipedia.org/wiki/Unix_philosophy[Unix Philosophy] as well.
+So in component's case:
+
+1. Make each component do one thing well. To do a new job, build afresh rather than complicate old component by adding new "features".
+
+2. Expect the output of every component to become the input to another, as yet unknown, program. Don't clutter output with extraneous information. Avoid stringently columnar or binary input formats. Don't insist on interactive input.
+
+3. Design and build components, to be tried early. Don't hesitate to throw away the clumsy parts and rebuild them.
+
+So in conclusion, based on unix philosophy:
+
+* Components should do one thing and do it well.
+* Components should be able to work together.
+* Components should handle streams of data (possibly maps).
+
+== Requirements
+
+A components:
+* Should be simple data structures.
+* Should have input and output streams dedicated to data input and output.
+* Should have lifecycles.
+* ....
+
+== Lifecycle
+*HellHound* system has a lifecycle which applies to components as well. A component should be able to
+run a function at `start` and another function at the `stop` moment of the system in order to do the
+setup/teardown logic. With the current implementation (v1.0.0-rc3) component should provide two functions
+`:hellhound.component/start-fn` and `:hellhound.component/stop-fn`. The `start-fn` will be called on
+the `start` stage of the system and `stop-fn` obviously will be called on the `stop` stage. *Please not
+that these two functions SHOULD NOT BLOCK*.
+
+== Component usage types
+Based on the usage, components might be categorized in four different categories.
+
+1. Sources
+2. Transforms
+4. Sinks
+5. State components
+
+NOTE: These categories are just usage based categories. All the components are the same there is no special
+thing about source components or sink components. There might be some shortcut macro or helper functions in order
+to help user with any category but under the hood all components are the same and based on a single spec.

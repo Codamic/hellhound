@@ -1,0 +1,45 @@
+= Rational
+Writing a program with a good design may seems easy at first but with growth of requirements and features the
+complexity of the prgram grows as well. It makes the mainantance and development of software event harder. Things
+get even tougher when we need to expand our team. I used to work in a company with ~200 developer working on
+a code base. It was a nightmare. A poor design makes in hard to reason about the code, add new feature, train new
+developers, etc ...
+
+But it shouldn't be this hard. A good design will make this process a lot easier. right ?
+hmm Kinda. In practice every one try to come up with a design for the next project based on
+the toolset and resources they have and based on their preferences, and most of the time
+they do it wrong and start to make changes while they're working on the development. Ofcourse
+that's noraml and it happened to all of us. But in my opionion a big part of the design can
+be dictate by the tools. This way lots of people can collaborate on the design and make it
+better and in the same time it will eliminate lots of mistakes in designing the program in the
+early stages.
+
+<PLACEHOLDER TEXT> Complete the rational
+
+== Goals
+The ultimate goal of *HellHound* is to create a set of libraries for creating well orginized, simple, easy to test, easy to
+to scale and distribute applications using Clojure and Clojurescipt around streams and data pipelines.
+
+Another goal of this project is to create a tool which allows developers to focus on their business logic as much as possible
+while *HellHound* takes care of different aspects of their distributed and scalable software in an opinionated way. We want
+to achieve this using different component which provides these kind of tasks.
+
+=== Road Map for next stable version
+Our near future goals are:
+* Support for configurable execution model for the entire system and components as well.
+  In addition to manage the execution model of the system automatically by HellHound, We like to add a configurable
+  execution model which allows users to change the behavior based on the use case. For example user might want
+  to run a component on a blocking thread pool or control the number of threads in each thread pool under hood.
+
+* Support for Kafka streams. We're working on adding the support for kafka streams in our stream abstractions so
+  users can easily take advantage of good features of Apache Kafka in their systems. (Development Started)
+
+* Support for IO spec for each component. The basic idea is to add the support for a pair of configurations to
+  components that allow them to define specs for incoming and outgoing messages. It should be possible to enforce
+  these spec on messages. Another purpose of having these specs is to create a diagram later that demonstrates how
+  data transform in the system. This way by creating the diagram in any given time, as a developer we would have
+  better understanding of our system and data flow. This feature would be awesome specially for new developers.
+
+* Better support for REPL driven development
+
+If you like to help us with any of these. Give us a shout.

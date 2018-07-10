@@ -11,3 +11,9 @@ Streams shoud be:
 * [ ] *Consumable*: We should be able to consume data from stream in sync and async fashion.
 
 * [ ] *Sinkable*: We should be able to put data on a stream.
+
+== Suggestions
+
+* It might be a good idea to create a `channel` type similar to `ManyToManyChannel` implementation
+of the core async but instead of working with the go blocks just queue up the handler into a job
+queue. In order to do this we need to change the Splitter implementation to work with it.

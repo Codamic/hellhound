@@ -3,6 +3,9 @@ This chapter describes all the specifications and design decisions around differ
 If you're not planning on contributing to *HellHound* you can safely skip this chapter. Some the speficiation
 in this chapter might be related to the stuff we want to implement but we are still discussing them.
 
+// COMPONENT
+include::component.adoc[leveloffset=+1]
+
 // STREAMS
 include::streams.adoc[leveloffset=+1]
 
