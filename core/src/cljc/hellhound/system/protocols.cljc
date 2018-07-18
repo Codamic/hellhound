@@ -23,6 +23,10 @@
     [_ component-name]
     "Returns a component with the given `name` from initialized system.")
 
+  (update-component
+    [system component-name component]
+    "Update the given component with the given name on component-map in the system.")
+
   (make-components-map
     [_]
     "Create a mapping from components name to components and validates each component."))

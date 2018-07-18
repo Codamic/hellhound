@@ -7,9 +7,10 @@
 
 
 (defcomponent c1
-  [this in out]
-  (doseq [v (range 100)]
-    (streams/>> in v))
+  [this]
+  (let [[in out] (com/io this)]
+    (doseq [v (range 100)]
+      (streams/>> in v)))
   this)
 
 
@@ -17,6 +18,7 @@
 (deftransform c2
   [this v]
   (Thread/sleep 5000)
+  (println "xxx" v)
   (inc v))
 
 (deftransform c3
@@ -34,4 +36,6 @@
 
 (sys/set-system! system)
 (sys/start!)
-(sys/stop!)
+(comment
+  (clojure.pprint/pprint (sys/system))
+  (sys/stop!))
