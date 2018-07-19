@@ -15,7 +15,7 @@ So in component's case:
 
 3. Design and build components, to be tried early. Don't hesitate to throw away the clumsy parts and rebuild them.
 
-So in conclusion, based on unix philosophy:
+So in conclusion, based on Unix philosophy:
 
 * Components should do one thing and do it well.
 * Components should be able to work together.
@@ -48,3 +48,7 @@ Based on the usage, components might be categorized in four different categories
 NOTE: These categories are just usage based categories. All the components are the same there is no special
 thing about source components or sink components. There might be some shortcut macro or helper functions in order
 to help user with any category but under the hood all components are the same and based on a single spec.
+
+=== Source Components
+A source component is a component which produce data and feed it to the data pipeline. A source component
+definitely will put data into output stream and may use input stream.
