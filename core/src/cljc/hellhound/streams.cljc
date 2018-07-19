@@ -41,10 +41,11 @@
 ;; ----------------------------------------------------------------------------
 (defn >>
   ([s v]
-   (>> s v (fn [v] v)))
+   (>> s v (fn [v] (println "----- " v) v)))
   ([s v f]
    (async/execute
     (fn []
+      (println "yechi- " (str s) v)
       ;; TODO: We need to handle the situation which the
       ;; stream is closed.
       (f @(put! s v))))))

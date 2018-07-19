@@ -9,19 +9,18 @@
 (defcomponent c1
   [this]
   (let [[in out] (com/io this)]
-    (println "CCC1" (str in))
-    (println "CCC2" (str out))
-    (doseq [v (range 100)]
-      (streams/>> in v)))
+    (hellhound.system.async/execute-io!
+     #(loop [v 0]
+        (Thread/sleep 300)
+        (streams/>> out v)
+        (recur (inc v)))))
   this)
 
 
 (defcomponent c2
   [this]
   (let [[in out] (com/io this)]
-    (println "CCC2" (str in))
-    (println "CCC2" (str out))
-    (streams/consume #(println "<<<<<<<<< " %) in))
+    (streams/consume #(streams/>> out (inc %)) in))
   this)
 
 

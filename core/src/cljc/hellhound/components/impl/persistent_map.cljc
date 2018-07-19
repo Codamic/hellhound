@@ -15,7 +15,7 @@
   "This function is responsible to initialize the given `component` by
   initializing the input and ouput manifolds of the component."
   [component]
-  (if (true? (::initialized? component))
+  (if (true? (:hellhound.component/initialized? component))
     ;; Return the component if it already initialized.
     component
     (let [default-io-buffer-size (core/get-config :components :io-buffer-size)

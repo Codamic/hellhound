@@ -126,9 +126,7 @@
   (if (not (cimpl/ready? component))
     (let [f (cimpl/get-fn component)]
       (if f
-        (do
-          (println "<<< " (cimpl/get-name component))
-          (f component))
+        (f component)
         ;; For now we need to warn the user of missing main function until
         ;; we reach a concrete decision about what should we do in this
         ;; situation. Because it make sense for a producer component
@@ -182,8 +180,7 @@
 (defn teardown
   [system]
   (log/debug "Tearing down the system workflow...")
-  (doseq [splitter (:splitters system)]
-    (println "xxxx" splitter)
+  (doseq [splitter (vals (:splitters system))]
     (impl/close! splitter))
   (log/debug "Workflow has been teared down.")
   (dissoc system :splitters))
