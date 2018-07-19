@@ -108,6 +108,9 @@
 (defn wire-components
   [system workflow-vector]
   (if (not (empty? workflow-vector))
+    ;; We didn't move :splitters to a protocol function
+    ;; for system because it's a workflow thing only and
+    ;; update-system would handle it for us.
     (impl/update-system system
                         :splitters
                         (wire-io (impl/components-map system)
@@ -174,3 +177,13 @@
         ready-system    (setup-main-functions wired-system workflow-vector)]
     (log/debug "Workflow setup has been done.")
     ready-system))
+
+
+(defn teardown
+  [system]
+  (log/debug "Tearing down the system workflow...")
+  (doseq [splitter (:splitters system)]
+    (println "xxxx" splitter)
+    (impl/close! splitter))
+  (log/debug "Workflow has been teared down.")
+  (dissoc system :splitters))

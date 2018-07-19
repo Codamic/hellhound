@@ -10,7 +10,11 @@
 
   (commit
     [_]
-    "Connect source channel to all the sinks"))
+    "Connect source channel to all the sinks")
+
+  (close! [_]
+    "Disconnects all the managing sinks and sources."))
+
 
 (defprotocol ComponentManagement
   (components-vector

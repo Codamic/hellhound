@@ -118,9 +118,9 @@
       :hellhound.component/fn
       (fn [component#]
         (let [f# ~(list* `fn body)]
-          (println "get called" (hellhound.component/input component#))
           (hellhound.streams/consume
            (fn [v#]
+             (println "get called -> " v#)
              (let [processed-v# (f# component# v#)]
                (when processed-v#
                  (hellhound.streams/>> (hellhound.component/output component#)
