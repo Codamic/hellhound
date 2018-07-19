@@ -106,7 +106,6 @@
       :hellhound.component/start-fn   hellhound.component/default-start-fn
       :hellhound.component/stop-fn    hellhound.component/default-stop-fn
       :hellhound.component/depends-on []
-      :hellhound.component/io?        false
       :hellhound.component/fn         ~(list* `fn body)}))
 
 (defmacro deftransform
@@ -116,16 +115,17 @@
       :hellhound.component/start-fn   hellhound.component/default-start-fn
       :hellhound.component/stop-fn    hellhound.component/default-stop-fn
       :hellhound.component/depends-on []
-      :hellhound.component/io?        false
       :hellhound.component/fn
-      (fn [component# in# out#]
-       (let [f# ~(list* `fn body)]
-         (hellhound.streams/consume
-          (fn [v#]
-            (let [processed-v# (f# component# v#)]
-              (when processed-v#
-                (hellhound.streams/>> out# processed-v#))))
-          in#)))}))
+      (fn [component#]
+        (let [f# ~(list* `fn body)]
+          (hellhound.streams/consume
+           (fn [v#]
+             (println "get called -> " v#)
+             (let [processed-v# (f# component# v#)]
+               (when processed-v#
+                 (hellhound.streams/>> (hellhound.component/output component#)
+                                       processed-v#))))
+           (hellhound.component/input component#))))}))
 
 
 (defmacro deftransform!
@@ -135,15 +135,16 @@
       :hellhound.component/start-fn   hellhound.component/default-start-fn
       :hellhound.component/stop-fn    hellhound.component/default-stop-fn
       :hellhound.component/depends-on []
-      :hellhound.component/io?        true
       :hellhound.component/fn
-      (fn [component in out]
-        (let [f ~(list* `fn body)]
-          (hellhound.streams/consume
-             (fn [v]
-               (let [processed-v (f component v)]
-                 (when processed-v
-                   (hellhound.streams/>>! out processed-v)))))))}))
+      (fn [component#]
+       (let [f# ~(list* `fn body)]
+         (hellhound.streams/consume
+          (fn [v#]
+            (let [processed-v# (f# component# v#)]
+              (when processed-v#
+                (hellhound.streams/>>! (hellhound.component/output component#)
+                                       processed-v#))))
+          (hellhound.component/input component#))))}))
 
 
 (defn io

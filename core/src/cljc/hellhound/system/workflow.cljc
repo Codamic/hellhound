@@ -108,29 +108,63 @@
 (defn wire-components
   [system workflow-vector]
   (if (not (empty? workflow-vector))
+    ;; We didn't move :splitters to a protocol function
+    ;; for system because it's a workflow thing only and
+    ;; update-system would handle it for us.
     (impl/update-system system
-                      :splitters
-                      (wire-io (impl/components-map system)
-                               workflow-vector))
+                        :splitters
+                        (wire-io (impl/components-map system)
+                                 workflow-vector))
     (do
       (log/warn "':workflow' of the system is empty. Skipping....")
       system)))
 
-
-(defn setup-consumers
-  [system workflow]
-  (doseq [[src-name & _] workflow]
-    (let [component (impl/get-component system src-name)
-          in  (cimpl/input component)
-          out (cimpl/output component)
-          io? (cimpl/io? component)
-          f   (cimpl/consumer-fn component)]
+(defn run-component-fn
+  "Runs the main function of the given component if the component is not
+  ready and marks it as ready. In both cases it will returns the component."
+  [component]
+  (if (not (cimpl/ready? component))
+    (let [f (cimpl/get-fn component)]
       (if f
-        (f component in out)
+        (do
+          (println "<<< " (cimpl/get-name component))
+          (f component))
+        ;; For now we need to warn the user of missing main function until
+        ;; we reach a concrete decision about what should we do in this
+        ;; situation. Because it make sense for a producer component
+        ;; to not to have a main function and do all it's job in `start-fn`.
         (log/debug (format "Skipping '%s' component. No consumer function."
-                           (cimpl/get-name component)))))))
+                           (cimpl/get-name component))))
+      ;; Even if the component does not have a main function
+      ;; we need to mark it as ready because we already processed
+      ;; the component.
+      (cimpl/mark-as-ready component))
+    component))
 
 
+(defn setup-pipe-main-fns
+  "Runs the main function of the source and destination components of
+  the given pipe (pipe iin the given system."
+  [system pipe]
+  (let [src-name (first pipe)
+        dst-name (last pipe)]
+
+    ;; NOTE: There is not need for validating the source and destination names
+    ;;       because at this stage we already validated the workflow.
+
+    ;; Run main function of source and destination components and updated
+    ;; the system with the ready components.
+    (reduce
+     #(impl/update-component %1 %2 (run-component-fn (impl/get-component %1 %2)))
+     system
+     [src-name dst-name])))
+
+
+(defn setup-main-functions
+  "Walks through the workflow and runs main function of all the components
+  and returns the updated system."
+  [system workflow]
+  (reduce setup-pipe-main-fns system workflow))
 
 
 (defn ^IPersistentMap setup
@@ -140,6 +174,16 @@
   (log/debug "Setting up the system workflow...")
   (let [workflow-vector (impl/get-workflow system)
         wired-system    (wire-components system workflow-vector)
-        ready-system    (setup-consumers wired-system workflow-vector)]
+        ready-system    (setup-main-functions wired-system workflow-vector)]
     (log/debug "Workflow setup has been done.")
-    wired-system))
+    ready-system))
+
+
+(defn teardown
+  [system]
+  (log/debug "Tearing down the system workflow...")
+  (doseq [splitter (:splitters system)]
+    (println "xxxx" splitter)
+    (impl/close! splitter))
+  (log/debug "Workflow has been teared down.")
+  (dissoc system :splitters))

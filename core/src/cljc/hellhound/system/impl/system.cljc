@@ -50,6 +50,14 @@
       (when components-map
         (get components-map component-name))))
 
+  (update-component
+    [system component-name component]
+    (protocols/update-system system
+                             :components-map
+                             (assoc (protocols/components-map system)
+                                    component-name
+                                    component)))
+
   (make-components-map
     [this]
     {:components-map (into {} (map conform-component

@@ -10,7 +10,11 @@
 
   (commit
     [_]
-    "Connect source channel to all the sinks"))
+    "Connect source channel to all the sinks")
+
+  (close! [_]
+    "Disconnects all the managing sinks and sources."))
+
 
 (defprotocol ComponentManagement
   (components-vector
@@ -22,6 +26,10 @@
   (get-component
     [_ component-name]
     "Returns a component with the given `name` from initialized system.")
+
+  (update-component
+    [system component-name component]
+    "Update the given component with the given name on component-map in the system.")
 
   (make-components-map
     [_]

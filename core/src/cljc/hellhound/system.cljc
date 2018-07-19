@@ -46,6 +46,7 @@
 
   (logger/info "System has been started successfully."))
 
+
 (defn stop!
   "Stops the default system.
 
@@ -55,6 +56,7 @@
   []
   (store/set-system!
    (-> @store/system
+       (workflow/teardown)
        (core/stop-system)))
   (logger/info "System has been stopped successfully."))
 

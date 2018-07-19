@@ -7,17 +7,29 @@
 
 
 (defcomponent c1
-  [this in out]
-  (doseq [v (range 100)]
-    (streams/>> in v))
+  [this]
+  (let [[in out] (com/io this)]
+    (println "CCC1" (str in))
+    (println "CCC2" (str out))
+    (doseq [v (range 100)]
+      (streams/>> in v)))
   this)
 
 
+(defcomponent c2
+  [this]
+  (let [[in out] (com/io this)]
+    (println "CCC2" (str in))
+    (println "CCC2" (str out))
+    (streams/consume #(println "<<<<<<<<< " %) in))
+  this)
 
-(deftransform c2
-  [this v]
-  (Thread/sleep 5000)
-  (inc v))
+
+;; (deftransform c2
+;;   [this v]
+;;   (Thread/sleep 5000)
+;;   (println "xxx" v)
+;;   (inc v))
 
 (deftransform c3
   [this v]
@@ -34,4 +46,6 @@
 
 (sys/set-system! system)
 (sys/start!)
-(sys/stop!)
+(comment
+  (clojure.pprint/pprint (sys/system))
+  (sys/stop!))

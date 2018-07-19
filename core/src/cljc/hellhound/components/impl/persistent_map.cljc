@@ -118,13 +118,20 @@
   [component]
   (:hellhound.component/executor component))
 
-(defn- io?
-  [component]
-  (:hellhound.component/io? component))
-
-(defn- consumer-fn
+(defn- get-fn
   [component]
   (:hellhound.component/fn component))
+
+(defn- ready?
+  [component]
+  (and (protocol/started? component)
+       (:hellhound.component/fn-called? component)))
+
+(defn- mark-as-ready
+  [component]
+  (assoc component
+         :hellhound.component/fn-called?
+         true))
 
 
 ;; IComponent Implementations ------------------------------
@@ -154,14 +161,14 @@
   (output [component]
     (output-of component))
 
-  (io? [component]
-    (io? component))
+  (get-fn [component]
+    (get-fn component))
 
-  (consumer-fn [component]
-    (consumer-fn component)))
+  (ready? [component]
+    (ready? component))
 
-  ;; (executor [component]
-  ;;   (executor-of component)))
+  (mark-as-ready [component]
+    (mark-as-ready component)))
 
 ;; SPECS ---------------------------------------------------
 (s/def :hellhound.component/name qualified-keyword?)

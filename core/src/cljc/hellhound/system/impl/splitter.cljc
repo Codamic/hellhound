@@ -36,7 +36,13 @@
   (commit
     [this]
     (doseq [[sink op-map] @sinks]
+      (println "Connecting " (str source) " --> " (str sink) "\n\n")
       (connect source sink op-map))
+    this)
+
+  (close!
+    [this]
+    (reset! sinks [])
     this))
 
 
