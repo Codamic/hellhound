@@ -14,7 +14,7 @@
   :plugins [[lein-sub "0.3.0"]
             [lein-codox "0.10.3"]
             [lein-kibit "0.1.6"]
-            [jonase/eastwood "0.2.7-SNAPSHOT"]
+            [jonase/eastwood "0.2.7"]
             [lein-bikeshed "0.5.1"]]
 
   :sub ["core" "i18n" "http" "extra_components/kafka"]
