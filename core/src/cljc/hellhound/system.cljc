@@ -60,6 +60,7 @@
        (core/stop-system)))
   (logger/info "System has been stopped successfully."))
 
+
 (defn get-component
   "Finds and returns the component with the given `name`.
 

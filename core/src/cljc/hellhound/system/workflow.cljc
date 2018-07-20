@@ -190,5 +190,4 @@
   [system]
   (log/debug "Tearing down the system workflow...")
   (-> system
-      close-splitters!)
-  (log/debug "Workflow has been teared down."))
+      (close-splitters!)))
