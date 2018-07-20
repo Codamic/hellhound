@@ -6,6 +6,7 @@
    [clojure.spec.alpha             :as s]
    [hellhound.logger               :as log]
    [hellhound.components.protocols :as cimpl]
+   [hellhound.streams              :as streams]
    [hellhound.system.workflow      :as workflow]
    [hellhound.system.utils         :as utils]
    [hellhound.system.impl.system   :as sysimpl]
@@ -60,6 +61,14 @@
   (make-components-index system-map))
 
 
+(defn get-dependants-of
+  "Returns a list of components of the given system which are depends on the
+   given component."
+  [system component]
+  (let [component-name (cimpl/get-name component)]
+    (filter #(some #{component-name} (cimpl/dependencies %))
+            (vals (impl/components-map system)))))
+
 
 (defn get-dependencies-of
   "Returns a vector of dependencies for the given `component` in the given
@@ -92,13 +101,15 @@
   (reduce stop-component!
           (update-in system-map
                      [:components-map (cimpl/get-name component)]
-                     (fn [old-component] (cimpl/stop! old-component)))
+                     (fn [old-component]
+                       (cimpl/stop! old-component)
+                       (streams/close! (cimpl/input old-component))
+                       (streams/close! (cimpl/output old-component))))
           (get-dependencies-of system-map component)))
 
 (s/def ::system-map (s/and map?
                            #(contains? % :components)
                            #(vector? (:components %))))
-
 
 
 (defn start-system
@@ -121,8 +132,6 @@
   (reduce start-component!
           system-map
           (vals (impl/components-map system-map))))
-
-
 
 
 (defn stop-system

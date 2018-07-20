@@ -38,6 +38,9 @@
 (def downstream s/downstream)
 
 (def close! s/close!)
+(def closed? s/closed?)
+
+
 ;; ----------------------------------------------------------------------------
 (defn >>
   ([s v]

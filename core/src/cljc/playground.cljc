@@ -2,6 +2,7 @@
   (:require
    [hellhound.core :as hh]
    [hellhound.system :as sys]
+   [hellhound.system.core :as syscore]
    [hellhound.streams :as streams]
    [hellhound.component :as com :refer [defcomponent deftransform! deftransform]]))
 
@@ -13,7 +14,9 @@
      #(loop [v 0]
         (Thread/sleep 300)
         (streams/>> out v)
-        (recur (inc v)))))
+        (when (and (not (streams/closed? in))
+                   (< 100 v))
+          (recur (inc v))))))
   this)
 
 
@@ -37,14 +40,16 @@
 
 
 (def system
-  {:components [c1 c2 c3]
+  {:components [c1 (assoc c2 :hellhound.component/depends-on [::c1])
+                   (assoc c3 :hellhound.component/depends-on [::c1])]
    :workflow [[::c1 ::c2]
               [::c2 ::c3]]
    :execution {:mode :multi-thread}})
 
 
+
 (sys/set-system! system)
-(sys/start!)
+;;(sys/start!)
 (comment
   (clojure.pprint/pprint (sys/system))
   (sys/stop!))

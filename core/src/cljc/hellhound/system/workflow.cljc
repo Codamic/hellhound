@@ -177,10 +177,18 @@
     ready-system))
 
 
+;; Tear down process ----------------------------------------------------------
+
+(defn close-splitters!
+  [system]
+  (doseq [splitter (vals (:splitters system))]
+    (impl/close! splitter))
+  (dissoc system :splitters))
+
+
 (defn teardown
   [system]
   (log/debug "Tearing down the system workflow...")
-  (doseq [splitter (vals (:splitters system))]
-    (impl/close! splitter))
-  (log/debug "Workflow has been teared down.")
-  (dissoc system :splitters))
+  (-> system
+      close-splitters!)
+  (log/debug "Workflow has been teared down."))

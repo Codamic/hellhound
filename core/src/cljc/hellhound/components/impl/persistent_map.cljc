@@ -11,6 +11,7 @@
 ;; Private Functions ---------------------------------------
 ;; These functions are the actual implementation of IComponent
 ;; Protocol for IPersistentMap.
+
 (defn- initialize-component
   "This function is responsible to initialize the given `component` by
   initializing the input and ouput manifolds of the component."
@@ -34,6 +35,7 @@
              :hellhound.component/input        (input-stream-fn)
              :hellhound.component/output       (output-stream-fn)))))
 
+
 (defn- start-component!
   "Fetches and calls the `start-fn` of the given `component`.
 
@@ -42,17 +44,21 @@
   key basically demonstrates that the component in question is running."
   [component context]
   (let [initialized-component (protocol/initialize component)
-        start-fn              (:hellhound.component/start-fn initialized-component)]
-    (if (not (protocol/started? initialized-component))
-      (do (log/debug (format "Starting component '%s'..."
-                             (protocol/get-name component)))
-          (assoc (start-fn initialized-component context)
-                 :hellhound.component/started?
-                 true))
+        start-fn              (:hellhound.component/start-fn initialized-component)
+        started?              (protocol/started? initialized-component)]
+
+    (if (not started?)
+      (do
+        (log/debug (format "Starting component '%s'..."
+                           (protocol/get-name component)))
+        (assoc (start-fn initialized-component context)
+               :hellhound.component/started?
+               true))
 
       (do (log/debug (format "Component '%s' already started. Skipping..."
                              (protocol/get-name initialized-component)))
           initialized-component))))
+
 
 (defn- stop-component!
   "Fetches and calls the `stop-fn` of the given `component`.
@@ -72,20 +78,24 @@
                                (protocol/get-name component)))
             component))))
 
+
 (defn- component-started?
   "Returns `true` if the given component is `started?`."
   [component]
   (or (:hellhound.component/started? component) false))
+
 
 (defn- name-of
   "Returns the `name` of the given `component`."
   [component]
   (:hellhound.component/name component))
 
+
 (defn- dependencies-of
   "Returns a collection of dependencies of the given `component`."
   [component]
   (:hellhound.component/depends-on component))
+
 
 (defn- input-of
   "Returns the input manifold of the given `component`.
@@ -97,6 +107,7 @@
     (assert (:hellhound.component/input new-component)
             "::input should not be empty. Please file a bug")
     (:hellhound.component/input new-component)))
+
 
 (defn- output-of
   "Returns the output manifold of the given `component`.
@@ -110,22 +121,17 @@
             "::output should not be empty. Please file a bug")
     (:hellhound.component/output new-component)))
 
-(defn- executor-of
-  "Returns the executor of the given `component`.
-
-  If component does not provide an executor then HellHound will choose
-  one base on the system configuration."
-  [component]
-  (:hellhound.component/executor component))
 
 (defn- get-fn
   [component]
   (:hellhound.component/fn component))
 
+
 (defn- ready?
   [component]
   (and (protocol/started? component)
        (:hellhound.component/fn-called? component)))
+
 
 (defn- mark-as-ready
   [component]
@@ -169,6 +175,7 @@
 
   (mark-as-ready [component]
     (mark-as-ready component)))
+
 
 ;; SPECS ---------------------------------------------------
 (s/def :hellhound.component/name qualified-keyword?)
