@@ -18,9 +18,9 @@
             [jonase/eastwood "0.2.7"]
             [lein-bikeshed "0.5.1"]]
 
-  :sub ["core" "i18n" "http"
+  :sub ["core" "i18n" "http"]
         ;;"extra_components/kafka"
-        ]
+
 
 
   :deploy-repositories [["releases" :clojars]
