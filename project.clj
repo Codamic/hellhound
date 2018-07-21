@@ -36,4 +36,5 @@
           :source-paths ["core/src"
                          "i18n/src"
                          "http/src"
-                         "extra_components/kafka/src"]})
+                         ;;"extra_components/kafka/src"
+                         ]})

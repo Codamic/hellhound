@@ -11,8 +11,18 @@ build:
   stage: build
   script: lein sub uberjar
   only:
-    - stable
+    - master
 
+linters:
+  stage: build
+  script:
+    - lein sub kibit
+    - lein sub eastwood
+    - lein sub bikeshed -m 100
+
+docs:
+  stage: build
+  script:
 test:
-  state: test
+  stage: test
   script: lein sub test
