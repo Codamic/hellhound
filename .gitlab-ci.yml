@@ -22,7 +22,8 @@ linters:
 
 docs:
   stage: build
-  script:
+  script: lein codox
+
 test:
   stage: test
   script: lein sub test
