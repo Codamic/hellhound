@@ -7,8 +7,9 @@
                 :url "https://github.com/Codamic/hellhound"}
   :dependencies [[org.clojure/clojure     "1.9.0"]
                  [codamic/hellhound.core  "1.0.0-SNAPSHOT"]
-                 [codamic/hellhound.http  "1.0.0-SNAPSHOT"]
-                 [codamic/hellhound.kafka "1.0.0-SNAPSHOT"]]
+                 [codamic/hellhound.http  "1.0.0-SNAPSHOT"]]
+                 ;;[codamic/hellhound.kafka "1.0.0-SNAPSHOT"]
+
 
 
   :plugins [[lein-sub "0.3.0"]
@@ -17,7 +18,9 @@
             [jonase/eastwood "0.2.7"]
             [lein-bikeshed "0.5.1"]]
 
-  :sub ["core" "i18n" "http" "extra_components/kafka"]
+  :sub ["core" "i18n" "http"
+        ;;"extra_components/kafka"
+        ]
 
 
   :deploy-repositories [["releases" :clojars]

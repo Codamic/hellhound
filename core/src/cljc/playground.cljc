@@ -48,8 +48,8 @@
 
 
 
-(sys/set-system! system)
-(sys/start!)
+;; (sys/set-system! system)
+;; (sys/start!)
 (comment
   (clojure.pprint/pprint (sys/system))
   (sys/stop!))

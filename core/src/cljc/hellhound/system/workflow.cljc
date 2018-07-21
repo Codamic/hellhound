@@ -60,7 +60,6 @@
 (defn connect-workflow
   "Setup and connect the components through the splitters."
   [[splitters components] connection-vec]
-
   (let [[from ops-map to] (apply parse connection-vec)
         source-component  (get components from)
         dest-component    (get components to)]
