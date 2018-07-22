@@ -108,16 +108,15 @@
 
 (defn accept-ws
   [{:keys [request] :as context}]
-  (->
-   (http/websocket-connection request)
-   (deferred/catch
-       Exception
-       ;; TODO: We need to return the exception message
-       ;; instead of its instance.
-       (fn [e]
-         (handlers/bad-request context
-                               (str "Expected a websocket request."
-                                    (.getMessage e)))))))
+  (deferred/catch
+      (http/websocket-connection request)
+      Exception
+    ;; TODO: We need to return the exception message
+    ;; instead of its instance.
+    (fn [e]
+      (handlers/bad-request context
+                            (str "Expected a websocket request."
+                                 (.getMessage e))))))
 
 (defn ws
   [{:keys [uid] :as context}]

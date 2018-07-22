@@ -44,10 +44,10 @@
 (defn parse
   "Returns a operations map based on the given arguments."
   ([from to]
-   (parse from #(identity %) #(identity %) to))
+   (parse from identity identity to))
 
   ([from pred to]
-   (parse from pred #(identity %) to))
+   (parse from pred identity to))
 
   ([from pred map-fn to]
    [from (op/make-ops-map pred map-fn) to]))
@@ -106,7 +106,7 @@
 
 (defn wire-components
   [system workflow-vector]
-  (if (not (empty? workflow-vector))
+  (if-not (empty? workflow-vector)
     ;; We didn't move :splitters to a protocol function
     ;; for system because it's a workflow thing only and
     ;; update-system would handle it for us.
@@ -122,7 +122,7 @@
   "Runs the main function of the given component if the component is not
   ready and marks it as ready. In both cases it will returns the component."
   [component]
-  (if (not (cimpl/ready? component))
+  (if-not (cimpl/ready? component)
     (let [f (cimpl/get-fn component)]
       (if f
         (f component)
@@ -188,5 +188,4 @@
 (defn teardown
   [system]
   (log/debug "Tearing down the system workflow...")
-  (-> system
-      (close-splitters!)))
+  (close-splitters! system))

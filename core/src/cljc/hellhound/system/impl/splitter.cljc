@@ -11,9 +11,8 @@
   "Applies all the operations defined in the given `ops` map and returns
   the transformed value."
   [value {:keys [filter-fn map-fn] :as ops}]
-  (if (filter-fn value)
-    (map-fn value)
-    nil))
+  (when (filter-fn value)
+    (map-fn value)))
 
 
 (defn- connect

@@ -10,7 +10,7 @@
   "Checks for a valid compnoent structure and returns a pair of component
   name and the component structure."
   [component]
-  (when (not (satisfies? cimpl/IComponent component))
+  (when-not (satisfies? cimpl/IComponent component)
     ;; Throw if component didn't satisfy the protocol.
     (println (cimpl/get-name component))
     (throw (ex-info "Provided component does not satisfies `IComponent` protocol."

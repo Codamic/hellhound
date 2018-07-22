@@ -95,7 +95,6 @@
             (is (stream/stream? output2))
 
             (todo "Replace these tests with splitter tests!")
-            ;; (is (= (second (first (stream/downstream input1))) output1))
             ;; (is (= (second (first (stream/downstream input2))) output2))
             ;; (is (= (second (first (stream/downstream input3))) output3))
             ;; (is (= (second (first (stream/downstream output1))) input2))
@@ -104,5 +103,3 @@
 
 
     (system/stop!)))
-
-(t/run-tests)

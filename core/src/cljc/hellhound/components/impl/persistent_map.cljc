@@ -47,7 +47,7 @@
         start-fn              (:hellhound.component/start-fn initialized-component)
         started?              (protocol/started? initialized-component)]
 
-    (if (not started?)
+    (if-not started?
       (do
         (log/debug (format "Starting component '%s'..."
                            (protocol/get-name component)))
