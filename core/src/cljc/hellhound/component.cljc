@@ -100,15 +100,26 @@
 
 
 (defmacro defcomponent
+  "Creates a component with the given `component-name` and use the
+  given `body` as the main function of the component.
+
+  The defined component will use `hellhound.components.defaults/start-fn` and
+  `hellhound.components.defaults/stop-fn` as the `start-fn` and `stop-fn`
+  which basically do nothing (`start-fn` attaches the context to the component)."
   [component-name & body]
-  `(def ~component-name
-     {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))
-      :hellhound.component/start-fn   hellhound.component/default-start-fn
-      :hellhound.component/stop-fn    hellhound.component/default-stop-fn
+  `(def ~component-name))
+p     {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))}
+      :hellhound.component/start-fn   hellhound.components.default/start-fn
+      :hellhound.component/stop-fn    hellhound.components.default/stop-fn
       :hellhound.component/depends-on []
-      :hellhound.component/fn         ~(list* `fn body)}))
+      :hellhound.component/fn         ~(list* `fn body)
+
 
 (defmacro deftransform
+  "Creates a [transform] component with the given `component-name` and uses
+  the given `body` to create a function to be used in the main function of
+  the component which gets two arguments, the component itself and a value
+  fetched from the input stream."
   [component-name & body]
   `(def ~component-name
      {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))
