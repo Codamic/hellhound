@@ -67,5 +67,5 @@
   TODO: more doc"
   {:added      1.0
    :public-api true}
-  [name]
-  (impl/get-component @store/system name))
+  [component-name]
+  (impl/get-component @store/system component-name))

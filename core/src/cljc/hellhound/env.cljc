@@ -1,9 +1,16 @@
-(ns hellhound.env)
+(ns hellhound.env
+  "This namespace contains several helper functions related to runtime
+  environment mode. For example `development?` function returns true
+  if we are running on development mode.
+
+  **HellHound** uses `HH_ENV` envrionment variable for runtime environment.")
+
 
 (defn- get-env
-  [key]
-  #?(:clj (System/getenv key)
-     :cljs (aget js/process.env key)))
+  [env-key]
+  #?(:clj (System/getenv env-key)
+     :cljs (aget js/process.env env-key)))
+
 
 ;;;; Runtime Environment helpers ---------------------------
 (defn env
