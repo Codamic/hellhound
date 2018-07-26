@@ -107,12 +107,12 @@
   `hellhound.components.defaults/stop-fn` as the `start-fn` and `stop-fn`
   which basically do nothing (`start-fn` attaches the context to the component)."
   [component-name & body]
-  `(def ~component-name))
-p     {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))}
+  `(def ~component-name
+     {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))
       :hellhound.component/start-fn   hellhound.components.default/start-fn
       :hellhound.component/stop-fn    hellhound.components.default/stop-fn
       :hellhound.component/depends-on []
-      :hellhound.component/fn         ~(list* `fn body)
+      :hellhound.component/fn         ~(list* `fn body)}))
 
 
 (defmacro deftransform
