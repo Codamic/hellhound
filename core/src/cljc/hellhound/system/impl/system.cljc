@@ -12,7 +12,6 @@
   [component]
   (when-not (satisfies? cimpl/IComponent component)
     ;; Throw if component didn't satisfy the protocol.
-    (println (cimpl/get-name component))
     (throw (ex-info "Provided component does not satisfies `IComponent` protocol."
                     {:cause component})))
 

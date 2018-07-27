@@ -109,8 +109,8 @@
   [component-name & body]
   `(def ~component-name
      {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))
-      :hellhound.component/start-fn   hellhound.components.default/start-fn
-      :hellhound.component/stop-fn    hellhound.components.default/stop-fn
+      :hellhound.component/start-fn   hellhound.components.defaults/start-fn
+      :hellhound.component/stop-fn    hellhound.components.defaults/stop-fn
       :hellhound.component/depends-on []
       :hellhound.component/fn         ~(list* `fn body)}))
 
@@ -131,7 +131,6 @@
         (let [f# ~(list* `fn body)]
           (hellhound.streams/consume
            (fn [v#]
-             (println "get called -> " v#)
              (let [processed-v# (f# component# v#)]
                (when processed-v#
                  (hellhound.streams/>> (hellhound.component/output component#)
