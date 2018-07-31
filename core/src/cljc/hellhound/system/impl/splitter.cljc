@@ -17,11 +17,10 @@
 
 (defn- connect
   [source sink op-map]
-  (streams/connect-via source
-                       (fn [v]
-                         (when-let [tv (transform-and-put v op-map)]
-                           (streams/put! sink tv)))
-                       sink))
+  (streams/consume (fn [v]
+                     (when-let [tv (transform-and-put v op-map)]
+                       (streams/put! sink tv)))
+                   source))
 
 
 (deftype OutputSplitter [source sinks]
