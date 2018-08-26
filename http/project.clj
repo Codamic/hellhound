@@ -18,7 +18,9 @@
                  [aleph                            "0.4.4-alpha4"]
 
                  ;; Routes & Routers
-                 [io.pedestal/pedestal.route       "0.5.3"]
+                 [io.pedestal/pedestal.route       "0.5.4"]
+                 [io.pedestal/pedestal.interceptor "0.5.4"]
+                 [io.pedestal/pedestal.service     "0.5.4"]
 
                  [danlentz/clj-uuid                "0.1.7"]
 
@@ -27,6 +29,7 @@
                  ;; UI
                  [reagent                    "0.7.0"]
                  [re-frame                   "0.10.1"]
+
                  ;; Client Side routeing
                  [secretary                  "1.2.3"]
                  [re-frisk                   "0.5.0"]

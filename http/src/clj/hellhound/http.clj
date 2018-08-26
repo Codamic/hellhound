@@ -6,7 +6,8 @@
    [hellhound.core           :as hh]
    [hellhound.http.route     :as route]
    [hellhound.http.websocket :as ws]
-   [hellhound.http.handlers  :as handlers]))
+   [hellhound.http.handlers  :as handlers]
+   [hellhound.http.interceptors :as interceptors]))
 
 ;; hellhound.http.route shortcuts --------------------------
 (defn router

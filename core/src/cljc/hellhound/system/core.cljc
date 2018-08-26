@@ -10,7 +10,8 @@
    [hellhound.system.workflow      :as workflow]
    [hellhound.system.utils         :as utils]
    [hellhound.system.impl.system   :as sysimpl]
-   [hellhound.system.protocols     :as impl])
+   [hellhound.system.protocols     :as impl]
+   [hellhound.logger               :as logger])
 
   (:import
    [hellhound.components.protocols IComponent]

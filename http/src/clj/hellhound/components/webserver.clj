@@ -10,7 +10,7 @@
    [clojure.spec.alpha   :as s]
    [aleph.http           :as aleph]
    [hellhound.logger     :as log]
-   [hellhound.spec       :as spec]
+   [hellhound.specs      :as spec]
    [hellhound.core       :as hellhound]
    [hellhound.component  :as hcomp]
    [hellhound.http       :as http]
