@@ -144,3 +144,11 @@
   (reduce stop-component!
           system-map
           (vals (impl/components-map system-map))))
+
+(def shutdown-hook
+  [system]
+  (.addShutdownHook
+   (Runtime/getRuntime)
+   (Thread. (fn []
+              (logger/info "Shutting down...")
+              (stop-system system)))))

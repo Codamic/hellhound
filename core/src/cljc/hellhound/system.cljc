@@ -42,7 +42,8 @@
    (-> @store/system
        (core/init-system)
        (core/start-system)
-       (workflow/setup)))
+       (workflow/setup)
+       (core/shutdown-hook)))
 
   (logger/info "System has been started successfully."))
 

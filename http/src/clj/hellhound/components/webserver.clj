@@ -14,6 +14,7 @@
    [hellhound.core       :as hellhound]
    [hellhound.component  :as hcomp]
    [hellhound.http       :as http]
+   [hellhound.streams    :as streams]
    [hellhound.http.route :as router]))
 
 ;; TODO: Extract the spec check into a predicate function called map-with
@@ -76,11 +77,16 @@
 
   ([routes hooks config]
    (spec/validate ::aleph-config config "Aleph configuration is invalid.")
-   (let [web-hooks (merge default-hooks
-                          hooks)]
+   (let [web-hooks (merge default-hooks hooks)]
      {:hellhound.component/name ::webserver
       :hellhound.component/start-fn (start! routes web-hooks config)
-      :hellhound.component/stop-fn stop!})))
+      :hellhound.component/stop-fn stop!
+      :hellhound.component/fn
+      (fn [component]
+        (streams/consume
+         #(when % (%))
+         (hcomp/input component)))})))
+
 
 (defn default-factory
   "Returns a new webserver component which uses the default routes and
