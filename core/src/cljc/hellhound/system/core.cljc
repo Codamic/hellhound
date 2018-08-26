@@ -145,7 +145,7 @@
           system-map
           (vals (impl/components-map system-map))))
 
-(def shutdown-hook
+(defn shutdown-hook
   [system]
   (.addShutdownHook
    (Runtime/getRuntime)
