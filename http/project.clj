@@ -9,10 +9,12 @@
   :exclusions [ch.qos.logback/logback-classic]
 
   :dependencies [[org.clojure/clojure        "1.9.0"]
-                 [org.clojure/clojurescript  "1.9.946"]
+                 [org.clojure/clojurescript  "1.10.339"]
+                 [com.bhauman/figwheel-main  "0.1.8"]
+                 ;; optional but recommended
+                 [com.bhauman/rebel-readline-cljs "0.1.4"]
                  [org.clojure/test.check     "0.10.0-alpha2"]
                  [codamic/hellhound.core     "1.0.0-SNAPSHOT"]
-                 ;; Logging
 
                  [ring/ring-core                   "1.6.3"]
                  [aleph                            "0.4.4-alpha4"]
@@ -26,26 +28,24 @@
 
                  ;; Used for websocket client
                  [jarohen/chord              "0.8.1"]
+
                  ;; UI
                  [reagent                    "0.7.0"]
                  [re-frame                   "0.10.1"]
 
                  ;; Client Side routeing
                  [secretary                  "1.2.3"]
+                 ;; TODO: Move it to dev profile
                  [re-frisk                   "0.5.0"]
 
                  ;; Transit support
-                 [com.cognitect/transit-clj  "0.8.300"]
-                 [com.cognitect/transit-cljs "0.8.239"]
-
-                 ;; Template Engine
-                 [selmer                     "1.10.7"]
+                 ;; [com.cognitect/transit-clj  "0.8.300"]
+                 ;; [com.cognitect/transit-cljs "0.8.239"]
 
                  ;; JSON Parser
                  [cheshire                   "5.7.1"]]
 
   :plugins [[lein-cljsbuild "1.1.7"]]
-
 
   :min-lein-version "2.6.1"
 
@@ -102,11 +102,8 @@
   :doo {:build "test"}
 
   :profiles {:dev
-             {:dependencies [[figwheel                   "0.5.10"]
-                             [figwheel-sidecar           "0.5.10"]
-                             [funcool/codeina            "0.5.0"]
-                             [com.cemerick/piggieback    "0.2.2"]
-                             [org.clojure/tools.nrepl    "0.2.13"]]
+             {:dependencies [[funcool/codeina            "0.5.0"]]
+
 
               :plugins [[lein-figwheel  "0.5.4-4"]
                         [lein-doo       "0.1.6"]]

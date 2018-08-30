@@ -41,9 +41,9 @@
 (defmacro defrouter
   [name & routes]
   `(def ~name
-     (hellhound.http.route/router
-      (hellhound.http.route/expand-routes
-       #{{:host   (hellhound.core/get-config :http :host)
-          :scheme  (hellhound.core/get-config :http :scheme)
-          :port    (hellhound.core/get-config :http :port)}
-         ~@routes}))))
+     ;;(hellhound.http.route/router)
+     (hellhound.http.route/expand-routes
+      #{{:host   (hellhound.core/get-config :http :host)
+         :scheme  (hellhound.core/get-config :http :scheme)
+         :port    (hellhound.core/get-config :http :port)}
+        ~@routes})))

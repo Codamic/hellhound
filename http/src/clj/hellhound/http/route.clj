@@ -11,6 +11,7 @@
    [hellhound.core     :as hellhound]
    [hellhound.http.websocket.json :as jpack]
    [hellhound.http.websocket.core :as packer]
+   [hellhound.http.interceptors :as interceptors]
    [hellhound.http.handlers :as handlers]))
 
 
@@ -71,7 +72,7 @@
     (:response (io.pedestal.interceptor.chain/execute context interceptors))))
 
 
-(defn route-handler
+(defn route-handler1
   "The default ring handler to be used with a ring webserver (webserver
   component) which is responsible for resolving routes.
 
@@ -86,3 +87,29 @@
       (if matched
         (execute-interceptors hellhound-context interceptors req)
         (handlers/not-found req)))))
+
+
+(defn route-handler
+  "The default ring handler to be used with a ring webserver (webserver
+  component) which is responsible for resolving routes.
+
+  This handler is responsible for resolving routes with the incomming
+  request and executing the chain of interceptors. It creates a context map
+  and pass it to each interceptor."
+  [hellhound-context routes]
+  (fn [req]
+    (let [interceptors-coll (interceptors/default-chain (io.pedestal.http.route/router routes)
+                                                        (io.pedestal.interceptor/interceptor {:name ::here1
+                                                                                              :enter (fn [x]
+                                                                                                       (println "JEJEJEJEJEJEJEJEJEJEJEJ")
+                                                                                                       (clojure.pprint/pprint x)
+                                                                                                       x)
+                                                                                              :leave nil
+                                                                                              :error nil}))]
+
+      (doseq [x interceptors-coll]
+             (println "-----------------------------------")
+             (println (io.pedestal.interceptor/interceptor? x))
+             (clojure.pprint/pprint x))
+      (println routes)
+      (execute-interceptors hellhound-context interceptors-coll req))))

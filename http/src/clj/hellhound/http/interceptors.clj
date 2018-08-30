@@ -7,18 +7,28 @@
    [io.pedestal.http.secure-headers :as sec-headers]
    [io.pedestal.http.ring-middlewares :as middlewares]))
 
-(defn default
+(defn default-chain
   [& interceptors]
-  (apply merge [http/log-request
-                cors/allow-origin
-                http/not-found
-                middlewares/session
-                csrf/anti-forgery
-                route/query-params
-                route/method-param
-                sec-headers/secure-headers]
-         interceptors))
+  (concat [http/log-request
+           (cors/allow-origin "localhost:3000")
+
+           (middlewares/session)
+           (csrf/anti-forgery)
+           (middlewares/content-type)
+           route/query-params
+           (route/method-param)
+           (sec-headers/secure-headers)]
+          interceptors
+          [(middlewares/fast-resource "public" {:index? true})
+           io.pedestal.http/not-found]))
+
+
 
 (defn dev
   [ctx]
   (http/dev-interceptors ctx))
+
+
+(defn merge-interceptors
+  [& interceptor-colls]
+  (distinct (flatten interceptor-colls)))
