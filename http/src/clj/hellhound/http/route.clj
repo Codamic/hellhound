@@ -68,8 +68,12 @@
   map for each interceptor. The `context` contains `input` and `output` of the
   webserver component along side with the incoming reqeust map."
   [hellhound-context interceptors req]
-  (let [context (assoc hellhound-context :request req)]
-    (:response (io.pedestal.interceptor.chain/execute context interceptors))))
+  (let [context (assoc hellhound-context :request req)
+        processd-context (io.pedestal.interceptor.chain/execute context interceptors)]
+    (println "+++++++++++++++++++++++++++++++")
+    (clojure.pprint/pprint (:response processd-context))
+    (println "+++++++++++++++++++++++++++++++")
+    (:response processd-context)))
 
 
 (defn route-handler1
@@ -98,18 +102,5 @@
   and pass it to each interceptor."
   [hellhound-context routes]
   (fn [req]
-    (let [interceptors-coll (interceptors/default-chain (io.pedestal.http.route/router routes)
-                                                        (io.pedestal.interceptor/interceptor {:name ::here1
-                                                                                              :enter (fn [x]
-                                                                                                       (println "JEJEJEJEJEJEJEJEJEJEJEJ")
-                                                                                                       (clojure.pprint/pprint x)
-                                                                                                       x)
-                                                                                              :leave nil
-                                                                                              :error nil}))]
-
-      (doseq [x interceptors-coll]
-             (println "-----------------------------------")
-             (println (io.pedestal.interceptor/interceptor? x))
-             (clojure.pprint/pprint x))
-      (println routes)
+    (let [interceptors-coll (interceptors/default-chain (io.pedestal.http.route/router routes))]
       (execute-interceptors hellhound-context interceptors-coll req))))
