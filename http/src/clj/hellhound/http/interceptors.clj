@@ -29,9 +29,10 @@
            (middlewares/content-type)
            route/query-params
            (route/method-param)
-           (sec-headers/secure-headers)]
+           (sec-headers/secure-headers {:content-security-policy-settings {:object-src "none"}})]
           interceptors
-          [(middlewares/fast-resource "public" {:index? true})
+          [(middlewares/resource "public")
+           ;;(middlewares/fast-resource "public" {:index? true})
            io.pedestal.http/not-found]))
 
 
