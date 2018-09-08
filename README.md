@@ -52,6 +52,10 @@ The `master` branch of this repo is for development purposes. In order to get th
 )
 * #hellhound channel on [clojurians](http://clojurians.net/)
 
+## Why did we move from Github?
+We're not happy with Microsoft buying Github and we don't trust a company like Microsoft because of their history and
+their strategies (For more information take a look at ([Halloween documents](https://en.wikipedia.org/wiki/Halloween_documents)).
+So we decided to move to Gitlab as an alternative and we are happy here (Gitlab) so far.
 
 ## License
 
