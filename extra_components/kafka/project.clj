@@ -7,8 +7,8 @@
                 :url "https://github.com/Codamic/hellhound"}
 
   :dependencies [[codamic/hellhound.core         "1.0.0-SNAPSHOT"]
-                 [org.apache.kafka/kafka-clients "1.0.1"]
-                 [org.apache.kafka/kafka-streams "1.0.1"]]
+                 [org.apache.kafka/kafka-clients "2.0.0"]]
+
 
 
   :plugins [[lein-codox "0.10.3"]]

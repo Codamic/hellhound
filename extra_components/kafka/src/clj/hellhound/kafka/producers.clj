@@ -1,4 +1,4 @@
-(ns hellhound.kafka.producers
+ (ns hellhound.kafka.producers
   "This namespace contains thin wrappers around the official
   Kafka Producer API. Here is a very simple example:
 
