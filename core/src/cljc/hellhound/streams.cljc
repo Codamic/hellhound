@@ -50,9 +50,6 @@
     (fn []
       ;; TODO: We need to handle the situation which the
       ;; stream is closed.
-      (println "xxxxxxxxxxxxxxxxxxxx")
-      (println s)
-      (println v)
       (f @(put! s v))))))
 
 ;; TODO: Is there any scenario for running a blocking code on the
