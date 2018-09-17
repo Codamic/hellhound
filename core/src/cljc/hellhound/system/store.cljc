@@ -2,10 +2,16 @@
   (:import
    (clojure.lang IPersistentMap)))
 
+(defn valid-system?
+  [value]
+  (cond
+    (nil? value) false
+    :else true))
 
 ;; Main storage for system data.
-(def system (atom {}))
-
+(def system
+  (atom {}
+        :validator valid-system?))
 
 (defn get-system
   "A shortcut function for derefing `system`."
