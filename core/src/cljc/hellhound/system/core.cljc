@@ -152,4 +152,5 @@
    (Runtime/getRuntime)
    (Thread. (fn []
               (logger/info "Shutting down...")
-              (stop-system system)))))
+              (stop-system system))))
+  system)
