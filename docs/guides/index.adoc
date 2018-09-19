@@ -6,7 +6,7 @@
 :icons: font
 :iconsfont:   font-awesome
 :sectanchors: true
-:description: A fullstack, async framework for creating web applications using Clojure and Clojurescript
+:description: A set of libraries to create fullstack, async and elegant applications using Clojure and Clojurescript
 :toc: macro
 :toc: left
 :toclevels: 3
@@ -29,7 +29,8 @@ leave us a message.
 ====
 
 ifdef::backend-html5[]
-image::https://github.com/Codamic/hellhound/raw/master/assets/hellhound-white.png[HellHound,align="center"]
+image::https://gitlab.com/Codamic/hellhound/raw/master/assets/hellhound-white.png?inline=false[HellHound,align="center"]
+
 ++++
 <div class="center-aligned download-btns">
 <a href="/guides/hellhound.pdf" class="lxbtn btn-success">
