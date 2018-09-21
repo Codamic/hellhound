@@ -1,5 +1,5 @@
 = Getting Started
-Before continue with document please make sure the you know enough about <<_prerequisite,HellHound prerequisite>>.
+Before continue with this document please make sure the you know enough about <<_prerequisite,HellHound prerequisite>>.
 
 In this section we're going to build an example application to cover some the most important concepts
 and features of HellHound.
@@ -7,7 +7,7 @@ and features of HellHound.
 In order to continue with this section you need to have https://leiningen.org/[Leiningen] setup in your
 box.
 
-The final application is available at https://github.com/Codamic/hellhound_examples[this github repository] and
+The complete application is available at https://gitlab.com/Codamic/hellhound-examples[this git repository] and
 under the `getting-started` namespace.
 
 == Before start
@@ -20,14 +20,24 @@ concepts we're going to use in this tutorial. You can read more about each of th
 in their own sections.
 
 * *System*:
-    It's a hashmap describing our application system. Basically how it should work. <<systems, Learn More.>>
+    It's a hashmap describing our application system. Basically each program maps to a system. There can be only
+    one running system in any given time. A program might have more than one system for different environments.
+    For example a development system and a production system. <<systems, Learn More.>>
 
 * *Component*:
-  A system is create by a set of components. You can think of a component as a unix command or a function ( they
-are more than a function though ). Just like a unix command each component has a input and output. <<components, Learn More>>
+  A system is created by a set of components. You can think of a component as a unix command or a function ( they
+  are more than a function though ). Just like a unix command each component has an input and an output and some
+  optional dependencies. <<components, Learn More>>
 
-* *Workflow*: A workflow is a graph like data structure which defines the data flow of the system. Simply describes how to pipe
-the output of a component to input of another component.<<workflow, Learn More>>
+* *Workflow*: A workflow is a graph like data structure which defines the data flow of the system. Simply describes
+  how to pipe the output of a component into the input of another component. Using workflow we can define the flow
+  of information in our system. <<workflow, Learn More>>
+
+* *execution*:
+  Execution describes the execution model of the system. For example whether it should be executed in a single
+  threaded or multi-threaded fashion (or distributed execution in the futur). By default systems get executed
+  in single threaded mode.
+
 
 == What do we want to build ?
 In order to gain an overview of HellHound systems we're going to build a real world application together. In this
@@ -36,16 +46,17 @@ webserver to serve the content of the given domain name and serve it locally.
 
 *HellHound is library to create data pipelines.* Basically data pipelines are suitable for stream processing and
 those use cases which involve with data streams. *But I chose the proxy use case intentionally to demonstrate
-the usage of HellHound for a use case which is not a case of stream processing by default.*
+the usage of HellHound for a use case which is not a case of stream processing by default.* This way, you don't
+need to know much about stream processing to understand the example.
 
 == Tackle the problem
-For this specific usage case web need to spin up a webserver which listens to a port for any HTTP URL and contructs new
+For this specific usage case web need to spin up a webserver which listens to a port for any HTTP URL and contruct new
 requests from the incoming requests with different host ( the remote host ) and sent them to the actual host and response
-back to user with the reponses fetch from the remote host.
+back to user with the reponses fetched from the remote host.
 
 So we're going to create a system hashmap with two component. A `webserver` component and a `loader` component. As the name
 suggests `webserver` component should be responsible for getting the user requests and serving responses to the user. The
-`loader` component should fetch the url content from the remote host. In this system we want to connect the output of
+`loader` component should fetch the url content from the remote host. In this system, we want to connect the output of
 `webserver` to the input of `loader` and connect the output of `loader` to input of `webserver`. So we're going to end
 up with a closed system.
 
@@ -58,26 +69,29 @@ Add *HellHound* to your dependencies as follow:
 
 [source,clojure]
 ----
-[codamic/hellhound "1.0.0-alpha3"]
+[codamic/hellhound "1.0.0-alpha4"]
 ----
 
-`codamic/hellhound` is a meta package which automatically install serveral HellHound libraries like `codamic/hellhound.core`
-and `codamic/hellhound.http`. So your can only install an specific library that you need instead of using `codamic/hellhound`.
-For instance you might not need the `codamic/hellhound.i18n` library or `codamic/hellhound.http` so you can just install
-`codamic/hellhound.core`. Systems are part of `codamic/hellhound.core` artifact.
+`codamic/hellhound` is a meta package which automatically install serveral HellHound libraries like `codamic/hellhound.core`,
+`codamic/hellhound.http` and `codamic/hellhound.utils`. So your can only install an specific library that you need instead
+of using `codamic/hellhound`. For instance, you might not need the `codamic/hellhound.i18n` library or `codamic/hellhound.http`
+so you can just install `codamic/hellhound.core`. Systems are part of `codamic/hellhound.core` artifact.
 
 == Components
 Lets start with <<components, components>> creation. HellHound's components are just hashmaps. Simple, good old hashmaps.
 Any component map should contains at least three keys, `:hellhound.component/name`, `:hellhound.component/start-fn` and
 `:hellhound.component/stop-fn`. The value of the `:hellhound.component/name` key should be a namespaced keyword which is
-the component name. We use this name to refer to the component later in our system configuration. the value  of
-`:hellhound.component/start-fn` should be function that takes two arguments. The first argument is the component hashmap
-itself and the second argument is another hashmap which is called context map (In order to learn more about components
-in details, please checkout the <<components, components section of this documentation>>). The main logic of the component
-goes into this function. It should return a component map again. The `:hellhound.component/stop-fn` function is similar
-to `start-fn` but accept only one argument which is the component map itself. This function is responsible for tearing down
-the logic of the component and do the clean up. For example, close the connection which has been opened on `start-fn` or similar
-stuff.
+the component name. We use this name to refer to the component later in our system configuration.
+
+The value of `:hfellhound.component/start-fn` should be a function that takes two arguments. The first argument is the
+component hashmap itself and the second argument is another hashmap which is called context map (In order to learn more
+about components in details, please checkout the <<components, components section of this documentation>>). This function
+should contains the initialization or even the main logic of the component (depends on the use case) and return a component
+map again.
+
+The `:hellhound.component/stop-fn` function is similar to `start-fn` but accept only one argument which is the component map
+itself. This function is responsible for tearing down the component and do the clean up. For example, close the connection
+which has been opened on `start-fn` or similar stuff.
 
 Ok, It's time to write some code. Let's start with a really basic component skeleton for the `webserver` component.
 Check out the following code.
@@ -112,19 +126,25 @@ Check out the following code.
     the actual hashmap definition of the component. We passed `::server` as the first argument to this function which
     is the name of our component. Component's name should be namespaced keyword.
 
-Almost all of the components that you may encounter or create, will have the same skeleton. Let's go over the basics of
-a component again. Each component has a name which must be a namespaced keyword, a `start-fn` with holds the logic of the
-component and gets two arguments, the component map itself and a context map, and should return a component map, a `stop-fn`
-that gets a component map and holds the termination logic. Every component has an input stream and an output stream defined
-in their component-map. There are more details about components which you can read in <<components, components section>>.
+Many of the components that you may encounter or create, may have the same skeleton. Let's go over the basics of
+a component again. Each component has a name which must be a namespaced keyword, a `start-fn` with holds the initialization
+or main logic of the component and gets two arguments, the component map itself and a context map, and should return
+a component map, a `stop-fn` that gets a component map and holds the termination logic. Every component has an input
+stream and an output stream defined in their component-map. There are more details about components which you can read
+in <<components, components section>>.
 
 HellHound created around and shares similar ideas as <<_the_unix_philosophy,unix philosophy>>. Components are isolated
-unix of execution which read data from their input, process the data and write the result to the output. System makes a
+unit of execution which read data from their input, process the data and write the result to the output. System makes a
 data pipeline by pipeing IO of different components to one another. You'll learn more about this concept later on this
 documentation.
 
 Now that we setup a very basic component and we have better understanding about component concept. let's focus on the
 webserver logic and create a real world webserver component.
+
+[NOTE]
+`codamic/hellhound.http` provides a webserver component under `hellhound.components.webserver` namespace which
+is a full fledged webserver is based on http://pedestal.io[Pedestal] and http://aleph.io[Aleph webserver]. You can
+read more about it on <<_http, HTTP library documentations>>.
 
 [source,clojure,linums]
 .Web server component.

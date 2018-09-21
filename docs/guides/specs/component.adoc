@@ -42,8 +42,8 @@ Based on the usage, components might be categorized in four different categories
 
 1. Sources
 2. Transforms
-4. Sinks
-5. State components
+3. Sinks
+4. State components
 
 NOTE: These categories are just usage based categories. All the components are the same there is no special
 thing about source components or sink components. There might be some shortcut macro or helper functions in order
