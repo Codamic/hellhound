@@ -24,4 +24,6 @@
   (dissoc this :server))
 
 
-(def nrepl (com/make-component ::nrepl start-fn stop-fn))
+(defn nrepl
+  []
+  (com/make-component ::nrepl start-fn stop-fn))
