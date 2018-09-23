@@ -18,6 +18,7 @@
   {:added      1.0
    :public-api true}
   [system-map]
+  (logger/init! (config/get-config-from-system system-map :logger))
   (store/set-system! system-map))
 
 (defn system
@@ -37,7 +38,6 @@
   ;; Read the configuration for the current runtime environment which
   ;; specified by `HH_ENV` environment. Default env is `:development`
   (config/load-runtime-configuration)
-  (logger/init! (config/get-config :logger))
   (store/set-system!
    (-> @store/system
        (core/init-system)
@@ -61,8 +61,13 @@
        (core/stop-system)))
   (logger/info "System has been stopped successfully."))
 
+
 (defn restart!
-  [])
+  []
+  (store/set-system!
+    (-> @store/system
+        (core/restart-system))))
+
 
 (defn get-component
   "Finds and returns the component with the given `name`.
