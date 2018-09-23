@@ -1,6 +1,5 @@
-(ns hellhound.system.store
-  (:import
-   (clojure.lang IPersistentMap)))
+(ns ^{:clojure.tools.namespace.repl/load false} hellhound.system.store)
+
 
 (defn valid-system?
   [value]
@@ -8,10 +7,12 @@
     (nil? value) false
     :else true))
 
+
 ;; Main storage for system data.
-(def system
+(defonce system
   (atom {}
         :validator valid-system?))
+
 
 (defn get-system
   "A shortcut function for derefing `system`."
@@ -21,5 +22,5 @@
 
 (defn set-system!
   "Sets the system of HellHound."
-  [^IPersistentMap system-map]
+  [system-map]
   (reset! system system-map))
