@@ -48,11 +48,10 @@
 (defn stop!
   "Stops the running webserver server."
   [this]
-  (if (:instance this)
-    (do
-      (.close (:instance this))
-      (dissoc this :instance))
-    this))
+  (when-let [server (:instance this)]
+    (.close server))
+  (dissoc this :instance))
+
 
 
 (def default-hooks
