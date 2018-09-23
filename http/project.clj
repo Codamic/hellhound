@@ -17,7 +17,7 @@
                  [codamic/hellhound.core     "1.0.0-SNAPSHOT"]
 
                  [ring/ring-core                   "1.6.3"]
-                 [aleph                            "0.4.4-alpha4"]
+                 [aleph                            "0.4.7-alpha1"]
 
                  ;; Routes & Routers
                  [io.pedestal/pedestal.route       "0.5.4"]
