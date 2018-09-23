@@ -87,17 +87,22 @@
                          ~{:?line (fline &form)}))
 
 
+(def default-config
+  {:level :info
+   :enabled? true
+   :output-fn (formatter/default-dev-formatter {:important-namespaces ["hellhound.*"]})
+   :middleware [middlewares/exceptions]
+   :ns-blacklist []
+   :filter-stracktrace true
+   :appenders
+   {:debug-appender {:enabled? true :min-level :debug :output-fn  :inherit
+                     :fn (fn [data]
+                           (let [{:keys [output_]} data
+                                 formatted-output-str (force output_)]
+                             (println formatted-output-str)))}}})
+
+
 (defn init!
   [config]
-  (timbre/set-config!
-   {:level :trace
-    :enabled? true
-    :output-fn (formatter/default-dev-formatter config)
-    :middleware [middlewares/exceptions]
-    :ns-blacklist []
-    :appenders
-    {:debug-appender {:enabled? true :min-level :debug :output-fn  :inherit
-                      :fn (fn [data]
-                            (let [{:keys [output_]} data
-                                  formatted-output-str (force output_)]
-                              (println formatted-output-str)))}}}))
+  (let [final-config (merge default-config config)]
+    (timbre/set-config! final-config)))
