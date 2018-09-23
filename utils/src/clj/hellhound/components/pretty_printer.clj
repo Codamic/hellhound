@@ -1,9 +1,10 @@
 (ns hellhound.components.pretty-printer
   (:require
+   [hellhound.logger :as logger]
    [hellhound.component :refer [deftransform]]))
 
 (deftransform printer
   [component v]
-  (println "PrettyPrinter --------------------------------------------")
+  (logger/debug "PrettyPrinter-START: -----------------------------------------")
   (clojure.pprint/pprint v)
-  (println))
+  (logger/debug "PrettyPrinter-END: -------------------------------------------"))
