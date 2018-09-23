@@ -19,6 +19,8 @@
   [& args]
   `(taoensso.timbre/log! :trace  :p ~args
                          ~{:?line (fline &form)}))
+
+
 (defmacro debug
   [& args]
   `(taoensso.timbre/log! :debug  :p ~args

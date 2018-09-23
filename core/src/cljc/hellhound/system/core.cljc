@@ -51,8 +51,10 @@
   "Creates an index from components vector of the `system` and store it
   under `:component-map` key in system."
   [system-map]
-  (merge system-map
-         (impl/make-components-map system-map)))
+  (if-not (nil? (:components-map system-map))
+    system-map
+    (merge system-map
+           (impl/make-components-map system-map))))
 
 
 (defn init-system
@@ -114,6 +116,19 @@
                            #(vector? (:components %))))
 
 
+(defn restart-component!
+  [system-map component-name]
+  (update-in system-map
+             [:components-map component-name]
+             (fn [old-component]
+               ;; The difference between stop-component! and this
+               ;; function is that we're not gonna close the streams
+               ;; here.
+               (->> old-component
+                   (cimpl/stop!)
+                   (cimpl/start! (context-for system-map old-component))))))
+
+
 (defn start-system
   "Starts the given `system-map`.
 
@@ -145,6 +160,14 @@
   (reduce stop-component!
           system-map
           (vals (impl/components-map system-map))))
+
+
+(defn restart-system
+  [system-map]
+  (-> system-map
+      (stop-system)
+      (start-system)))
+
 
 (defn shutdown-hook
   [system]
