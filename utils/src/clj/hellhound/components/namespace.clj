@@ -14,12 +14,10 @@
   (and (or (= kind :modify)
            (= kind :create))
        (and file
-            (not (re-matches #"\..*" (.getName file))))))
+            (not (re-matches #".*\.#[^/]+(clj|cljc)$" (.getName file))))))
 
 (deftransform loader
   [component value]
   (let [{:keys [kind file]} (:event value)]
-    (cond
-      (should-reload? kind file) (reload-ns)
-      ;; TODO: Replace the not reloading with a log entry.
-      :else (println "NOt reloading"))))
+    (when (should-reload? kind file)
+      (reload-ns))))
