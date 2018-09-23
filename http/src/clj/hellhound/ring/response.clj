@@ -1,7 +1,6 @@
 (ns hellhound.ring.response
   "This namespace contains several helper function to
   help users to produce a ring response."
-
   (:require [ring.util.response :as res]
             [selmer.parser      :as parser]))
 
