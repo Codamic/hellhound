@@ -4,7 +4,9 @@
    [clojure.spec.test.alpha :as stest]
    [hellhound.component     :as hcomp]
    [hellhound.system.core   :as sut]
-   [hellhound.test          :as ht]))
+   [hellhound.test          :as ht]
+   [hellhound.system.store  :as store]
+   [clojure.test :as t]))
 
 
 (def c1 (hcomp/make-component ::c1
@@ -30,8 +32,8 @@
                                    c2)]
       (is (map? ctx-map))
 
-      (sut/set-system! (sut/init-system subject-system))
-      (is (map? (sut/context-for (sut/get-system) c2))))))
+      (store/set-system! (sut/init-system subject-system))
+      (is (map? (sut/context-for (store/get-system) c2))))))
 
 
 (deftest get-dependencies-of
@@ -41,8 +43,9 @@
     (is (=  1 (count (sut/get-dependencies-of
                       (sut/make-components-index subject-system) c2))))))
 
-(deftest stop-start-system)
+
 (deftest spec-test
   (ht/ns-spec-tests 'hellhound.system.core))
 
-(run-tests)
+(comment
+  (run-tests))
