@@ -6,7 +6,8 @@
   :scm         {:name "git"
                 :url "https://github.com/Codamic/hellhound"}
 
-  :dependencies [[cider/cider-nrepl           "0.18.0-SNAPSHOT"]
+  :dependencies [[refactor-nrepl              "2.4.0"]
+                 [cider/cider-nrepl           "0.18.0"]
                  [org.clojure/tools.namespace "0.2.11"]
                  [hawk                        "0.2.11"]]
 
