@@ -9,10 +9,7 @@ before_script:
 
 build:
   stage: build
-  script:
-    - lein sub install
-    - lein sub uberjar
-    - lein install
+  script: ./scripts/build.sh
   only:
     - master
 

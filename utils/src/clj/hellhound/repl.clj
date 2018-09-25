@@ -1,8 +1,8 @@
 (ns hellhound.repl
   (:require
    [nrepl.server :as nrepl-server]
-   [hellhound.system :as sys]
-   [hellhound.logger :as logger]))
+   [hellhound.logger :as logger]
+   [hellhound.system :as sys]))
 
 (defn nrepl-handler []
   (require 'cider.nrepl)
