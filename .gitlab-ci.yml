@@ -5,7 +5,6 @@ before_script:
   - chmod a+x lein
   - export LEIN_ROOT=1
   - PATH=$PATH:.
-  - lein deps
 
 build:
   stage: build

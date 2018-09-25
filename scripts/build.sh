@@ -14,5 +14,7 @@ build_jar http
 build_jar utils
 build_jar extra_components
 
-
+lein deps
+lein install
+lein ubderjar 
 
