@@ -9,7 +9,7 @@ before_script:
 build:
   stage: build
   script:
-    - ./scripts/build.sh .
+    - ./scripts/build.sh $(pwd)
   only:
     - master
 
