@@ -17,4 +17,4 @@ build_jar extra_components
 
 $lein_path/lein deps
 $lein_path/lein install
-$lein_path/lein ubderjar
+$lein_path/lein uberjar

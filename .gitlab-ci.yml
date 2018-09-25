@@ -13,17 +13,17 @@ build:
   only:
     - master
 
-# linters:
-#   stage: build
-#   script:
-#     - lein sub kibit
-#     - lein sub eastwood
-#     - lein sub bikeshed -m 100
+linters:
+  stage: build
+  script:
+    - lein sub kibit
+    - lein sub eastwood
+    - lein sub bikeshed -m 100
 
-# docs:
-#   stage: build
-#   script: lein codox
+docs:
+  stage: build
+  script: lein codox
 
-# test:
-#   stage: test
-#   script: lein sub test
+test:
+  stage: test
+  script: lein sub test
