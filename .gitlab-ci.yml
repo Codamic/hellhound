@@ -4,7 +4,7 @@ before_script:
   - wget https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
   - chmod a+x lein
   - export LEIN_ROOT=1
-  - PATH=$PATH:.
+  - export PATH=$PATH:.
 
 build:
   stage: build
