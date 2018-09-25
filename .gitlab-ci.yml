@@ -8,7 +8,9 @@ before_script:
 
 build:
   stage: build
-  script: ./scripts/build.sh
+  script:
+    - echo $(which lein)
+    - sh ./scripts/build.sh
   only:
     - master
 
