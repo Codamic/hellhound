@@ -6,6 +6,10 @@ before_script:
   - export LEIN_ROOT=1
   - export PATH=$PATH:.
 
+cache:
+  paths:
+    - .m2/
+
 build:
   stage: build
   script:
