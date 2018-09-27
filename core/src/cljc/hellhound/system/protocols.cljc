@@ -1,4 +1,4 @@
-(ns hellhound.system.protocols)
+(ns ^{:clojure.tools.namespace.repl/load false} hellhound.system.protocols)
 
 
 (defprotocol Splitter
