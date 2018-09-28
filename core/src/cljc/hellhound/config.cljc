@@ -9,7 +9,9 @@
    [hellhound.config.parser  :as parser]
    [hellhound.env            :as env]
    [hellhound.system.store   :as store]
+   [hellhound.system.protocols :as impl]
    [hellhound.config.helpers :as helpers])
+
 
   #?(:cljs
      (:import [goog.string.format])))
@@ -46,7 +48,7 @@
   default value from `hellhound.config`.
   "
   [system-map & config-keys]
-  (let [config-value (get-in system-map config-keys :not-found)]
+  (let [config-value (impl/get-config system-map config-keys :not-found)]
     (if (= :not-found config-value)
       (helpers/default-value-for config-keys)
       config-value)))

@@ -100,4 +100,12 @@
   protocols/SystemManagement
   (update-system
     [system k v]
-    (assoc system k v)))
+    (assoc system k v))
+
+  (get-config
+    [system ks]
+    (get-in system ks))
+
+  (get-config
+    [system ks default-value]
+    (get-in system ks default-value)))

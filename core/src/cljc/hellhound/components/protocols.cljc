@@ -1,4 +1,5 @@
-(ns hellhound.components.protocols)
+(ns ^{:clojure.tools.namespace.repl/load false}
+    hellhound.components.protocols)
 
 (defprotocol IComponent
   "This protocol defines a very basic component for hellhound system."

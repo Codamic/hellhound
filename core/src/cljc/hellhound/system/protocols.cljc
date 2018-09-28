@@ -1,6 +1,10 @@
-(ns ^{:clojure.tools.namespace.repl/load false} hellhound.system.protocols)
+(ns ^{:clojure.tools.namespace.repl/load false}
+    hellhound.system.protocols)
 
 
+;; Splitter protocol describes all the rules to create an splitter type
+;; which connects the output of a source component to the input of one
+;; or more sink components.
 (defprotocol Splitter
   (connect [this sink operation-map]
     "Setup the `sink` channel to be connected to a source later based on
@@ -16,6 +20,8 @@
     "Disconnects all the managing sinks and sources."))
 
 
+;; This protocol describes how a system should manage its
+;; components.
 (defprotocol ComponentManagement
   (components-vector
     [_]
@@ -35,16 +41,28 @@
     [_]
     "Create a mapping from components name to components and validates each component."))
 
+
+;; A system protocol for managing the workflow of the system.
 (defprotocol WorkflowManagement
   (get-workflow
     [system]
     "Returns the workflow of the given system"))
 
+;; Basic system actions described in this protocol.
 (defprotocol SystemManagement
   (update-system
     [system k v]
-    "Updates the value of `k` with the given `v` in the given `system`."))
+    "Updates the value of `k` with the given `v` in the given `system`.")
 
+  (get-config
+    [system ks]
+    [system ks default-value]
+    "Returns the value of the given `ks` (keys) from the system and returns the
+     default-value if the value was missing."))
+
+
+;; This protocol explains how to manage the execution and thread pool creation
+;; of the system
 (defprotocol ExecutionManagement
   (execution-pool
     [system]
