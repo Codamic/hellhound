@@ -115,6 +115,22 @@
       :hellhound.component/fn         ~(list* `fn body)}))
 
 
+(defn make-transformer
+  [component-name f]
+  {:hellhound.component/name       component-name
+   :hellhound.component/start-fn   default-start-fn
+   :hellhound.component/stop-fn    default-stop-fn
+   :hellhound.component/depends-on []
+   :hellhound.component/fn
+   (fn [component]
+     (streams/consume
+      (fn [v]
+        (let [processed-v (f component v)]
+          (when processed-v
+            (streams/>> (output component) processed-v))))
+      (input component)))})
+
+
 (defmacro deftransform
   "Creates a [transform] component with the given `component-name` and uses
   the given `body` to create a function to be used in the main function of
