@@ -28,38 +28,72 @@
   []
   (store/get-system))
 
+
+(defn start
+  [system-map]
+  ;;(config/load-runtime-configuration)
+  (let [new-system
+        (-> system-map
+            (core/init-system)
+            (core/start-system)
+            (workflow/setup))]
+    (logger/info "System has been started successfully.")
+    (println "returning the new system")
+    new-system))
+
 (defn start!
-  "Starts the default system by calling start on all the components.
-
-  TODO: more doc"
-  {:added      1.0
-   :public-api true}
   []
-  ;; Read the configuration for the current runtime environment which
-  ;; specified by `HH_ENV` environment. Default env is `:development`
-  (config/load-runtime-configuration)
-  (store/set-system!
-   (-> @store/system
-       (core/init-system)
-       (core/start-system)
-       (workflow/setup)
-       (core/shutdown-hook)))
+  (alter-var-root #'hellhound.system.store/store
+                  #(start %)))
 
-  (logger/info "System has been started successfully."))
+;; (defn start!
+;;   "Starts the default system by calling start on all the components.
 
+;;   TODO: more doc"
+;;   {:added      1.0
+;;    :public-api true}
+;;   []
+;;   ;; Read the configuration for the current runtime environment which
+;;   ;; specified by `HH_ENV` environment. Default env is `:development`
+;;   (config/load-runtime-configuration)
+;;   (store/set-system!
+;;    (-> @store/system
+;;        (core/init-system)
+;;        (core/start-system)
+;;        (workflow/setup)
+;;        (core/shutdown-hook)))
+
+;;   (logger/info "System has been started successfully."))
+
+
+(defn stop
+  [system-map]
+  (when system-map
+    (let [new-system
+          (-> system-map
+              (workflow/teardown)
+              (core/stop-system))]
+      (logger/info "System has been stopped successfully.")
+      new-system)))
 
 (defn stop!
-  "Stops the default system.
-
-  TODO: more doc"
-  {:added      1.0
-   :public-api true}
   []
-  (store/set-system!
-   (-> @store/system
-       (workflow/teardown)
-       (core/stop-system)))
-  (logger/info "System has been stopped successfully."))
+  (alter-var-root #'hellhound.system.store/store
+                  #(stop %)))
+
+
+;; (defn stop!
+;;   "Stops the default system.
+
+;;   TODO: more doc"
+;;   {:added      1.0
+;;    :public-api true}
+;;   []
+;;   (store/set-system!
+;;    (-> @store/system
+;;        (workflow/teardown)
+;;        (core/stop-system)))
+;;   (logger/info "System has been stopped successfully."))
 
 
 (defn restart!
