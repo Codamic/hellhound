@@ -13,6 +13,7 @@
   (atom {}
         :validator valid-system?))
 
+(def store nil)
 
 (defn get-system
   "A shortcut function for derefing `system`."
@@ -20,7 +21,11 @@
   @system)
 
 
+;; (defn set-system!
+;;   "Sets the system of HellHound."
+;;   [system-map]
+;;   (reset! system system-map))
+
 (defn set-system!
-  "Sets the system of HellHound."
-  [system-map]
-  (reset! system system-map))
+  [system-fn]
+  (alter-var-root #'store (constantly (system-fn))))

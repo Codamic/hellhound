@@ -103,12 +103,15 @@
    ^IComponent     component]
   (reduce stop-component!
           (update-in system-map
+                     ;; TODO: We need to use the protocol functions here to
+                     ;; update the system.
                      [:components-map (cimpl/get-name component)]
                      (fn [old-component]
                        (streams/close! (cimpl/input old-component))
-                       (streams/close! (cimpl/output old-component))
+                       (streams/close! (cimpl/output old-component)
                        ;; TODO: Should we call stop as the last step ?
-                       (cimpl/stop! old-component)))
+                       (cimpl/stop! old-component))))
+
           (get-dependencies-of system-map component)))
 
 (s/def ::system-map (s/and map?
