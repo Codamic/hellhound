@@ -7,15 +7,20 @@
 (defn- handle-change
   [output-stream]
   (fn [hawk-ctx event]
+    (println "event")
     (>> output-stream {:ctx hawk-ctx :event event})
     hawk-ctx))
 
+
 (defn start-fn
-  [this context]
-  (assoc this
-         :watcher
-         (hawk/watch! [{:paths ["src/clj"]
-                        :handler (handle-change (com/output this))}])))
+  [config]
+  (fn [this context]
+    (println "start=fn")
+    (assoc this
+           :watcher
+           (hawk/watch! [{:paths ["src/clj"] ;;(merge ["src/clj"] (or (:paths config) []))
+                          :handler (handle-change (com/output this))}]))))
+
 
 (defn stop-fn
   [this]
@@ -23,4 +28,23 @@
     (hawk/stop! watcher))
   (dissoc this :watcher))
 
-(def watcher (com/make-component ::watcher start-fn stop-fn))
+
+(defn watcher-factory
+  [config]
+  (com/make-component ::watcher (start-fn config) stop-fn))
+
+
+(defn change-handler
+  [f]
+  (fn [ctx event]
+    (f event)
+    ctx))
+
+(defn start-watch
+  [config f]
+  (hawk/watch! [{:paths ["src/clj"] ;;(merge ["src/clj"] (or (:paths config) []))
+                 :handler (change-handler f)}]))
+
+(defn stop-watch
+  [server]
+  (hawk/stop! server))
