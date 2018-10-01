@@ -27,7 +27,8 @@
   (fn [component]
     (dissoc (assoc component :stopped? true) key)))
 
-(def sample-system
+(defn sample-system
+  []
   {:components
    [(hcomp/make-component :sample/component2
       (sample-start-fn :key2 :value2)
@@ -103,3 +104,7 @@
 
 
     (system/stop!)))
+
+
+(comment
+  (t/run-tests))
