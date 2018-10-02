@@ -18,10 +18,11 @@
   {:added      1.0
    :public-api true}
   [system-map]
+  (store/set-system! system-map)
   ;; TODO: We need to establish an official entry point for the system
   ;;       and move the logger initialization to there.
-  (logger/init! (config/get-config-from-system system-map :logger))
-  (store/set-system! system-map))
+  (logger/init! (config/get-config-from-system (store/get-system) :logger)))
+
 
 
 (defn system

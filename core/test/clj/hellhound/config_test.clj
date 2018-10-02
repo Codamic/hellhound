@@ -14,7 +14,7 @@
     (is (nil? (sut/get-config-from-system {:example {:key1 nil}} :example :key1)))))
 
 (deftest get-config
-  (sys/set-system! {:example {:key1 true :key2 "test"}})
+  (sys/set-system! (fn [] {:example {:key1 true :key2 "test"}}))
   (are [x] nil?
     (sut/get-config :e)
     (sut/get-config :e :a)

@@ -22,10 +22,12 @@
              :context context
              :counter @component-counter))))
 
+
 (defn sample-stop-fn
   [key]
   (fn [component]
     (dissoc (assoc component :stopped? true) key)))
+
 
 (defn sample-system
   []
@@ -73,8 +75,10 @@
               deps2 (:dependencies ctx2)
               deps-map2 (:dependencies-map ctx2)]
           (is (hcomp/started? (first deps2)))
-          (is (= component1 (first deps2)))
-          (is (= component1 (:sample/component1 deps-map2)))))
+          (is (= (hcomp/get-name component1)
+                 (hcomp/get-name (first deps2))))
+          (is (= (hcomp/get-name component1)
+                 (hcomp/get-name (:sample/component1 deps-map2))))))
 
       (testing "Workflow"
         (let [input1  (hcomp/input component1)

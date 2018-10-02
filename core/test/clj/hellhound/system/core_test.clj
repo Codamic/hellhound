@@ -16,32 +16,33 @@
                               (fn [this ctx ] this)
                               #(identity %)
                               [::c1]))
-(def subject-system
+(defn subject-system
+  []
   {:components [c1 c2]})
 
 
 (deftest context-for
   (testing "Before setting the system"
     (try
-      (sut/context-for subject-system c2)
+      (sut/context-for (subject-system) c2)
       (catch clojure.lang.ExceptionInfo e
         (is (= (.getMessage e) "Components map is nil. Did you set the system?")))))
 
   (testing "After setting the system"
-    (let [ctx-map (sut/context-for (sut/make-components-index subject-system)
+    (let [ctx-map (sut/context-for (sut/make-components-index (subject-system))
                                    c2)]
       (is (map? ctx-map))
 
-      (store/set-system! (sut/init-system subject-system))
+      (store/set-system! (fn [] (sut/init-system (subject-system))))
       (is (map? (sut/context-for (store/get-system) c2))))))
 
 
 (deftest get-dependencies-of
   (testing "Uninitialized dependency tree"
-    (is (= [] (sut/get-dependencies-of subject-system c2))))
+    (is (= [] (sut/get-dependencies-of (subject-system) c2))))
   (testing "initialized dependency tree"
     (is (=  1 (count (sut/get-dependencies-of
-                      (sut/make-components-index subject-system) c2))))))
+                      (sut/make-components-index (subject-system)) c2))))))
 
 
 (deftest spec-test

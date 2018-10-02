@@ -108,9 +108,9 @@
                      [:components-map (cimpl/get-name component)]
                      (fn [old-component]
                        (streams/close! (cimpl/input old-component))
-                       (streams/close! (cimpl/output old-component)
+                       (streams/close! (cimpl/output old-component))
                        ;; TODO: Should we call stop as the last step ?
-                       (cimpl/stop! old-component))))
+                       (cimpl/stop! old-component)))
 
           (get-dependencies-of system-map component)))
 

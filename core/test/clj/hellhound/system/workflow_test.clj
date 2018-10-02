@@ -18,7 +18,8 @@
     [component]
     (assoc component :stopped? true))
 
-  (def sample-system
+  (defn sample-system
+    []
     {:components
      [(hcomp/make-component :sample/component2
                             sample-start-fn
