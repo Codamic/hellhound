@@ -1,4 +1,12 @@
-(ns ^{:clojure.tools.namespace.repl/load false} hellhound.system.store)
+(ns hellhound.system.store
+  "This namespace contains all the necessary means to store and manage the only
+  global state of a **HellHound** application which is the `system` description.
+
+  `store` is the binding which holds the system. In order to set the system, use
+  `set-system!` function which alters the root of `store` binding to point to the
+  given system."
+  {:clojure.tools.namespace.repl/load false})
+
 
 ;; Main storage for system data.
 (def store nil)

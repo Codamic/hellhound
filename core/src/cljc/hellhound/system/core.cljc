@@ -39,7 +39,8 @@
   (let [components   (impl/components-map system-map)
         dependencies (cimpl/dependencies component)
         deps         (map #(get components %) dependencies)]
-    (when (nil? components)
+
+    (when-not components
       (throw (ex-info "Components map is nil. Did you set the system?"
                       {:cause system-map})))
 
@@ -76,16 +77,15 @@
 (defn get-dependencies-of
   "Returns a vector of dependencies for the given `component` in the given
   `system`."
-  [^IPersistentMap system-map component]
+  [system-map component]
   (let [dependencies (cimpl/dependencies component)]
     (filter #(some #{(cimpl/get-name %)} dependencies)
             (vals (impl/components-map system-map)))))
 
 
-(defn ^IPersistentMap start-component!
+(defn start-component!
   "Starts the given `component` of the given `system`."
-  [^IPersistentMap system-map
-   ^IComponent     component]
+  [system-map ^IComponent component]
   (let [dependencies (get-dependencies-of system-map component)
         new-system   (reduce start-component! system-map dependencies)]
     (update-in new-system
@@ -99,8 +99,7 @@
 
 (defn stop-component!
   "Stops the given `component` of the given `system`."
-  [^IPersistentMap system-map
-   ^IComponent     component]
+  [system-map ^IComponent component]
   (reduce stop-component!
           (update-in system-map
                      ;; TODO: We need to use the protocol functions here to
@@ -111,7 +110,6 @@
                        (streams/close! (cimpl/output old-component))
                        ;; TODO: Should we call stop as the last step ?
                        (cimpl/stop! old-component)))
-
           (get-dependencies-of system-map component)))
 
 (s/def ::system-map (s/and map?
