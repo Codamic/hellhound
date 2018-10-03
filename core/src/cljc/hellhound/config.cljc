@@ -40,34 +40,3 @@
     (if (empty? config-data)
       (load-runtime-configuration)
       config-data)))
-
-
-(defn get-config-from-system
-  "Returns the value of the given `config-keys` by looking into the given
-  `system-map`. If the value is `nil` it will return the possible
-  default value from `hellhound.config`.
-  "
-  [system-map & config-keys]
-  (let [config-value (impl/get-config system-map config-keys :not-found)]
-    (if (= :not-found config-value)
-      (helpers/default-value-for config-keys)
-      config-value)))
-
-
-(defn get-config
-  "Fetch the given key (or nested keys) from the default system.
-   If there is not value for the given `config-keys` in the system
-   then it will return the default value from `hellhound.config`.
-
-  Examples:
-
-  ```clojure
-  ;; Returns the value of `:http` from the config file
-  (get-config :http)
-
-  ;; Returns the value of `:host` key inside `:http` map.
-  (get-config :http :host)
-  ```
-  "
-  [& config-keys]
-  (apply get-config-from-system (store/get-system) config-keys))

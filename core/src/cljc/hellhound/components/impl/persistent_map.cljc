@@ -6,7 +6,8 @@
    [hellhound.streams :as stream]
    [hellhound.core    :as core]
    [hellhound.logger  :as log]
-   [hellhound.components.protocols :as protocol]))
+   [hellhound.components.protocols :as protocol]
+   [hellhound.system :as sys]))
 
 ;; Private Functions ---------------------------------------
 ;; These functions are the actual implementation of IComponent
@@ -19,7 +20,8 @@
   (if (true? (:hellhound.component/initialized? component))
     ;; Return the component if it already initialized.
     component
-    (let [default-io-buffer-size (core/get-config :components :io-buffer-size)
+    (let [default-io-buffer-size (sys/get-config [:components-io-buffer-size])
+
           default-stream-fn      #(stream/stream default-io-buffer-size)
           input-stream-fn        (get component
                                       :input-stream-fn

@@ -6,10 +6,6 @@
    [hellhound.config :as config]
    [hellhound.env    :as env]))
 
-;; Shortcut functions --------------------------------------
-(def ^{:original-ns :hellhound.config}
-  get-config config/get-config)
-
 ;; ENV -----------------------------------------------------
 (def ^{:original-ns :hellhound.env} env env/env)
 (def ^{:original-ns :hellhound.env} development? env/development?)

@@ -27,6 +27,11 @@
 
   Basically concext map contains the following keys:
 
+  * `:config`: A map of configuration for the given `component` which fetched from
+    the `system-map` under `:config` using the component name. Basically any value
+    provided for the key with the component name in system under `:config` will be
+    passed as config value.
+
   * `:dependencies`: A vector of running components which the current component
     is depends on.
 
@@ -44,7 +49,11 @@
       (throw (ex-info "Components map is nil. Did you set the system?"
                       {:cause system-map})))
 
-    {:dependencies deps
+    ;; TODO: Refactor the :config value to be more elegant.
+    {:config (impl/get-value system-map
+                             [:config (cimpl/get-name component)]
+                             {})
+     :dependencies deps
      :dependencies-map (into {} (map (fn [x] [(cimpl/get-name x) x]) deps))}))
 
 

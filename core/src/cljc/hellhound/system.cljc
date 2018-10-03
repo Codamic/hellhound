@@ -9,7 +9,8 @@
             [hellhound.system.protocols    :as impl]
             [hellhound.system.core         :as core]
             [hellhound.system.store        :as store]
-            [hellhound.system.workflow     :as workflow]))
+            [hellhound.system.workflow     :as workflow]
+            [hellhound.system.defaults     :as defaults]))
 
 
 (defn set-system!
@@ -21,8 +22,7 @@
   (store/set-system! system-map)
   ;; TODO: We need to establish an official entry point for the system
   ;;       and move the logger initialization to there.
-  (logger/init! (config/get-config-from-system (store/get-system) :logger)))
-
+  (logger/init! (impl/get-value (store/get-system) [:logger] {})))
 
 
 (defn system
@@ -32,6 +32,14 @@
    :public-api true}
   []
   (store/get-system))
+
+
+(defn get-config
+  [ks]
+  (let [value (impl/get-value (system) ks :not-found)]
+    (if (= value :not-found)
+      (get-in defaults/config ks)
+      value)))
 
 
 (defn start

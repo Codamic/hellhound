@@ -54,7 +54,7 @@
     [system k v]
     "Updates the value of `k` with the given `v` in the given `system`.")
 
-  (get-config
+  (get-value
     [system ks]
     [system ks default-value]
     "Returns the value of the given `ks` (keys) from the system and returns the

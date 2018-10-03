@@ -18,7 +18,8 @@
                               [::c1]))
 (defn subject-system
   []
-  {:components [c1 c2]})
+  {:components [c1 c2]
+   :config {::c2 {:example 1}}})
 
 
 (deftest context-for
@@ -43,6 +44,20 @@
   (testing "initialized dependency tree"
     (is (=  1 (count (sut/get-dependencies-of
                       (sut/make-components-index (subject-system)) c2))))))
+
+
+(deftest config-map
+  (testing "Config map being passed to in context."
+    (let [config (:config (sut/context-for
+                           (sut/make-components-index (subject-system))
+                           c2))]
+      (is (map? config))
+      (is (= 1 (:example config))))
+    (let [config (:config (sut/context-for
+                           (sut/make-components-index (subject-system))
+                           c1))]
+      (is (map? config))
+      (is (empty? config)))))
 
 
 (deftest spec-test
