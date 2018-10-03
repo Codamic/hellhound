@@ -5,7 +5,7 @@
   In order this use this component simply call the `factory` function.
   It's going to get the configuration from the environment edn file and
   returns a component map."
-  ^{:author "Sameer Rahmani (@lxsameer)"}
+  {:author "Sameer Rahmani (@lxsameer)"}
   (:require
    [clojure.spec.alpha   :as s]
    [aleph.http           :as aleph]
@@ -39,6 +39,7 @@
                              :hooks  hooks
                              :input  (hcomp/input this)
                              :output (hcomp/output this))
+          config      (merge (:config new-context) config)
           http-routes (router/route-handler new-context routes)]
       (assoc this
              :instance
@@ -51,7 +52,6 @@
   (when-let [server (:instance this)]
     (.close server))
   (dissoc this :instance))
-
 
 
 (def default-hooks
@@ -67,12 +67,11 @@
   provides a helper namespace for dealing with routes. Checkout
   [[hellhound.http]] and [[hellhound.http.route]] namespaces for more info."
   ([routes]
-   (factory routes default-hooks (hellhound/get-config :http)))
+   (factory routes default-hooks {}))
 
   ([routes hooks]
-   (factory routes
-            (merge default-hooks hooks)
-            (hellhound/get-config :http)))
+   (factory routes (merge default-hooks hooks) {}))
+
 
   ([routes hooks config]
    (spec/validate ::aleph-config config "Aleph configuration is invalid.")
@@ -93,8 +92,8 @@
 
   TODO: more docs"
   ([]
-   (factory http/default-routes))
+   (factory (http/default-routes)))
 
   ([hooks]
-   (factory http/default-routes
+   (factory (http/default-routes)
             (merge default-hooks hooks))))

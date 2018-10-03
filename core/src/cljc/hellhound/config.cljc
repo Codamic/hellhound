@@ -9,8 +9,7 @@
    [hellhound.config.parser  :as parser]
    [hellhound.env            :as env]
    [hellhound.system.store   :as store]
-   [hellhound.system.protocols :as impl]
-   [hellhound.config.helpers :as helpers])
+   [hellhound.system.protocols :as impl])
 
 
   #?(:cljs

@@ -41,7 +41,6 @@
 
 (ns hellhound.system.development
   (:require
-   [medusa.system :as system]
    [hellhound.system :as sys]
    [clojure.tools.namespace.repl :as repl]))
 

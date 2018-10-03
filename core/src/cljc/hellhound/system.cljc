@@ -5,7 +5,6 @@
     :added 1.0}
   (:require [hellhound.config              :as config]
             [hellhound.logger              :as logger]
-            [hellhound.config.defaults     :as default]
             [hellhound.system.protocols    :as impl]
             [hellhound.system.core         :as core]
             [hellhound.system.store        :as store]
