@@ -5,17 +5,18 @@ before_script:
   - chmod a+x lein
   - export LEIN_ROOT=1
   - export PATH=$PATH:.
-
+  - ./scripts/build.sh $(pwd)
+  
 cache:
   paths:
     - .m2/
 
-build:
-  stage: build
-  script:
-    - ./scripts/build.sh $(pwd)
-  only:
-    - master
+# build:
+#   stage: build
+#   script:
+#     - ./scripts/build.sh $(pwd)
+#   only:
+#     - master
 
 # linters:
 #   stage: build
