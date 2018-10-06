@@ -5,9 +5,12 @@
    [io.pedestal.http :as http]
    [io.pedestal.http.csrf :as csrf]
    [io.pedestal.http.secure-headers :as sec-headers]
-   [io.pedestal.http.ring-middlewares :as middlewares]))
+   [io.pedestal.http.ring-middlewares :as middlewares]
+   [hellhound.logger :as log]
+   [hellhound.http.interceptors.request :as request]))
 
-(def uri->path-info
+(defn uri->path-info
+  [config]
   (io.pedestal.interceptor/interceptor
    {:name ::uri->path-info
     :enter (fn [ctx]
@@ -16,28 +19,32 @@
                       :request
                       (assoc req :path-info (:uri req)))))}))
 
+(defn resource-middleware
+  [config]
+  (middlewares/resource (or (:public-path config) "public")))
+
 
 (defn default-chain
-  [& interceptors]
-  (concat [uri->path-info
-           http/log-request
+  [config & interceptors]
+  (concat [(uri->path-info config)
+           route/query-params
+           (route/method-param)
+           (request/logger config)
            (cors/allow-origin "localhost:3000")
            (middlewares/session)
            (csrf/anti-forgery)
            (middlewares/content-type)
-           route/query-params
-           (route/method-param)
            (sec-headers/secure-headers {:content-security-policy-settings
                                         {:object-src "none"}})]
           interceptors
-          [(middlewares/resource "public")
+          [(resource-middleware config)
            io.pedestal.http/not-found]))
 
 
 
-(defn dev
-  [ctx]
-  (http/dev-interceptors ctx))
+;; (defn dev
+;;   [ctx]
+;;   (http/dev-interceptors ctx))
 
 
 (defn merge-interceptors

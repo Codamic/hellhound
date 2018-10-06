@@ -94,7 +94,7 @@
    :enabled? true
    :output-fn (formatter/default-dev-formatter {:important-namespaces ["hellhound.*"]})
    :middleware [middlewares/exceptions]
-   :ns-blacklist []
+   :ns-blacklist ["io.pedestal.*"]
    :filter-stracktrace true
    :appenders
    {:debug-appender {:enabled? true :min-level :debug :output-fn  :inherit

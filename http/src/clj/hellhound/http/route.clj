@@ -5,7 +5,6 @@
    [clojure.spec.alpha :as s]
    [io.pedestal.http.route.prefix-tree :as prefix-tree]
    [io.pedestal.http.route.router :as pedestal-router]
-   [io.pedestal.http.route.definition.table :as table]
    [io.pedestal.http.route        :as pedestal-route]
    [hellhound.logger   :as log]
    [hellhound.component :as hcomp]
@@ -17,7 +16,7 @@
 
 
 (def expand-routes pedestal-route/expand-routes)
-(def table-routes table/table-routes)
+
 
 ;; TODO: Add a shortcut function for the most basic routes
 ;; which should only serves the index page and the ws connection.
@@ -84,6 +83,11 @@
   and pass it to each interceptor."
   [hellhound-context routes]
   (fn [req]
-    (let [interceptors-coll (interceptors/default-chain
-                             (io.pedestal.http.route/router routes))]
-      (execute-interceptors hellhound-context interceptors-coll req))))
+    (let [web-config         (:config hellhound-context)
+          interceptor-chain (or (:interceptors-stack web-config)
+                                interceptors/default-chain)
+          interceptors-coll (interceptor-chain web-config
+                                               (pedestal-route/router routes))]
+      (execute-interceptors hellhound-context
+                            interceptors-coll
+                            req))))
