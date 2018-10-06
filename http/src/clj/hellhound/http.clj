@@ -50,16 +50,15 @@
         (ws/interceptor-factory)]}))))
 
 
-;; hellhound.http.websocket shortcuts ----------------------
-
 (defmacro defrouter
   [name & routes]
-  `(defn ~name
-     ([]
-      (~name hellhound.http/default-router-configuration))
-     ([config#]
-      (hellhound.http.route/expand-routes
-       #{{:host   (:host config#)
-          :scheme  (:scheme config#)
-          :port    (:port config#)}
-         ~@routes}))))
+  `(def ~name
+     (clojure.core/fn
+       ([]
+        (~name hellhound.http/default-router-configuration))
+       ([config#]
+        (hellhound.http.route/expand-routes
+         #{{:host   (:host config#)}
+           :scheme  (:scheme config#)
+           :port    (:port config#)
+           ~@routes})))))

@@ -5,6 +5,7 @@
    [clojure.spec.alpha :as s]
    [io.pedestal.http.route.prefix-tree :as prefix-tree]
    [io.pedestal.http.route.router :as pedestal-router]
+   [io.pedestal.http.route.definition.table :as table]
    [io.pedestal.http.route        :as pedestal-route]
    [hellhound.logger   :as log]
    [hellhound.component :as hcomp]
@@ -16,6 +17,7 @@
 
 
 (def expand-routes pedestal-route/expand-routes)
+(def table-routes table/table-routes)
 
 ;; TODO: Add a shortcut function for the most basic routes
 ;; which should only serves the index page and the ws connection.
@@ -70,27 +72,7 @@
   [hellhound-context interceptors req]
   (let [context (assoc hellhound-context :request req)
         processd-context (io.pedestal.interceptor.chain/execute context interceptors)]
-    (println "+++++++++++++++++++++++++++++++")
-    (clojure.pprint/pprint (:response processd-context))
-    (println "+++++++++++++++++++++++++++++++")
     (:response processd-context)))
-
-
-(defn route-handler1
-  "The default ring handler to be used with a ring webserver (webserver
-  component) which is responsible for resolving routes.
-
-  This handler is responsible for resolving routes with the incomming
-  request and executing the chain of interceptors. It creates a context map
-  and pass it to each interceptor."
-  [hellhound-context routes]
-  (fn [req]
-    (let [matched      (io.pedestal.http.route.router/find-route routes req)
-          interceptors (:interceptors matched)]
-
-      (if matched
-        (execute-interceptors hellhound-context interceptors req)
-        (handlers/not-found req)))))
 
 
 (defn route-handler
@@ -102,5 +84,6 @@
   and pass it to each interceptor."
   [hellhound-context routes]
   (fn [req]
-    (let [interceptors-coll (interceptors/default-chain (io.pedestal.http.route/router routes))]
+    (let [interceptors-coll (interceptors/default-chain
+                             (io.pedestal.http.route/router routes))]
       (execute-interceptors hellhound-context interceptors-coll req))))

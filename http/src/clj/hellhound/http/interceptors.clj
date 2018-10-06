@@ -17,8 +17,6 @@
                       (assoc req :path-info (:uri req)))))}))
 
 
-
-
 (defn default-chain
   [& interceptors]
   (concat [uri->path-info
@@ -29,10 +27,10 @@
            (middlewares/content-type)
            route/query-params
            (route/method-param)
-           (sec-headers/secure-headers {:content-security-policy-settings {:object-src "none"}})]
+           (sec-headers/secure-headers {:content-security-policy-settings
+                                        {:object-src "none"}})]
           interceptors
           [(middlewares/resource "public")
-           ;;(middlewares/fast-resource "public" {:index? true})
            io.pedestal.http/not-found]))
 
 

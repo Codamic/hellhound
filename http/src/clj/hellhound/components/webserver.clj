@@ -10,8 +10,8 @@
    [clojure.spec.alpha   :as s]
    [aleph.http           :as aleph]
    [hellhound.logger     :as log]
-   [hellhound.specs      :as spec]
    [hellhound.core       :as hellhound]
+   [hellhound.specs       :as spec]
    [hellhound.component  :as hcomp]
    [hellhound.http       :as http]
    [hellhound.streams    :as streams]
@@ -25,6 +25,9 @@
          #(and (contains? % :port)
                (int? (:port %)))))
 
+
+(def CONFIG_ERR_MSG
+  "Aleph configuration is invalid. Probably forgot to add the configuration to your system.")
 
 (defn start!
   "Returns a start function for the webserver component.
@@ -40,7 +43,9 @@
                              :input  (hcomp/input this)
                              :output (hcomp/output this))
           config      (merge (:config new-context) config)
-          http-routes (router/route-handler new-context routes)]
+          http-routes (router/route-handler new-context (routes config))]
+
+      (spec/validate ::aleph-config config CONFIG_ERR_MSG)
       (assoc this
              :instance
              (aleph/start-server http-routes config)))))
@@ -74,7 +79,6 @@
 
 
   ([routes hooks config]
-   (spec/validate ::aleph-config config "Aleph configuration is invalid.")
    (let [web-hooks (merge default-hooks hooks)]
      {:hellhound.component/name ::webserver
       :hellhound.component/start-fn (start! routes web-hooks config)
