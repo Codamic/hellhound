@@ -41,7 +41,7 @@
                  ;; Transit support
                  ;; [com.cognitect/transit-clj  "0.8.300"]
                  ;; [com.cognitect/transit-cljs "0.8.239"]
-
+                 [selmer                     "1.12.1"]
                  ;; JSON Parser
                  [cheshire                   "5.7.1"]]
 

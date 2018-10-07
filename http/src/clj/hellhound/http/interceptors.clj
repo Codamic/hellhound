@@ -60,7 +60,7 @@
   (middlewares/content-type))
 
 
-(defn sec-headers/secure-headers
+(defn secure-headers
   [config]
   (sec-headers/secure-headers {:content-security-policy-settings
                                {:object-src "none"}}))
@@ -81,7 +81,7 @@
            (session config)
            (anti-forgery config)
            (content-type config)
-           (sec-headers config)]
+           (secure-headers config)]
           interceptors
           [(resource-middleware config)
            (not-found config)]))
