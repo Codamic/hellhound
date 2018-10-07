@@ -24,29 +24,64 @@
   (middlewares/resource (or (:public-path config) "public")))
 
 
+(defn query-params
+  [config]
+  route/query-params)
+
+
+(defn method-param
+  [config]
+  (route/method-param))
+
+
+(defn allow-origin
+  [config]
+  (let [host (:host config)
+        port (:port config)
+        cors-hosts (or (:cors-hosts config)
+                       [])]
+
+    (cors/allow-origin (concat [(str host ":" port)]
+                               cors-hosts))))
+
+
+(defn session
+  [config]
+  (middlewares/session))
+
+
+(defn anti-forgery
+  [config]
+  (csrf/anti-forgery))
+
+
+(defn content-type
+  [config]
+  (middlewares/content-type))
+
+
+(defn sec-headers/secure-headers
+  [config]
+  (sec-headers/secure-headers {:content-security-policy-settings
+                               {:object-src "none"}}))
+
+
+(defn not-found
+  [config]
+  io.pedestal.http/not-found)
+
+
 (defn default-chain
   [config & interceptors]
   (concat [(uri->path-info config)
-           route/query-params
-           (route/method-param)
+           (query-params config)
+           (method-param config)
            (request/logger config)
-           (cors/allow-origin "localhost:3000")
-           (middlewares/session)
-           (csrf/anti-forgery)
-           (middlewares/content-type)
-           (sec-headers/secure-headers {:content-security-policy-settings
-                                        {:object-src "none"}})]
+           (allow-origin config)
+           (session config)
+           (anti-forgery config)
+           (content-type config)
+           (sec-headers config)]
           interceptors
           [(resource-middleware config)
-           io.pedestal.http/not-found]))
-
-
-
-;; (defn dev
-;;   [ctx]
-;;   (http/dev-interceptors ctx))
-
-
-(defn merge-interceptors
-  [& interceptor-colls]
-  (distinct (flatten interceptor-colls)))
+           (not-found config)]))

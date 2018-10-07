@@ -58,3 +58,19 @@
       :enter (request-logger colorful?)
       :leave (response-logger colorful?)
       :error (error-logger colorful?)})))
+
+
+(defn debug
+  [config]
+  (interceptor/interceptor
+   {:name ::debug
+    :enter (fn [x]
+             (println "REQUEST-------------------")
+             (clojure.pprint/pprint x)
+             (println "--------------------------")
+             x)
+    :leave (fn [x]
+             (println "RESPONE+++++++++++++++++++")
+             (clojure.pprint/pprint x)
+             (println "++++++++++++++++++++++++++")
+             x)}))
