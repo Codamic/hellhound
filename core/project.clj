@@ -11,6 +11,8 @@
   :dependencies [[org.clojure/clojure              "1.9.0"]
                  [org.clojure/test.check           "0.10.0-alpha2"]
                  [manifold                         "0.1.8"]
+                 [expound                          "0.7.1"]
+                 [orchestra                        "2018.09.10-1"]
                  ;; Logging
                  [org.slf4j/slf4j-api              "1.7.25"]
                  [com.taoensso/timbre              "4.10.0"]

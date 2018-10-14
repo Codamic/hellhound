@@ -3,6 +3,12 @@
    [hellhound.env :as env]))
 
 
+(defn uuid
+  "Generated and return a random uuid."
+  []
+  (str (java.util.UUID/randomUUID)))
+
+
 (defmacro todo
   "Very simple TODO macro to reminds us of the work
   we should do. It will do nothing on production and I

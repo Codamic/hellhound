@@ -48,3 +48,12 @@
 (def timeout! d/timeout!)
 
 (def zip d/zip)
+
+
+(defn xyz
+  [v f]
+  (let [d (deferred)]
+    [d (fn [final-v] (f final-v))]))
+
+
+(comment)
