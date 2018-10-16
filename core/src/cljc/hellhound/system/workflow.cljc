@@ -1,32 +1,37 @@
 (ns hellhound.system.workflow
   "System's workflow a vector describing the dataflow of the system.
-  Components have an input and an output stream. Each stream is a
-  core.async channel. HellHound connects io of each component to another
-  component based on the desciption given by the `:workflow` of the
-  system.
+  Each components has an input and an output stream. Each stream is a
+  `hellhound.stream/stram`. HellHound connects io of each component
+  to another component based on the desciption given by the `:workflow`
+  of the system.
 
-  System's workflow is a vector of vectors. Each vector contains two
-  mandatory element which are:
-    * The name of the output component
-    * The name of the input component
-  and an optional predicate function. This function connects the
-  output stream of output component to input stream of input component,
-  and in case of existance of a predicate function, it only sends those
-  messages which pass the predicate.
+  System's workflow is a vector of hashmaps. Each hashmap contains two
+  mandatory keys which are:
 
-  Predicate function should be a pure function obviousely."
+    * `:hellhound.workflow/source` which its value should be name of
+      the output component
+    * `:hellhound.workflow/sink`  which its value should be name of
+      the input component
+
+  and an optional `:hellhound.workflow/predicate` key that its value
+  should be predicate function.
+
+  Hellhound setup up a connection based on every hashmap (Node) and
+  connects the output of the source to input of the sink.
+
+  predicate function should return a boolean which filters all the
+  messages (See `hellhound.message`) from source component and feed
+  them to the sink component.
+
+  Predicate function must be pure and free of side effects."
   (:require
    [hellhound.logger               :as log]
    [hellhound.components.protocols :as cimpl]
-   [hellhound.streams              :as streams]
    [hellhound.system.impl.splitter :as spltr]
-   [hellhound.system.operations    :as op]
-   [hellhound.system.impl.system   :as sys]
-   [hellhound.system.protocols     :as impl]
-   [hellhound.system.utils         :as utils])
+   [hellhound.system.protocols     :as impl])
 
-  (:import (clojure.lang IPersistentMap
-                         PersistentVector)))
+  (:import (clojure.lang IPersistentMap)))
+
 
 
 (defn- invalid-workflow
