@@ -25,9 +25,9 @@
    [hellhound.system.protocols     :as impl]
    [hellhound.system.utils         :as utils])
 
-
   (:import (clojure.lang IPersistentMap
                          PersistentVector)))
+
 
 (defn- invalid-workflow
   [component]
@@ -35,54 +35,58 @@
                           (cimpl/get-name component))
                   {:cause component})))
 
+
 (defn- invalid-component-name
   [cname]
   (throw (ex-info
           (format "Can't find component '%s' in the system." cname)
           {:cause cname})))
 
-(defn parse
-  "Returns a operations map based on the given arguments."
-  ([from to]
-   (parse from identity identity to))
 
-  ([from pred to]
-   (parse from pred identity to))
+(defn parse-node
+  [node]
+  [(:hellhound.workflow/source node)
+   (:hellhound.workflow/sink node)])
 
-  ([from pred map-fn to]
-   [from (op/make-ops-map pred map-fn) to]))
 
 (defn make-splitter
   "Creates a splitter from the given `source-component` component."
   [source-component]
   (spltr/output-splitter (cimpl/output source-component)))
 
-(defn connect-workflow
-  "Setup and connect the components through the splitters."
-  [[splitters components] connection-vec]
-  (let [[from ops-map to] (apply parse connection-vec)
-        source-component  (get components from)
-        dest-component    (get components to)]
 
-    ;; Validates the source and dest components
-    (when (nil? source-component)
-      (invalid-component-name from))
+(defn get-node-components
+  "Return a vector containing the source component of the given
+  `node` in the given system as the first element and the sink
+  component as the second element."
+  [system node]
+  (let [[source-name sink-name] (parse-node node)
+        source (impl/get-component system source-name)
+        sink   (impl/get-component system sink-name)]
+    ;; Validates the source and sink components
+    (when (nil? source)
+      (invalid-component-name source))
 
-    (when (nil? dest-component)
-      (invalid-component-name to))
+    (when (nil? sink)
+      (invalid-component-name sink))
+    [source sink]))
 
 
-    ;; Get or create a new splitter from the source
-    ;; component
-    (let [splitter (or (get splitters from)
-                       (make-splitter source-component))]
+(defn connect-node
+  "Returns a reduce function for the given `system` which reduce over
+  workflow nodes and setup their connection using the source compoennt
+  as the root of each splitter."
+  [system]
+  (fn [splitters  node]
+    (let [[source sink] (get-node-components system node)
+          ;; Get or create a new splitter from the source
+          ;; component
+          splitter (or (get splitters (cimpl/get-name source))
+                       (make-splitter source))]
 
-      (impl/connect splitter
-                    (cimpl/input dest-component)
-                    ops-map)
+      (impl/connect splitter (cimpl/input sink) node)
+      (assoc splitters (cimpl/get-name source) splitter))))
 
-      [(assoc splitters from splitter)
-       components])))
 
 
 (defn wire-io
@@ -98,11 +102,12 @@
   output stream of output component to input stream of input component,
   and in case of existance of a predicate function, it only sends those
   messages which pass the predicate."
-  [components workflow]
-  (let [[splitters _] (reduce connect-workflow [{} components] workflow)
-        commit-fn     (fn [acc [k v]]
-                        (assoc acc k (impl/commit v)))]
+  [system workflow]
+  (let [splitters (reduce (connect-node system) {}  workflow)
+        commit-fn (fn [acc [k v]]
+                    (assoc acc k (impl/commit v)))]
     (doall (reduce commit-fn {} splitters))))
+
 
 (defn wire-components
   [system workflow-vector]
@@ -112,11 +117,11 @@
     ;; update-system would handle it for us.
     (impl/update-system system
                         :splitters
-                        (wire-io (impl/components-map system)
-                                 workflow-vector))
+                        (wire-io system workflow-vector))
     (do
       (log/warn "':workflow' of the system is empty. Skipping....")
       system)))
+
 
 (defn run-component-fn
   "Runs the main function of the given component if the component is not
@@ -140,21 +145,19 @@
 
 
 (defn setup-pipe-main-fns
-  "Runs the main function of the source and destination components of
-  the given pipe (pipe iin the given system."
-  [system pipe]
-  (let [src-name (first pipe)
-        dst-name (last pipe)]
-
-    ;; NOTE: There is not need for validating the source and destination names
+  "Runs the main function of the source and sink components of
+  the given node (nodes in the workflow vector of the given system)."
+  [system node]
+  (let [[source-name sink-name] (parse-node node)]
+    ;; NOTE: There is not need for validating the source and sink names
     ;;       because at this stage we already validated the workflow.
 
-    ;; Run main function of source and destination components and updated
+    ;; Run main function of source and sink components and updated
     ;; the system with the ready components.
     (reduce
      #(impl/update-component %1 %2 (run-component-fn (impl/get-component %1 %2)))
      system
-     [src-name dst-name])))
+     [source-name sink-name])))
 
 
 (defn setup-main-functions

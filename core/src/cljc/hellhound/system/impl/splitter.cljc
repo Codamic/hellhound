@@ -8,11 +8,19 @@
 
 
 (defn- transform-and-put
-  "Applies all the operations defined in the given `ops` map and returns
-  the transformed value."
-  [value {:keys [filter-fn map-fn] :as ops}]
-  (when (filter-fn value)
-    (map-fn value)))
+  "Applies all the operations defined in the given `node` map on the given
+   `value` and returns the transformed result."
+  [value node]
+  ;; TODO: Create a protocol for extracting data from Node.
+  ;;       I don't like to extract data using keys. this
+  ;;       function knows too much.
+  (let [filter-fn (or (:hellhound.component/predicate node)
+                      #(identity %))
+        map-fn (or (:hellhound.component/map node)
+                   #(identity %))]
+
+    (when (filter-fn value)
+      (map-fn value))))
 
 
 (defn- connect

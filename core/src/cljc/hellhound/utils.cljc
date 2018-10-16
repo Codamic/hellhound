@@ -6,7 +6,7 @@
 (defn uuid
   "Generated and return a random uuid."
   []
-  (str (java.util.UUID/randomUUID)))
+  (java.util.UUID/randomUUID))
 
 
 (defmacro todo
