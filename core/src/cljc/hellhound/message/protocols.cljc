@@ -7,6 +7,7 @@
     "Initialize the the message.")
   (id [_] "Returns the ID of the given value.")
   (type [_] "Returns the type of the given value.")
+  (payload [_] "Returns the payload of the message.")
   (resolvers [_]
     "Returns a sequence of resolver functions which each of them resolves
      a deferred value.")

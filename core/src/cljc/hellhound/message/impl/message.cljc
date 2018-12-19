@@ -19,6 +19,10 @@
     [msg]
     (:hellhound.message/type msg))
 
+  (payload
+    [msg]
+    :hellhound.message/payload msg)
+
   (resolvers
     [msg]
     (:hellhound.message/resolvers msg))

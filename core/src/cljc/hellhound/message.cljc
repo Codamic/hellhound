@@ -43,6 +43,7 @@
 (def id impl/id)
 (def resolvers impl/resolvers)
 (def type impl/type)
+(def payload impl/payload)
 (def enqueue-resolver impl/enqueue-resolver)
 (def resolve! impl/resolve!)
 
