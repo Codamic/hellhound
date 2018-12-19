@@ -25,13 +25,10 @@
 
   Predicate function must be pure and free of side effects."
   (:require
-   [hellhound.logger               :as log]
    [hellhound.components.protocols :as cimpl]
+   [hellhound.system.protocols     :as impl]
    [hellhound.system.impl.splitter :as spltr]
-   [hellhound.system.protocols     :as impl])
-
-  (:import (clojure.lang IPersistentMap)))
-
+   [hellhound.logger               :as log]))
 
 
 (defn- invalid-workflow
@@ -91,7 +88,6 @@
 
       (impl/connect splitter (cimpl/input sink) node)
       (assoc splitters (cimpl/get-name source) splitter))))
-
 
 
 (defn wire-io
@@ -172,10 +168,10 @@
   (reduce setup-pipe-main-fns system workflow))
 
 
-(defn ^IPersistentMap setup
+(defn setup
   "Sets up the workflow of the system by wiring the io of each component
   in the order provided by the user in `:workflow` key."
-  [^IPersistentMap system]
+  [system]
   (log/debug "Setting up the system workflow...")
   (let [workflow-vector (impl/get-workflow system)
         wired-system    (wire-components system workflow-vector)

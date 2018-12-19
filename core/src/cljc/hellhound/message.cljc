@@ -35,6 +35,7 @@
   in the middle of a workflow second solution is much simpler and nicer.
   "
   (:require
+   [hellhound.async :as async]
    [hellhound.message.protocols :as impl]
    [hellhound.message.impl.message]))
 
@@ -46,6 +47,7 @@
 
 
 (defn create
+  "Creates A new Message with the given `initial-value`."
   ([]
    (create {}))
   ([initial-value]
@@ -54,6 +56,5 @@
 
 (comment
   (impl/resolvers (enqueue-resolver (create) #(println %)))
-
   (let [m (create)]
     (impl/resolve! (impl/enqueue-resolver m #(println %)))))

@@ -1,12 +1,14 @@
-(ns ^{:clojure.tools.namespace.repl/load false}
-    hellhound.system.protocols)
+(ns hellhound.system.protocols
+  {:clojure.tools.namespace.repl/load false})
+
 
 
 ;; Splitter protocol describes all the rules to create an splitter type
 ;; which connects the output of a source component to the input of one
 ;; or more sink components.
 (defprotocol Splitter
-  (connect [this sink operation-map]
+  (connect
+    [this sink node]
     "Setup the `sink` channel to be connected to a source later based on
      the given `operation-map` which basically defines all the operations
      that should apply to the value before sending it to the sink. Operations
@@ -16,7 +18,8 @@
     [_]
     "Connect source channel to all the sinks")
 
-  (close! [_]
+  (close!
+    [_]
     "Disconnects all the managing sinks and sources."))
 
 

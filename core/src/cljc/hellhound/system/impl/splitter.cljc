@@ -1,10 +1,16 @@
 (ns hellhound.system.impl.splitter
   {:added 1.0}
   (:require
-   [hellhound.system.operations :as op]
    [hellhound.streams :as streams]
    [hellhound.system.protocols :as proto]
    [hellhound.utils :refer [todo]]))
+
+
+(def ^:private default-node
+  ;; TODO: Remove this binding and refactor the connect function
+  ;;       To not use it
+  {:hellhound.workflow/predicate #(identity %)
+   :hellhound.component/map      #(identity %)})
 
 
 (defn- transform-and-put
@@ -14,19 +20,18 @@
   ;; TODO: Create a protocol for extracting data from Node.
   ;;       I don't like to extract data using keys. this
   ;;       function knows too much.
-  (let [filter-fn (or (:hellhound.component/predicate node)
+  (let [filter-fn (or (:hellhound.workflow/predicate node)
                       #(identity %))
         map-fn (or (:hellhound.component/map node)
                    #(identity %))]
-
     (when (filter-fn value)
       (map-fn value))))
 
 
 (defn- connect
-  [source sink op-map]
+  [source sink node]
   (streams/consume (fn [v]
-                     (when-let [tv (transform-and-put v op-map)]
+                     (when-let [tv (transform-and-put v node)]
                        (streams/put! sink tv)))
                    source))
 
@@ -34,9 +39,9 @@
 (deftype OutputSplitter [source sinks]
   proto/Splitter
   (connect
-    [this sink operation-map]
+    [this sink node]
     ;; Simply puts the sink and it's operation-map into sinks vector
-    (let [m (or operation-map op/default-operations)]
+    (let [m (or node default-node)]
       (swap! sinks conj [sink m])))
 
   (commit

@@ -23,6 +23,8 @@
 (def deferred? d/deferred?)
 (def deferrable? d/deferrable?)
 
+(def on-realized d/on-realized)
+
 (def catch d/catch)
 (def finally d/finally)
 
@@ -50,10 +52,13 @@
 (def zip d/zip)
 
 
-(defn xyz
-  [v f]
+(comment
+  (def x1 (deferred))
+  @x1
+  (success! x1 :true)
   (let [d (deferred)]
-    [d (fn [final-v] (f final-v))]))
-
-
-(comment)
+    (on-realized d
+                 (fn [x] (:a x))
+                 (fn [x] (println "error")))
+    (success! d {:a 2})
+    @d))

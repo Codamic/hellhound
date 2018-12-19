@@ -3,13 +3,14 @@
   Systems define how your application should work."
   ^{:author "Sameer Rahmani (@lxsameer)"
     :added 1.0}
-  (:require [hellhound.config              :as config]
-            [hellhound.logger              :as logger]
-            [hellhound.system.protocols    :as impl]
-            [hellhound.system.core         :as core]
-            [hellhound.system.store        :as store]
-            [hellhound.system.workflow     :as workflow]
-            [hellhound.system.defaults     :as defaults]))
+  (:require
+   [hellhound.system.protocols    :as impl]
+   [hellhound.config              :as config]
+   [hellhound.logger              :as logger]
+   [hellhound.system.core         :as core]
+   [hellhound.system.store        :as store]
+   [hellhound.system.workflow     :as workflow]
+   [hellhound.system.defaults     :as defaults]))
 
 
 (defn set-system!
@@ -39,6 +40,7 @@
     (if (= value :not-found)
       (get-in defaults/config ks)
       value)))
+
 
 
 (defn start

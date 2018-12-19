@@ -9,7 +9,8 @@
   :dependencies [[codamic/hellhound.core      "1.0.0-SNAPSHOT"]
   		 [refactor-nrepl              "2.4.0"]
                  [cider/cider-nrepl           "0.18.0"]
-                 [org.clojure/tools.namespace "0.2.11"]		 
+                 [org.clojure/tools.namespace "0.2.11"]
+                 [org.clojure/java.classpath  "0.3.0"]
                  [hawk                        "0.2.11"]]
 
   :plugins [[lein-codox "0.10.3"]]
