@@ -15,6 +15,10 @@
     [msg]
     (:hellhound.message/id msg))
 
+  (type
+    [msg]
+    (:hellhound.message/type msg))
+
   (resolvers
     [msg]
     (:hellhound.message/resolvers msg))
