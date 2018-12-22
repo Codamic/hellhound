@@ -32,17 +32,19 @@
 
 
 (defn- invalid-workflow
-  [component]
+  [component node]
   (throw (ex-info (format "Invalid component '%s' in workflow."
                           (cimpl/get-name component))
-                  {:cause component})))
+                  {:cause component
+                   :node  node})))
 
 
 (defn- invalid-component-name
-  [cname]
+  [cname node]
   (throw (ex-info
           (format "Can't find component '%s' in the system." cname)
-          {:cause cname})))
+          {:cause cname
+           :node  node})))
 
 
 (defn parse-node
@@ -67,10 +69,10 @@
         sink   (impl/get-component system sink-name)]
     ;; Validates the source and sink components
     (when (nil? source)
-      (invalid-component-name source))
+      (invalid-component-name source node))
 
     (when (nil? sink)
-      (invalid-component-name sink))
+      (invalid-component-name sink node))
     [source sink]))
 
 

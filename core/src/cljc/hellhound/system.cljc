@@ -42,7 +42,6 @@
       value)))
 
 
-
 (defn start
   "Starts the given `system-map` by initalizing the system and call the
   `start-fn` of all the components in order and setting up the workflow
