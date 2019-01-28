@@ -7,4 +7,5 @@
   [component v]
   (logger/debug "PrettyPrinter-START: -----------------------------------------")
   (clojure.pprint/pprint v)
-  (logger/debug "PrettyPrinter-END: -------------------------------------------"))
+  (logger/debug "PrettyPrinter-END: -------------------------------------------")
+  v)
