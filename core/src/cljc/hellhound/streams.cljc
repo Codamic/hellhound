@@ -5,6 +5,7 @@
   (:require
    [manifold.stream :as s]
    [hellhound.system.async :as async]
+   [hellhound.async :as d]
    [hellhound.utils :refer [todo]]))
 
 
@@ -21,15 +22,50 @@
 (def stream  s/stream)
 (def stream? s/stream?)
 
-(def consume s/consume)
-(def put! s/put!)
+(defn- handle-execption
+  [e]
+  (todo "Improve the handle-exception to use supervisor streams")
+  (println e))
+
+
+(defn- callback-wrapper
+  [f]
+  (try
+    (f)
+    (catch Exception e
+      (handle-execption e)))
+  ;; A hack to prevent source stream to get close.
+  ;; If the consume callback return falsy deferred
+  ;; it means that the sink is closed and source
+  ;; should close as well. which we don't want it
+  ;; to happen
+  (d/success-deferred true))
+
+
+(defn consume
+  [f source]
+  (s/consume (fn [value]
+               (callback-wrapper #(f value)))
+             source))
+
+(def consume-async s/consume-async)
+
+(defn put!
+  [sink value]
+  (s/put! sink value))
+
 (def try-put! s/try-put!)
 
 (def take! s/take!)
 (def try-take! s/try-take!)
 
 (def connect s/connect)
-(def connect-via s/connect-via)
+(defn connect-via
+  [source f sink]
+  (s/connect-via source
+                 (fn [value]
+                   (callback-wrapper #(f value)))
+                 sink))
 
 (def map s/map)
 (def transform s/transform)
@@ -50,7 +86,8 @@
     (fn []
       ;; TODO: We need to handle the situation which the
       ;; stream is closed.
-      (f @(put! s v))))))
+      (-> (put! s v)
+          (d/chain #(f %)))))))
 
 ;; TODO: Is there any scenario for running a blocking code on the
 ;; put call back ?
@@ -62,16 +99,19 @@
     (fn []
       ;; TODO: We need to handle the situation which the
       ;; stream is closed.
-      (f @(put! s v))))))
+      (-> (put! s v)
+          (d/chain #(f %)))))))
 
 (defn <<
   [s f]
   (async/execute
    (fn []
-     (f @(take! s)))))
+     (-> (take! s)
+         (d/chain #(f %))))))
 
 (defn <<!
   [s f]
   (async/execute-io!
    (fn []
-     (f @(take! s)))))
+     (-> (take! s)
+         (d/chain #(f %))))))

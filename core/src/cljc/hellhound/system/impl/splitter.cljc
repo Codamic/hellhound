@@ -3,7 +3,7 @@
   (:require
    [hellhound.streams :as streams]
    [hellhound.system.protocols :as proto]
-   [hellhound.utils :refer [todo]]))
+   [hellhound.async :as async]))
 
 
 (def ^:private default-node
@@ -30,10 +30,14 @@
 
 (defn- connect
   [source sink node]
-  (streams/consume (fn [v]
-                     (when-let [tv (transform-and-put v node)]
-                       (streams/put! sink tv)))
-                   source))
+  (streams/connect-via source
+                       (fn [v]
+                         (when-let [tv (transform-and-put v node)]
+                           (streams/put! sink tv))
+
+                         ;; Quick hack to prevent the downstream to get closed
+                         (async/success-deferred true))
+                       sink))
 
 
 (deftype OutputSplitter [source sinks]
