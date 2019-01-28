@@ -50,7 +50,8 @@
   (:require
    [hellhound.streams :as streams]
    [hellhound.components.protocols :as impl]
-   [hellhound.components.impl.persistent-map :as component-impl]))
+   [hellhound.components.impl.persistent-map :as component-impl]
+   [hellhound.logger :as logger]))
 
 
 ;; Public Functions ----------------------------------------
@@ -114,7 +115,6 @@
       :hellhound.component/depends-on []
       :hellhound.component/fn         ~(list* `fn body)}))
 
-
 (defn make-transformer
   [component-name f]
   {:hellhound.component/name       component-name
@@ -126,7 +126,7 @@
      (streams/consume
       (fn [v]
         (let [processed-v (f component v)]
-          (when processed-v
+          (if processed-v
             (streams/>> (output component) processed-v))))
       (input component)))})
 
@@ -173,6 +173,7 @@
           (hellhound.component/input component#))))}))
 
 
+;; IO helpers ----------------------------------------------
 (defn io
   "Returns a vector containing the IO streams of the given `component`.
 
@@ -204,3 +205,23 @@
            streams/<<!
            streams/>>!
            f))
+
+
+(defn ->output
+  [component v]
+  (let [[_ out] (io component)]
+    (streams/>> out v)))
+
+
+(defn ->output!
+  [component v]
+  (let [[_ out] (io component)]
+    (streams/>>! out v)))
+
+
+;; IO & Execution helpers ----------------------------------
+(defn scheduled-output
+  [component delay f]
+  (let [[_ out] (io component)]
+    (async/schedule-fixedrate-interval delay
+                                       #(>> out (f)))))
