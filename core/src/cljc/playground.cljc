@@ -53,3 +53,25 @@
 
   (clojure.pprint/pprint (sys/system))
   (sys/stop!))
+
+
+(defn hellhound-executor
+  [nthreads keep-alive timeunit queue]
+  (proxy [java.util.concurrent.ThreadPoolExecutor] [nthreads nthreads keep-alive timeunit queue]
+    (getThreadFactory []
+      (println "98888888888888888888888")
+      (proxy [java.util.concurrent.ThreadFactory] []
+        (newThread [f]
+          (proxy [Thread] [f]
+            (getUncaughtExceptionHandler []
+              (fn [t e]
+                (println "Unexpeced happend")
+                (println e)))))))
+
+    (afterExecute [r t]
+      (proxy-super afterExecute r t)
+      (if t
+        (do
+          (println "hasdsadasndsakndakdnkjsandkasndakjndksajdnakndakjdnakdjnakjdnakjdnakdjnakdjand")
+          (println (.toString t)))
+        (println "Successsssss")))))

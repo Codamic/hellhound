@@ -20,9 +20,9 @@
                  [aleph                            "0.4.7-alpha1"]
 
                  ;; Routes & Routers
-                 [io.pedestal/pedestal.route       "0.5.4"]
-                 [io.pedestal/pedestal.interceptor "0.5.4"]
-                 [io.pedestal/pedestal.service     "0.5.4"]
+                 [io.pedestal/pedestal.route       "0.5.5"]
+                 [io.pedestal/pedestal.interceptor "0.5.5"]
+                 [io.pedestal/pedestal.service     "0.5.5"]
 
                  [danlentz/clj-uuid                "0.1.7"]
 
