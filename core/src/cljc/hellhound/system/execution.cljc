@@ -2,7 +2,9 @@
   (:require
    [hellhound.system.protocols :as impl])
   (:import
-   [java.util.concurrent Executors]))
+   [java.util.concurrent
+    Executors
+    TimeUnit]))
 
 
 (def SINGLE_THREAD :single-thread)
@@ -15,9 +17,10 @@
   8)
 
 (defn schedule-pool-size
-  [system]
-  ;; TODO: Find the optimal number for the schedule size
-  8)
+  ([] 8)
+  ([system]
+   ;; TODO: Find the optimal number for the schedule size
+   8))
 
 (defn create-execution-pool
   ([]
@@ -26,9 +29,11 @@
   ([size]
    (Executors/newFixedThreadPool size)))
 
+
 (defn create-wait-pool
   []
   (Executors/newCachedThreadPool))
+
 
 (defn create-schedule-pool
   ([]
@@ -92,5 +97,29 @@
   (execute-in (impl/wait-pool system) f))
 
 (defn schedule-with-system
-  [system f details]
-  (execute-in (impl/schedule-pool system) f))
+  [system delay f]
+  (.schedule (impl/schedule-pool system) f delay TimeUnit/MILLISECONDS))
+
+(defn schedule-fixrate-interval-with-system
+  "Executes the given `f` periodically with the given `delay` regardless
+  of the termination of the tasks and.
+
+  It schedules the jobs on the schedule threadpool of the given `system`."
+  [system delay f]
+  (.scheduleAtFixedRate (impl/schedule-pool system)
+                        f
+                        0
+                        delay
+                        TimeUnit/MILLISECONDS))
+
+(defn schedule-interval-with-system
+  "Executes the given `f` periodically with the given `delay` between
+  the termination of one execution and the commencement of the next.
+
+  It schedules the jobs on the schedule threadpool of the given `system`."
+  [system delay f]
+  (.scheduleWithFixedDelay (impl/schedule-pool system)
+                           f
+                           0
+                           delay
+                           TimeUnit/MILLISECONDS))
