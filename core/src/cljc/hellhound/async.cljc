@@ -5,7 +5,8 @@
    :experimental true}
   (:refer-clojure :exclude [future zip realized?])
   (:require
-   [manifold.deferred :as d]))
+   [manifold.deferred :as d]
+   [hellhound.system.execution :as exec]))
 
 ;; IMPORTANT NOTE: At this point, this namespace is just a proxy for
 ;; manifold.deferred. But in near future we want to introduce our own
@@ -51,6 +52,23 @@
 
 (def zip d/zip)
 
+(defn schedule
+  [delay f]
+  (exec/schedule-with-system (hellhound.system.store/get-system) delay f))
+
+(defn schedule-interval
+  [delay f]
+  (exec/schedule-interval-with-system
+   (hellhound.system.store/get-system)
+   delay
+   f))
+
+(defn schedule-fixedrate-interval
+  [delay f]
+  (exec/schedule-fixrate-interval-with-system
+   (hellhound.system.store/get-system)
+   delay
+   f))
 
 (comment
   (def x1 (deferred))
