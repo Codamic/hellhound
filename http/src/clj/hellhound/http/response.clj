@@ -10,7 +10,8 @@
   ([config]
    (async/timeout! (async/deferred)
                    (or (:response-timeout config)
-                       5000))))
+                       5000)
+                   {:status 502 :body "Timeout"})))
 
 
 (defn resolver
