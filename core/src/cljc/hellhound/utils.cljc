@@ -1,6 +1,16 @@
 (ns hellhound.utils
   (:require
+   [hellhound.logger.formatters  :as formatter]
    [hellhound.env :as env]))
+
+(defn code-location
+  [and-form]
+  (formatter/green
+   (str *ns* ":" (:line (meta and-form)))))
+
+(defn- printer
+  [x]
+  `(println ~(formatter/yellow (str x)) ":" ~x))
 
 
 (defn uuid
@@ -17,3 +27,14 @@
   (if (or (env/test?) (env/development?))
     `(println (str "[" ~*ns* ":" ~(:line (meta &form))
                    "] TODO: " ~msg))))
+
+
+(defmacro dump
+  [& args]
+  (let [prints (map printer args)]
+    `(do
+       (println (str "Debug in "
+                     ~(code-location &form)
+                     " -----------------------"))
+       ~@prints
+       (println "End =========================\n"))))
