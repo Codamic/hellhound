@@ -51,6 +51,7 @@
    [hellhound.streams :as streams]
    [hellhound.components.protocols :as impl]
    [hellhound.components.impl.persistent-map :as component-impl]
+   [hellhound.async :as async]
    [hellhound.logger :as logger]))
 
 
@@ -172,6 +173,10 @@
                                        processed-v#))))
           (hellhound.component/input component#))))}))
 
+;; Helpers -------------------------------------------------
+(defn get-config
+  [component]
+  (:config (:context component)))
 
 ;; IO helpers ----------------------------------------------
 (defn io
@@ -224,4 +229,4 @@
   [component delay f]
   (let [[_ out] (io component)]
     (async/schedule-fixedrate-interval delay
-                                       #(>> out (f)))))
+                                       #(streams/>> out (f)))))
