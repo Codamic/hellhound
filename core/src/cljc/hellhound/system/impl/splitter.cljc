@@ -10,7 +10,7 @@
   ;; TODO: Remove this binding and refactor the connect function
   ;;       To not use it
   {:hellhound.workflow/predicate #(identity %)
-   :hellhound.component/map      #(identity %)})
+   :hellhound.workflow/map      #(identity %)})
 
 
 (defn- transform-and-put
@@ -22,7 +22,7 @@
   ;;       function knows too much.
   (let [filter-fn (or (:hellhound.workflow/predicate node)
                       #(identity %))
-        map-fn (or (:hellhound.component/map node)
+        map-fn (or (:hellhound.workflow/map node)
                    #(identity %))]
     (when (filter-fn value)
       (map-fn value))))
