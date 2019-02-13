@@ -1,7 +1,7 @@
 (ns hellhound.streams
   "TODO: Write docstring for this ns.
    CAUTION: Experimental ns."
-  (:refer-clojure :exclude [map])
+  (:refer-clojure :exclude [map reduce])
   (:require
    [manifold.stream :as s]
    [hellhound.system.async :as async]
@@ -21,6 +21,7 @@
 ;; streams functions.
 (def stream  s/stream)
 (def stream? s/stream?)
+(def reduce s/reduce)
 
 (defn- handle-execption
   [e]
@@ -41,12 +42,19 @@
   ;; to happen
   (d/success-deferred true))
 
+(defn on-message
+  [source f]
+  (s/consume f source))
 
+;; TODO: Fix consume! to be run on calculaiton threadpool
 (defn consume
   [f source]
   (s/consume (fn [value]
                (callback-wrapper #(f value)))
              source))
+
+;; TODO: Fix consume! to be run on blocking threadpool
+(def consume! consume)
 
 (def consume-async s/consume-async)
 

@@ -88,17 +88,21 @@
   "A short cut function to create a component map with the given details.
 
   Returns a component map with the given `name`, `start-fn`, `stop-fn` and
-  the optional `dependencies` collection."
+  the optional `process-fn` and `dependencies` collection."
   {:added      1.0
    :public-api true}
   ([component-name start-fn stop-fn]
-   (make-component component-name start-fn stop-fn []))
+   (make-component component-name start-fn stop-fn nil []))
 
-  ([component-name start-fn stop-fn dependencies]
+  ([component-name start-fn stop-fn process-fn]
+   (make-component component-name start-fn stop-fn process-fn []))
+
+  ([component-name start-fn stop-fn process-fn dependencies]
    {::name component-name
     ::start-fn start-fn
     ::stop-fn stop-fn
-    ::depends-on dependencies}))
+    ::depends-on dependencies
+    ::fn process-fn}))
 
 
 (defmacro defcomponent
@@ -188,18 +192,19 @@
 
 
 (defn- in->out
-  [component takefn putfn f]
+  [component consume-fn putfn f]
   (let [[input output] (io component)]
-    (takefn input
+    (consume-fn
         (fn [v]
           (let [processed-v (f v)]
             (when processed-v
-              (putfn output processed-v)))))))
+              (putfn output processed-v))))
+        input)))
 
 (defn input->output
   [component f]
   (in->out component
-           streams/<<
+           hellhound.streams/consume
            streams/>>
            f))
 
@@ -207,7 +212,7 @@
 (defn input->output!
   [component f]
   (in->out component
-           streams/<<!
+           hellhound.streams/consume!
            streams/>>!
            f))
 

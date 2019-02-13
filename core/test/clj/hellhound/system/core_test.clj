@@ -15,6 +15,7 @@
 (def c2 (hcomp/make-component ::c2
                               (fn [this ctx ] this)
                               #(identity %)
+                              nil
                               [::c1]))
 (defn subject-system
   []

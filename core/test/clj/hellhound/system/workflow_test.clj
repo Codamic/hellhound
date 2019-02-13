@@ -24,13 +24,16 @@
      [(hcomp/make-component :sample/component2
                             sample-start-fn
                             sample-stop-fn
+                            nil
                             [:sample/component1])
+
       (hcomp/make-component :sample/component1
                             sample-start-fn
                             sample-stop-fn)
       (hcomp/make-component :sample/component3
                             sample-start-fn
                             sample-stop-fn
+                            nil
                             [:sample/component1])]
 
      :workflow [[:sample/component1 odd? :sample/component2]

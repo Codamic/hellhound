@@ -35,6 +35,7 @@
    [(hcomp/make-component :sample/component2
       (sample-start-fn :key2 :value2)
       (sample-stop-fn :key2)
+      nil
       [:sample/component1])
     (hcomp/make-component :sample/component1
       (sample-start-fn :key1 :value1)
@@ -42,6 +43,7 @@
     (hcomp/make-component :sample/component3
       (sample-start-fn :key3 :value3)
       (sample-stop-fn :key3)
+      nil
       [:sample/component1])]
 
    ;; The order is intentionally reverse just for testing

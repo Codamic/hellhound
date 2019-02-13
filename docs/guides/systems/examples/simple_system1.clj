@@ -33,6 +33,7 @@
 (def component-2 (hcomp/make-component :simple-system/component-2
                                start-fn2
                                stop-fn2
+                               nil
                                [:simple-system/component-1])) <9>
 
 (def simple-system <10>

@@ -12,4 +12,4 @@
 (deftest make-component-test
   (testing "make-component"
     (is (= simple-map (sut/make-component :component/name inc inc)))
-    (is (= simple-map (sut/make-component :component/name inc inc [])))))
+    (is (= simple-map (sut/make-component :component/name inc inc nil [])))))
