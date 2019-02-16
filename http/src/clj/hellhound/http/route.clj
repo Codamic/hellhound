@@ -3,7 +3,7 @@
   DOCTODO"
   (:require
    [clojure.spec.alpha :as s]
-   [io.pedestal.http.route.prefix-tree :as prefix-tree]
+   ;;[io.pedestal.http.route.prefix-tree :as prefix-tree]
    [io.pedestal.http.route.router :as pedestal-router]
    [io.pedestal.http.route        :as pedestal-route]
    [hellhound.logger   :as log]
@@ -15,46 +15,46 @@
    [hellhound.http.handlers :as handlers]))
 
 
-(def expand-routes pedestal-route/expand-routes)
+;; (def expand-routes pedestal-route/expand-routes)
 
 
 ;; TODO: Add a shortcut function for the most basic routes
 ;; which should only serves the index page and the ws connection.
 
-(defrecord MapRouter [routes tree-map]
-  pedestal-router/Router
-  (find-route [this req]
-    ;; find a result in the prefix-tree - payload could contains mutiple routes
-    (when-let [match-fn (tree-map (:uri req))]
-      ;; call payload function to find specific match based on method, host, scheme and port
-      (when-let [route (match-fn req)]
-        ;; return a match only if query constraints are satisfied
-        ;; the `nil` here is "path-params"
-        (when ((::prefix-tree/satisfies-constraints? route) req nil)
-          route)))))
+;; (defrecord MapRouter [routes tree-map]
+;;   pedestal-router/Router
+;;   (find-route [this req]
+;;     ;; find a result in the prefix-tree - payload could contains mutiple routes
+;;     (when-let [match-fn (tree-map (:uri req))]
+;;       ;; call payload function to find specific match based on method, host, scheme and port
+;;       (when-let [route (match-fn req)]
+;;         ;; return a match only if query constraints are satisfied
+;;         ;; the `nil` here is "path-params"
+;;         (when ((::prefix-tree/satisfies-constraints? route) req nil)
+;;           route)))))
 
-(defn matching-route-map
-  "Given the full sequence of route-maps,
-  return a single map, keyed by path, whose value is a function matching on the req.
-  The function takes a request, matches criteria and constraints, and returns
-  the most specific match.
-  This function only processes the routes if all routes are static."
-  [routes]
-  {:pre [(not (some prefix-tree/contains-wilds? (map :path routes)))]}
-  (let [initial-tree-map (group-by :path
-                                   (map prefix-tree/add-satisfies-constraints? routes))]
-    (reduce (fn [tree [path related-routes]]
-              (assoc tree path (prefix-tree/create-payload-fn related-routes)))
-            {}
-            initial-tree-map)))
+;; (defn matching-route-map
+;;   "Given the full sequence of route-maps,
+;;   return a single map, keyed by path, whose value is a function matching on the req.
+;;   The function takes a request, matches criteria and constraints, and returns
+;;   the most specific match.
+;;   This function only processes the routes if all routes are static."
+;;   [routes]
+;;   {:pre [(not (some prefix-tree/contains-wilds? (map :path routes)))]}
+;;   (let [initial-tree-map (group-by :path
+;;                                    (map prefix-tree/add-satisfies-constraints? routes))]
+;;     (reduce (fn [tree [path related-routes]]
+;;               (assoc tree path (prefix-tree/create-payload-fn related-routes)))
+;;             {}
+;;             initial-tree-map)))
 
-(defn router
-  "Given a sequence of routes, return a router which satisfies the
-  io.pedestal.http.route.router/Router protocol."
-  [routes]
-  (if (some prefix-tree/contains-wilds? (map :path routes))
-    (prefix-tree/router routes)
-    (->MapRouter routes (matching-route-map routes))))
+;; (defn router
+;;   "Given a sequence of routes, return a router which satisfies the
+;;   io.pedestal.http.route.router/Router protocol."
+;;   [routes]
+;;   (if (some prefix-tree/contains-wilds? (map :path routes))
+;;     (prefix-tree/router routes)
+;;     (->MapRouter routes (matching-route-map routes))))
 
 
 (defn execute-interceptors
