@@ -9,7 +9,7 @@
 (def ^:private default-node
   ;; TODO: Remove this binding and refactor the connect function
   ;;       To not use it
-  {:hellhound.workflow/predicate #(identity %)
+  {:hellhound.workflow/filter   #(identity %)
    :hellhound.workflow/map      #(identity %)})
 
 
@@ -20,7 +20,7 @@
   ;; TODO: Create a protocol for extracting data from Node.
   ;;       I don't like to extract data using keys. this
   ;;       function knows too much.
-  (let [filter-fn (or (:hellhound.workflow/predicate node)
+  (let [filter-fn (or (:hellhound.workflow/filter node)
                       #(identity %))
         map-fn (or (:hellhound.workflow/map node)
                    #(identity %))]
