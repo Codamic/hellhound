@@ -195,3 +195,8 @@
   [system]
   (log/debug "Tearing down the system workflow...")
   (close-splitters! system))
+
+;; Helper Macros/Funcitons ----------------------------------------------------
+;; (defmacro >
+;;   [workflows]
+;;   (map #(workflow->hashmap %) workflow))

@@ -53,6 +53,30 @@
   ([initial-value]
    (impl/init initial-value)))
 
+;; Macros ---------------------------------------------------------------------
+(defn create-helper
+  "Create a predicatefn based one the `field` name and the `type-keyword`"
+  [field acc type-keyword]
+  (conj acc
+        `(defn ~(symbol (str (name type-keyword)
+                             "-"
+                             (name field)
+                             "?"))
+           [msg#]
+           (= (~field msg#) ~type-keyword))))
+
+(defn make-filter-helpers
+  "Creates predicate functions for the given `field` and `keywords` values."
+  [field & keywords]
+  (let [fns (reduce #(hellhound.message/create-helper field %1 %2)
+                    []
+                    keywords)]
+    `(do ~@fns)))
+
+(defmacro type-helpers
+  [& types]
+  (apply make-filter-helpers ::type types))
+
 
 (comment
   (impl/resolvers (enqueue-resolver (create) #(println %)))
