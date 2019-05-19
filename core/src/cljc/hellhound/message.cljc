@@ -73,10 +73,15 @@
                     keywords)]
     `(do ~@fns)))
 
-(defmacro type-helpers
+
+(defmacro make-type-helpers
   [& types]
   (apply make-filter-helpers ::type types))
 
+
+(defmacro make-helpers
+  [field & keywords]
+  (apply make-filter-helpers field keywords))
 
 (comment
   (impl/resolvers (enqueue-resolver (create) #(println %)))
