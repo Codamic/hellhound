@@ -75,3 +75,22 @@
           (println "hasdsadasndsakndakdnkjsandkasndakjndksajdnakndakjdnakdjnakjdnakjdnakdjnakdjand")
           (println (.toString t)))
         (println "Successsssss")))))
+
+
+
+(defn return
+  [v]
+  (fn [continuation]
+    (continuation v)))
+
+(defn value
+  [mv]
+  (mv identity))
+
+(value (return 5))
+
+(defn bind
+  [mv f]
+  (fn [continuation]
+    (mv (fn [v]
+          ((f v) continuation)))))
