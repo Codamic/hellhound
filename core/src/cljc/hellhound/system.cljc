@@ -18,8 +18,8 @@
   `system-map`."
   {:added      1.0
    :public-api true}
-  [system-map]
-  (store/set-system! system-map)
+  [system-fn]
+  (store/set-system! system-fn)
   ;; TODO: We need to establish an official entry point for the system
   ;;       and move the logger initialization to there.
   (logger/init! (impl/get-value (store/get-system) [:logger] {})))

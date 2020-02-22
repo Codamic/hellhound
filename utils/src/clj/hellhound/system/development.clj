@@ -17,7 +17,9 @@
   `(do
      (defn ~(symbol "start")
        []
-       (hellhound.system.development/load-and-set-system! ~system-var)
+       (assert (symbol? ~system-var) "'system-path' value must be a symbol")
+       (let [system-fn# (ns-resolve (quote ~nsname) ~system-var)]
+         (hellhound.system.store/set-system! system-fn#))
        (hellhound.system/start!))
 
      (defn ~(symbol "stop")
