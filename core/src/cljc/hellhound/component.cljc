@@ -68,8 +68,6 @@
 
 (def started? impl/started?)
 
-(def get-name impl/get-name)
-
 (def dependencies impl/dependencies)
 
 (def input impl/input)
@@ -80,60 +78,60 @@
   [this ctx]
   (assoc this :context ctx))
 
-(defn default-stop-fn
-  [this]
-  this)
+(def default-stop-fn identity)
+
 
 (defn make-component
-  "A short cut function to create a component map with the given details.
+  "A helper function to create a component map with the given details.
 
-  Returns a component map with the given `name`, `start-fn`, `stop-fn` and
-  the optional `process-fn` and `dependencies` collection."
+  Returns a component map with the given, `start-fn`, `stop-fn` and
+  the optional `f` and `dependencies` collection. The function `f` get
+  executed everytime a value is available on the component's input stream."
   {:added      1.0
    :public-api true}
-  ([component-name start-fn stop-fn]
-   (make-component component-name start-fn stop-fn nil []))
-
-  ([component-name start-fn stop-fn process-fn]
-   (make-component component-name start-fn stop-fn process-fn []))
-
-  ([component-name start-fn stop-fn process-fn dependencies]
-   {::name component-name
-    ::start-fn start-fn
+  ([start-fn stop-fn]
+   (make-component start-fn stop-fn nil []))
+  ([start-fn stop-fn f]
+   (make-component start-fn stop-fn f []))
+  ([start-fn stop-fn f dependencies]
+   {::start-fn start-fn
     ::stop-fn stop-fn
     ::depends-on dependencies
-    ::fn process-fn}))
+    ::fn f}))
 
-
-(defmacro defcomponent
-  "Creates a component with the given `component-name` and use the
-  given `body` as the main function of the component.
-
-  The defined component will use `hellhound.components.defaults/start-fn` and
-  `hellhound.components.defaults/stop-fn` as the `start-fn` and `stop-fn`
-  which basically do nothing (`start-fn` attaches the context to the component)."
-  [component-name & body]
-  `(def ~component-name
-     {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))
-      :hellhound.component/start-fn   hellhound.components.defaults/start-fn
-      :hellhound.component/stop-fn    hellhound.components.defaults/stop-fn
-      :hellhound.component/depends-on []
-      :hellhound.component/fn         ~(list* `fn body)}))
 
 (defn make-transformer
-  [component-name f]
-  {:hellhound.component/name       component-name
-   :hellhound.component/start-fn   default-start-fn
-   :hellhound.component/stop-fn    default-stop-fn
-   :hellhound.component/depends-on []
-   :hellhound.component/fn
-   (fn [component]
-     (streams/consume
-      (fn [v]
-        (let [processed-v (f component v)]
-          (if processed-v
-            (streams/>> (output component) processed-v))))
-      (input component)))})
+  "Returns a new function which takes a `component` and applies
+  the given function `f` to every value received from the input
+  stream of the `component` and send the return value of the
+  applied function to the output stream of `component`.
+
+  `f` shouldn't block."
+  [f]
+  (fn [component]
+      (streams/consume
+       (fn [v]
+         (let [processed-v (f component v)]
+           (if processed-v
+             (streams/>> (output component) processed-v))))
+       (input component))))
+
+
+(defn make-transformer!
+  "Returns a new function which takes a `component` and applies
+  the given function `f` to every value received from the input
+  stream of the `component` and send the return value of the
+  applied function to the output stream of `component`.
+
+  `f` can have blocking operations."
+  [f]
+  (fn [component]
+      (streams/consume!
+       (fn [v]
+         (let [processed-v (f component v)]
+           (if processed-v
+             (streams/>> (output component) processed-v))))
+       (input component))))
 
 
 (defmacro deftransform
@@ -143,39 +141,31 @@
   fetched from the input stream."
   [component-name & body]
   `(def ~component-name
-     {:hellhound.component/name       (keyword (str *ns*) ~(str component-name))
-      :hellhound.component/start-fn   hellhound.component/default-start-fn
+     {:hellhound.component/start-fn   hellhound.component/default-start-fn
       :hellhound.component/stop-fn    hellhound.component/default-stop-fn
       :hellhound.component/depends-on []
       :hellhound.component/fn
-      (fn [component#]
-        (let [f# ~(list* `fn body)]
-          (hellhound.streams/consume
-           (fn [v#]
-             (let [processed-v# (f# component# v#)]
-               (when processed-v#
-                 (hellhound.streams/>> (hellhound.component/output component#)
-                                       processed-v#))))
-           (hellhound.component/input component#))))}))
-
+      (hellhound.component/make-transformer
+       (fn [v#]
+         (let [processed-v# (f# component# v#)]
+           (when processed-v#
+             (hellhound.streams/>> (hellhound.component/output component#)
+                                   processed-v#)))))}))
 
 (defmacro deftransform!
   [component-name & body]
   `(def ~component-name
-     {:hellhound.component/name (keyword (str *ns*) ~(str component-name))
-      :hellhound.component/start-fn   hellhound.component/default-start-fn
+     {:hellhound.component/start-fn   hellhound.component/default-start-fn
       :hellhound.component/stop-fn    hellhound.component/default-stop-fn
       :hellhound.component/depends-on []
       :hellhound.component/fn
-      (fn [component#]
-       (let [f# ~(list* `fn body)]
-         (hellhound.streams/consume
-          (fn [v#]
-            (let [processed-v# (f# component# v#)]
-              (when processed-v#
-                (hellhound.streams/>>! (hellhound.component/output component#)
-                                       processed-v#))))
-          (hellhound.component/input component#))))}))
+      (hellhound.component/make-transformer!
+       (fn [v#]
+         (let [processed-v# (f# component# v#)]
+           (when processed-v#
+             (hellhound.streams/>> (hellhound.component/output component#)
+                                   processed-v#)))))}))
+
 
 ;; Helpers -------------------------------------------------
 (defn get-config

@@ -46,7 +46,7 @@
   [source f]
   (s/consume f source))
 
-;; TODO: Fix consume! to be run on calculaiton threadpool
+;; TODO: Fix consume to be run on calculaiton threadpool
 (defn consume
   [f source]
   (s/consume (fn [value]
