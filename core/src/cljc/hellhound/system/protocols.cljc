@@ -26,10 +26,7 @@
 ;; This protocol describes how a system should manage its
 ;; components.
 (defprotocol ComponentManagement
-  (components-vector
-    [_]
-    "Returns the raw definition of system components as a vector of components")
-  (components-map
+  (components
     [_]
     "Returns a map of components name to valid components.")
   (get-component
@@ -40,9 +37,9 @@
     [system component-name component]
     "Update the given component with the given name on component-map in the system.")
 
-  (make-components-map
+  (validate-components
     [_]
-    "Create a mapping from components name to components and validates each component."))
+    "Validates each component in the components map."))
 
 
 ;; A system protocol for managing the workflow of the system.

@@ -33,34 +33,29 @@
 
 (extend-type clojure.lang.IPersistentMap
   protocols/ComponentManagement
-  ;; The system map should have a `:component` key which its value
-  ;; is a vector of component.
-  (components-vector
+  ;; The system map should have a `:components` key which its value
+  ;; is a map of component names to components.
+  (components
     [this]
     (:components this))
 
-  (components-map
-    [this]
-    (:components-map this))
-
   (get-component
     [this component-name]
-    (let [components-map (protocols/components-map this)]
-      (when components-map
-        (get components-map component-name))))
+    (let [components (protocols/components this)]
+      (when components
+        (get components component-name))))
 
   (update-component
     [system component-name component]
     (protocols/update-system system
-                             :components-map
-                             (assoc (protocols/components-map system)
+                             :components
+                             (assoc (protocols/components system)
                                     component-name
                                     component)))
 
-  (make-components-map
+  (validate-components
     [this]
-    {:components-map (into {} (map conform-component
-                                   (protocols/components-vector this)))})
+    (println "fix this"))
 
   protocols/WorkflowManagement
   (get-workflow

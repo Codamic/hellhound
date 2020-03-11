@@ -145,12 +145,13 @@
       :hellhound.component/stop-fn    hellhound.component/default-stop-fn
       :hellhound.component/depends-on []
       :hellhound.component/fn
-      (hellhound.component/make-transformer
-       (fn [v#]
-         (let [processed-v# (f# component# v#)]
-           (when processed-v#
-             (hellhound.streams/>> (hellhound.component/output component#)
-                                   processed-v#)))))}))
+      #(hellhound.component/make-transformer
+        (fn [v#]
+          (let [f# ~(list* `fn body)
+                processed-v# (f# % v#)]
+            (when processed-v#
+              (hellhound.streams/>> (hellhound.component/output %)
+                                    processed-v#)))))}))
 
 (defmacro deftransform!
   [component-name & body]
@@ -159,12 +160,13 @@
       :hellhound.component/stop-fn    hellhound.component/default-stop-fn
       :hellhound.component/depends-on []
       :hellhound.component/fn
-      (hellhound.component/make-transformer!
-       (fn [v#]
-         (let [processed-v# (f# component# v#)]
-           (when processed-v#
-             (hellhound.streams/>> (hellhound.component/output component#)
-                                   processed-v#)))))}))
+      #(hellhound.component/make-transformer!
+        (fn [v#]
+          (let [f# ~(list* `fn body)
+                processed-v# (f# % v#)]
+            (when processed-v#
+              (hellhound.streams/>> (hellhound.component/output %)
+                                    processed-v#)))))}))
 
 
 ;; Helpers -------------------------------------------------

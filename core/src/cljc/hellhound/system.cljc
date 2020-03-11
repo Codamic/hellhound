@@ -49,7 +49,6 @@
   [system-map]
   (let [new-system
         (-> system-map
-            (core/init-system)
             (core/start-system)
             (workflow/setup))]
     (logger/info "System has been started successfully.")

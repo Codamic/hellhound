@@ -35,7 +35,7 @@
                                    c2)]
       (is (map? ctx-map))
 
-      (store/set-system! (fn [] (sut/init-system (subject-system))))
+      (store/set-system! (fn [] (subject-system)))
       (is (map? (sut/context-for (store/get-system) c2))))))
 
 

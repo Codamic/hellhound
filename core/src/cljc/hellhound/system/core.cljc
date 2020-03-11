@@ -40,8 +40,7 @@
 
   NOTE: for more info checkout the guides for `Context Map`."
   [system-map component]
-
-  (let [components   (impl/components-map system-map)
+  (let [components   (impl/components system-map)
         dependencies (cimpl/dependencies component)
         deps         (map #(get components %) dependencies)]
 
@@ -57,30 +56,13 @@
      :dependencies-map (into {} (map (fn [x] [(cimpl/get-name x) x]) deps))}))
 
 
-(defn make-components-index
-  "Creates an index from components vector of the `system` and store it
-  under `:component-map` key in system."
-  [system-map]
-  (if-not (nil? (:components-map system-map))
-    system-map
-    (merge system-map
-           (impl/make-components-map system-map))))
-
-
-(defn init-system
-  "Initializes the given `system-map` by making an index from components and
-  returns the new system."
-  [system-map]
-  (make-components-index system-map))
-
-
 (defn get-dependants-of
   "Returns a list of components of the given system which are depends on the
    given component."
   [system component]
   (let [component-name (cimpl/get-name component)]
     (filter #(some #{component-name} (cimpl/dependencies %))
-            (vals (impl/components-map system)))))
+            (vals (impl/components system)))))
 
 
 (defn get-dependencies-of
@@ -89,7 +71,7 @@
   [system-map component]
   (let [dependencies (cimpl/dependencies component)]
     (filter #(some #{(cimpl/get-name %)} dependencies)
-            (vals (impl/components-map system-map)))))
+            (vals (impl/components system-map)))))
 
 
 (defn start-component!
@@ -98,7 +80,8 @@
   (let [dependencies (get-dependencies-of system-map component)
         new-system   (reduce start-component! system-map dependencies)]
     (update-in new-system
-               [:components-map (cimpl/get-name component)]
+               ;; TODO: use the protocol function to update the components
+               [:components (cimpl/get-name component)]
                ;; New value for the component name which will be the return
                ;; value of the `start-fn` function
                (fn [old-component]
@@ -113,7 +96,7 @@
           (update-in system-map
                      ;; TODO: We need to use the protocol functions here to
                      ;; update the system.
-                     [:components-map (cimpl/get-name component)]
+                     [:components (cimpl/get-name component)]
                      (fn [old-component]
                        (streams/close! (cimpl/input old-component))
                        (streams/close! (cimpl/output old-component))
@@ -123,13 +106,14 @@
 
 (s/def ::system-map (s/and map?
                            #(contains? % :components)
-                           #(vector? (:components %))))
+                           #(map? (:components %))))
 
 
 (defn restart-component!
   [system-map component-name]
   (update-in system-map
-             [:components-map component-name]
+             ;; TODO: Use protocol functions to update components
+             [:components component-name]
              (fn [old-component]
                ;; The difference between stop-component! and this
                ;; function is that we're not gonna close the streams
@@ -137,6 +121,15 @@
                (->> old-component
                    (cimpl/stop!)
                    (cimpl/start! (context-for system-map old-component))))))
+
+(defn update-component-names
+  "Returns a new `system-map` with all the components being injected
+  with their names."
+  [system-map]
+  (reduce (fn [sys [name component]]
+            (impl/update-component sys name (cimpl/set-name component name)))
+          system-map
+          (impl/components system-map)))
 
 
 (defn start-system
@@ -156,9 +149,10 @@
     (throw (ex-info "Provided system is not valid"
                     {:cause (s/explain-data ::system-map system-map)})))
 
-  (reduce start-component!
-          system-map
-          (vals (impl/components-map system-map))))
+  (let [system (update-component-names system-map)]
+    (reduce start-component!
+            system
+            (vals (impl/components system)))))
 
 
 (defn stop-system
@@ -169,7 +163,7 @@
   [^IPersistentMap system-map]
   (reduce stop-component!
           system-map
-          (vals (impl/components-map system-map))))
+          (vals (impl/components system-map))))
 
 
 (defn restart-system

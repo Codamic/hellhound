@@ -93,6 +93,12 @@
   (:hellhound.component/name component))
 
 
+(defn- set-name-of
+  "Returns a new `component` with the given `name`."
+  [component new-name]
+  (assoc component :hellhound.component/name new-name))
+
+
 (defn- dependencies-of
   "Returns a collection of dependencies of the given `component`."
   [component]
@@ -159,6 +165,9 @@
 
   (get-name [component]
     (name-of component))
+
+  (set-name [component new-name]
+    (set-name-of component new-name))
 
   (dependencies [component]
     (dependencies-of component))

@@ -18,6 +18,9 @@
   (get-name [component]
     "Returns the name of the component.")
 
+  (set-name [component new-name]
+    "Returns a new component with the given name.")
+
   (dependencies [component]
     "Returns a vector of dependency names.")
 
