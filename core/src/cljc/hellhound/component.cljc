@@ -84,20 +84,24 @@
 (defn make-component
   "A helper function to create a component map with the given details.
 
-  Returns a component map with the given, `start-fn`, `stop-fn` and
-  the optional `f` and `dependencies` collection. The function `f` get
-  executed everytime a value is available on the component's input stream."
-  {:added      1.0
-   :public-api true}
-  ([start-fn stop-fn]
-   (make-component start-fn stop-fn nil []))
-  ([start-fn stop-fn f]
-   (make-component start-fn stop-fn f []))
-  ([start-fn stop-fn f dependencies]
-   {::start-fn start-fn
-    ::stop-fn stop-fn
-    ::depends-on dependencies
-    ::fn f}))
+  Returns a component map with the given `componenet-description-map` that
+  is going to be merged with the default values of a componenet. The default
+  values are:
+
+  {:hellhound.component/start-fn (fn [x _] x)
+   :hellhound.component/stop-fn  identity
+   :hellhound.component/depends-on []
+   :hellhound.component/fn identity}
+
+  For more information on components checkout the :hellhoun.component/component
+  spec."
+  [componenet-description-map]
+  (merge
+   {::start-fn default-start-fn
+    ::stop-fn default-stop-fn
+    ::depends-on []
+    ::fn identity}
+   componenet-description-map))
 
 
 (defn make-transformer
